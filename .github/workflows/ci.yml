@@ -1,5 +1,4 @@
 name: Frontend CI/CD Pipeline
-
 on:
   push:
     branches:
@@ -7,25 +6,10 @@ on:
   pull_request:
     branches:
       - develop
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 코드 체크아웃
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # 2. Docker Compose 설치
-      - name: Install Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-
-      # 3. Docker Compose 빌드 및 배포
-      - name: Build and Deploy with Docker
-        run: |
-          docker-compose down --volumes --remove-orphans || true
-          docker-compose build
-          docker-compose up -d
+    - name: Checkout code
+      uses: actions/checkout@v3
