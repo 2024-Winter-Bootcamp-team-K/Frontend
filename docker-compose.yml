@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   front:
     build:
@@ -6,5 +8,5 @@ services:
     container_name: front
     ports:
       - "3000:3000"
-    command: npm run dev
+    command: yarn preview
     restart: always
