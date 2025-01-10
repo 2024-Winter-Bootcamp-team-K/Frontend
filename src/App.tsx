@@ -1,9 +1,10 @@
 import './App.css'
 //import ChoosePage from './pages/ChoosePage';
-import FailPage from './pages/FailPage';
+//import FailPage from './pages/FailPage';
+import GiveUpPage from './pages/GiveUpPage';
 
 const App = () => {
-  return <FailPage/>;
+  return <GiveUpPage/>;
 };
 
 export default App

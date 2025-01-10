@@ -21,12 +21,12 @@ export default {
       },
       keyframes: {
         stamp: {
-          '0%': { transform: 'translate(-50%, 0) scale(2)', opacity: '0' },
+          '0%': { transform: 'translate(-50%, 0) scale(3)', opacity: '0' },
           '100%': { transform: 'translate(-50%, 0) scale(1)', opacity: '1' },
         },
       },
       animation: {
-        stamp: 'stamp 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+        stamp: 'stamp 1s cubic-bezier(0.25, 1, 0.5, 1)',
       },
     },
   },
