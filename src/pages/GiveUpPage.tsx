@@ -1,4 +1,6 @@
-const GiveUpPage = () => {
+import React from "react";
+
+const GiveUpPage: React.FC = () => {
     return (
         <div className="fixed inset-0 bg-cover bg-center"
         style={{
