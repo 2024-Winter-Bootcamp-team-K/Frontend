@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@400;500;700&display=swap');
+
+.back-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-51%, -55%);
+    background: rgba(39, 43, 44, 10);
+    width: 509px;
+    height: 335px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 2px solid white;;
+}
+
+.logo {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    width: 15%;
+}
+
+.title-box {
+    color: white;
+    position: absolute;
+    top: 52%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+}
+
+.title {
+    font-size: 43px;
+    letter-spacing: 7px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-weight: 500;
+}
+
+.minititle {
+    font-size: 10px;
+    letter-spacing: 9px;
+    font-family: 'Alegreya SC', serif;
+}
+
