@@ -1,7 +1,8 @@
+import React from "react";
 import { useState, useEffect } from 'react'; 
 import ZoomBackground from './ZoomBackground';
 import CenteredImage from './CenteredImage';
-import './StartPage.css'; 
+import '../components/StartPage.css'; 
 
 const StartPage: React.FC = () => {
   const [isZooming, setIszooming] = useState(false);
@@ -20,7 +21,7 @@ const StartPage: React.FC = () => {
       {!isZooming && (
         <div className="content">
           <img
-            src="/images/Group 201 (2).png" 
+            src="/images/InitPageText.png" 
             alt="start-text" 
             className="start-text"
           />

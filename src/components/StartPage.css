@@ -1,7 +1,7 @@
 .start-page {
   width: 100vw;
   height: 100vh;
-  background-image: url('/images/Group 23.png'); /* 배경 이미지 */
+  background-image: url('../../public/images/InitPage.png'); /* 배경 이미지 */
   background-size: cover; /* 배경 크기 */
   background-position: center; /* 배경 위치 */
   display: flex;
@@ -30,4 +30,9 @@
 
 .start-text.fade-out {
   opacity: 0;
+}
+
+/* 스크롤 숨기기 */
+body, html {
+  overflow: hidden; /* 스크롤 비활성화 */
 }

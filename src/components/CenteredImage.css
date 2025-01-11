@@ -67,3 +67,8 @@
 .idcard-container.flip .idcard-back {
   transform: rotateY(0deg);
 }
+
+/* 스크롤 숨기기 */
+body, html {
+  overflow: hidden; /* 스크롤 비활성화 */
+}

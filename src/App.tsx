@@ -8,11 +8,15 @@ import FailPage from "./pages/FailPage";
 import GiveUpPage from "./pages/GiveUpPage";
 import SuccessPage from "./pages/SuccessPage";
 import EndingPage from "./pages/EndingPage";
+import StartPage from "./pages/StartPage";
+import SignupBox from "./pages/SignupBox";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/start" element={<StartPage />} />
+        <Route path="/register" element={<SignupBox />} />
         <Route path="/play" element={<PlayPage />} />
         <Route path="/loading" element={<LoadingScenarioPage />} />
         <Route path="/initchat" element={<InitChatPage />} />
