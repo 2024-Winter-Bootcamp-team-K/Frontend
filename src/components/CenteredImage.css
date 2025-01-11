@@ -1,0 +1,69 @@
+.centered-image-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+}
+
+.wallet-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: auto;
+  object-fit: contain;
+  opacity: 1;
+  transition: transform 2s ease-in-out, opacity 3s ease-in-out;
+}
+
+.cutting-wallet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-49.5%, -40.6%);
+  width: 613px;
+  height: auto;
+  object-fit: contain;
+  opacity: 1;
+  transition: transform 2s ease-in-out, opacity 3s ease-in-out;
+}
+
+.wallet-image.move-down,
+.cutting-wallet.move-down {
+  transform: translate(-50%, 150%);
+  opacity: 0;
+}
+
+.idcard-container {
+    perspective: 1000px; /* 3D 효과 */
+}
+
+
+.idcard-container .idcard-front,
+.idcard-container .idcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden; /* 뒷면 숨김 */
+  transition: transform 1s ease-in-out;
+}
+
+.idcard-container .idcard-back {
+  transform: rotateY(180deg);
+}
+
+.idcard-container.flip .idcard-front {
+  transform: rotateY(-180deg);
+}
+
+.idcard-container.flip .idcard-back {
+  transform: rotateY(0deg);
+}
