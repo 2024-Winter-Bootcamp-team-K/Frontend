@@ -17,7 +17,8 @@ const InitChatPage: React.FC = () => {
         style={{
           backgroundColor: '#1E305A',
           boxShadow: 'inset 0px 10px 30px rgba(24, 23, 32, 0.7), inset 0px -10px 30px rgba(0, 0, 0, 0.7)',
-          height: '400px', // 기본 높이 설정
+          width: '1000px',
+          height: '400px',
         }}
       >
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 items-center">
@@ -64,7 +65,7 @@ const InitChatPage: React.FC = () => {
 
       {/* 수사 시작하기 버튼 */}
       <button
-        className="mt-8 px-8 py-3 text-white text-lg font-intelmono"
+        className="mt-8 px-8 text-white text-lg font-intelmono font-semibold"
         style={{ fontSize: '1.5rem' }}
       >
         수사 시작하기
