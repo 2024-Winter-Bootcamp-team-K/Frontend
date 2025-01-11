@@ -13,7 +13,7 @@
     background-image: url(/images/EndingPage.png); /* 배경 이미지 */
     background-size: cover;
     background-position: center;
-    animation: scrollBackground 20s linear forwards; /* 애니메이션 */
+    animation: transform 0.1s linear forwards; /* 애니메이션 */
   }
 
     .credits {
