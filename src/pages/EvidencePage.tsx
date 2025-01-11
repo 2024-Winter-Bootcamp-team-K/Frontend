@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Evidence {
     id: number;
@@ -9,9 +10,10 @@ interface Evidence {
 }
 
 const EvidencePage: React.FC = () => {
+    const navigate = useNavigate();
     const [selectedEvidence, setSelectedEvidence] = useState<Evidence | null>(null);
     const [showItems, setShowItems] = useState<number[]>([]);
-    const handleBackCheck = () => {};
+    const handleBackCheck = () => {navigate("/play")};
     const handleFolderCheck = () => {};
 
     const evidenceData = [
@@ -37,7 +39,7 @@ const EvidencePage: React.FC = () => {
                 setTimeout(() => {
                     setShowItems((prev) => [...prev, index]);
                 }, index * 800);
-            });
+            }, 1000);
         };
 
         showItemsWithDelay();

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SuspectPage: React.FC = () => {
+    const navigate = useNavigate();
     const [showItems, setShowItems] = useState<number[]>([]);
-    const handleBackCheck = () => {};
+    const handleBackCheck = () => {navigate("/play")};
     const handleFolderCheck = () => {};
     const handleInterrogate = () => {};
     const handleAccuse = () => {};
@@ -19,7 +21,7 @@ const SuspectPage: React.FC = () => {
                 setTimeout(() => {
                     setShowItems((prev) => [...prev, index]);
                 }, index * 800);
-            });
+            }, 1000);
         };
 
         showItemsWithDelay();

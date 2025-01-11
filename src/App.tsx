@@ -8,7 +8,7 @@ import SuccessPage from "./pages/SuccessPage";
 import EndingPage from "./pages/EndingPage";
 import LoadingScenarioPage from "./pages/LoadingScenarioPage";
 import EvidencePage from "./pages/EvidencePage";
-import SuspectPage from "./pages/SuspectPagePage";
+import SuspectPage from "./pages/SuspectPage";
 
 const App: React.FC = () => {
   return (
