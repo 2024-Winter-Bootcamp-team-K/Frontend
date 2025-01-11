@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoadingScenarioPage: React.FC = () => {
   const [text, setText] = useState('');
   const [progress, setProgress] = useState(0);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false); // 오디오 활성화 상태
+  const navigate = useNavigate();
 
   const fullText = `2024년 12월 30일 밤 11시 30분 경,
 서울 현대미술관 3층 특별 전시실에서
@@ -79,24 +81,33 @@ const LoadingScenarioPage: React.FC = () => {
     }
   }, [text]);
 
+  useEffect(() => {
+    if (progress === 100) {
+      const timeout = setTimeout(() => {
+        navigate('/initchat'); // 초기 진술 페이지로 이동
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [progress, navigate]);
+
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-[#181818] text-white">
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#181818] text-white">
       {/* 제목 */}
       <h1
-        className="font-intelmono absolute top-28 text-xl font-bold text-center"
-        style={{ fontSize: '30px' }}
+        className="font-intelmono text-xl font-bold text-center mb-8"
+        style={{ fontSize: '2rem' }}
       >
         기밀 사건 파일 #2024-12-30
       </h1>
 
       {/* 파란색 창 */}
       <div
-        className="font-intelmono relative p-6 rounded-lg"
+        className="font-intelmono relative p-6 rounded-lg w-full max-w-4xl flex flex-col justify-center"
         style={{
-          width: '800px',
-          height: '400px',
           backgroundColor: '#1E305A',
           boxShadow: 'inset 0px 10px 30px rgba(24, 23, 32, 0.7), inset 0px -10px 30px rgba(0, 0, 0, 0.7)',
+          width: '1000px',
+          height: '400px',
         }}
       >
         {/* 타이핑 텍스트 */}
@@ -135,7 +146,7 @@ const LoadingScenarioPage: React.FC = () => {
       {/* 완료 메시지 */}
       {progress === 100 && (
         <p
-          className="font-intelmono absolute bottom-28 text-center text-white text-lg font-semibold"
+          className="font-intelmono mt-8 text-center text-white text-lg font-semibold"
           style={{ fontSize: '20px' }}
         >
           현장 조사 데이터 분석이 완료되었습니다.

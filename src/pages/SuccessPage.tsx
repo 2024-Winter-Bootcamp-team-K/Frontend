@@ -19,11 +19,11 @@ const SuccessPage: React.FC = () => {
       }}
       onClick={handleBackgroundClick} // 배경 클릭 이벤트 등록
     >
-      <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 text-center">
+      <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 text-center px-4">
         <p
-          className="font-Binggrae font-bold drop-shadow-md"
+          className="font-Binggrae font-bold drop-shadow-md leading-tight"
           style={{
-            fontSize: "80px",
+            fontSize: "6vw", // 반응형 폰트 크기
             color: "#FFD700",
           }}
         >
