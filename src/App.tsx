@@ -8,6 +8,7 @@ import SuccessPage from "./pages/SuccessPage";
 import EndingPage from "./pages/EndingPage";
 import LoadingScenarioPage from "./pages/LoadingScenarioPage";
 import EvidencePage from "./pages/EvidencePage";
+import SuspectPage from "./pages/SuspectPagePage";
 
 const App: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ const App: React.FC = () => {
         <Route path="/Ending" element={<EndingPage />} />
         <Route path="/loading" element={<LoadingScenarioPage />} />
         <Route path="/evidence" element={<EvidencePage />} />
+        <Route path="/suspect" element={<SuspectPage />} />
       </Routes>
     </Router>
   );
