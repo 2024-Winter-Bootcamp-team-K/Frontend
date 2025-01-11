@@ -6,6 +6,7 @@ import FailPage from "./pages/FailPage";
 import GiveUpPage from "./pages/GiveUpPage";
 import SuccessPage from "./pages/SuccessPage";
 import EndingPage from "./pages/EndingPage";
+import LoadingScenarioPage from "./pages/LoadingScenarioPage";
 
 const App: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const App: React.FC = () => {
         <Route path="/give-up" element={<GiveUpPage />} />
         <Route path="/Success" element={<SuccessPage />} />
         <Route path="/Ending" element={<EndingPage />} />
+        <Route path="/loading" element={<LoadingScenarioPage />} />
       </Routes>
     </Router>
   );

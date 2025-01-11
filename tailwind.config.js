@@ -8,7 +8,8 @@ export default {
   theme: {
     extend: {
       fontFamily:{
-        'Binggrae':['BinggraeII']
+        'Binggrae':['BinggraeII'],
+        'intelmono': ['Intelone_mono_font_family_regular', 'monospace'],
       },
       textStroke: {
         '1': '1px',

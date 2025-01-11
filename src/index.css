@@ -10,5 +10,10 @@
 
 @font-face {
   font-family: 'THEFACESHOP_INKLIPQUID';
-  src: url('/public/fonts/THEFACESHOP+INKLIPQUID.ttf') format('truetype');
+  src: url('/fonts/THEFACESHOP+INKLIPQUID.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Intelone_mono_font_family_regular';
+  src: url('/fonts/intelone-mono-font-family-regular.ttf') format('truetype');
 }
