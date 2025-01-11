@@ -23,8 +23,8 @@ const FailPage: React.FC = () => {
 
       <div className="absolute bottom-[43%] left-[75%] transform -translate-x-1/2 text-center">
         <button
-          className="text-lg font-semibold text-red-500 border-2 border-red-500 bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
-          style={{ fontSize: "30px", width: "280px", height: "50px" }}
+          className="text-lg font-semibold border-2 border-red-500 bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
+          style={{ fontSize: "30px", width: "280px", height: "50px", color: "#FF0000" }}
           onClick={() => alert("다시 도전하기")}
         >
           다시 도전하기
@@ -34,7 +34,7 @@ const FailPage: React.FC = () => {
       <div className="absolute bottom-[33%] left-[75%] transform -translate-x-1/2 text-center">
         <button
           className="text-lg font-semibold text-red-500 border-2 border-red-500 bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
-          style={{ fontSize: "30px", width: "280px", height: "50px" }}
+          style={{ fontSize: "30px", width: "280px", height: "50px", color: "#FF0000"  }}
           onClick={() => navigate("/give-up")}
         >
           포기 하기
