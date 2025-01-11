@@ -1,0 +1,65 @@
+/* 전체 컨테이너 스타일 */
+.ending-page {
+    position: fixed;
+    inset: 0;
+    overflow: hidden; /* 스크롤바 방지 */
+  }
+  
+  /* 스크롤 애니메이션이 적용될 컨테이너 */
+  .scroll-container {
+    position: absolute;
+    width: 100%;
+    height: 400%; /* 크레딧 길이에 따라 높이를 조정 */
+    background-image: url(/images/EndingPage.png); /* 배경 이미지 */
+    background-size: cover;
+    background-position: center;
+    animation: scrollBackground 20s linear forwards; /* 애니메이션 */
+  }
+
+    .credits {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 25%;
+    transform: translateY(-50%);
+    font-family: Arial, sans-serif;
+    color: black;
+    }
+
+    .credits p.title {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    }
+
+    .credits p.subtitle {
+    font-size: 32px;
+    font-weight: 600;
+    margin: 20px 0;
+    }
+    
+    .credits p {
+    font-size: 24px;
+    font-weight: normal;
+    margin: 10px 0;
+    }
+  
+  /* 배경과 텍스트가 동시에 위에서 아래로 움직이는 애니메이션 */
+  @keyframes scrollBackground {
+    0% {
+      transform: translateY(0); /* 초기 위치 */
+    }
+    100% {
+      transform: translateY(-70%); /* 화면 끝까지 이동 */
+    }
+  }
+  
+  @keyframes scrollCredits {
+    0% {
+      transform: translateY(50%); /* 텍스트 시작 위치 */
+    }
+    100% {
+      transform: translateY(-200%); /* 텍스트 끝 위치 */
+    }
+  }
+  
