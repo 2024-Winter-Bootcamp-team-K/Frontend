@@ -1,8 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const PlayPage: React.FC = () => {
-  const handleSuspectCheck = () => {};
-  const handleEvidenceCheck = () => {};
+  const navigate = useNavigate();
+  const handleSuspectCheck = () => {navigate("/suspect")};
+  const handleEvidenceCheck = () => {navigate("/evidence")};
   const handleFolderCheck = () => {};
 
   return (

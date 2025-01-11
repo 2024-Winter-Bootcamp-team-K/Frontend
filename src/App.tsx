@@ -8,6 +8,8 @@ import FailPage from "./pages/FailPage";
 import GiveUpPage from "./pages/GiveUpPage";
 import SuccessPage from "./pages/SuccessPage";
 import EndingPage from "./pages/EndingPage";
+import EvidencePage from "./pages/EvidencePage";
+import SuspectPage from "./pages/SuspectPage";
 import StartPage from "./pages/StartPage";
 import SignupBox from "./pages/SignupBox";
 
@@ -25,6 +27,9 @@ const App: React.FC = () => {
         <Route path="/give-up" element={<GiveUpPage />} />
         <Route path="/Success" element={<SuccessPage />} />
         <Route path="/Ending" element={<EndingPage />} />
+        <Route path="/loading" element={<LoadingScenarioPage />} />
+        <Route path="/evidence" element={<EvidencePage />} />
+        <Route path="/suspect" element={<SuspectPage />} />
       </Routes>
     </Router>
   );
