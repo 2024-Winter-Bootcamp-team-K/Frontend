@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoadingScenarioPage: React.FC = () => {
   const [text, setText] = useState('');
   const [progress, setProgress] = useState(0);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false); // 오디오 활성화 상태
+  const navigate = useNavigate();
 
   const fullText = `2024년 12월 30일 밤 11시 30분 경,
 서울 현대미술관 3층 특별 전시실에서
@@ -78,6 +80,15 @@ const LoadingScenarioPage: React.FC = () => {
       }, 50);
     }
   }, [text]);
+
+  useEffect(() => {
+    if (progress === 100) {
+      const timeout = setTimeout(() => {
+        navigate('/initchat'); // 초기 진술 페이지로 이동
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [progress, navigate]);
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-[#181818] text-white">
