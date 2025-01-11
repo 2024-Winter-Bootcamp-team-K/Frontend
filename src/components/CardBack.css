@@ -43,3 +43,7 @@
     font-family: 'Alegreya SC', serif;
 }
 
+/* 스크롤 숨기기 */
+body, html {
+    overflow: hidden; /* 스크롤 비활성화 */
+  }

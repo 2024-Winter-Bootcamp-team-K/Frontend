@@ -1,7 +1,8 @@
+import React from "react";
 import { useState, useEffect } from "react";
-import "./CenteredImage.css";
-import LoginBox from "../login/LoginBox";
-import CardBack from "../start(2)/CardBack";
+import "../components/CenteredImage.css";
+import LoginBox from "../pages/LoginBox";
+import CardBack from "../pages/CardBack";
 
 const CenteredImage: React.FC = () => {
   const [startZoom, setStartZoom] = useState(false);

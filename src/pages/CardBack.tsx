@@ -1,4 +1,5 @@
-import "./CardBack.css"
+import React from "react";
+import "../components/CardBack.css"
 
 const CardBack: React.FC = () => {
     return (
