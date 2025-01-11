@@ -7,6 +7,7 @@ import GiveUpPage from "./pages/GiveUpPage";
 import SuccessPage from "./pages/SuccessPage";
 import EndingPage from "./pages/EndingPage";
 import LoadingScenarioPage from "./pages/LoadingScenarioPage";
+import EvidencePage from "./pages/EvidencePage";
 
 const App: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const App: React.FC = () => {
         <Route path="/Success" element={<SuccessPage />} />
         <Route path="/Ending" element={<EndingPage />} />
         <Route path="/loading" element={<LoadingScenarioPage />} />
+        <Route path="/evidence" element={<EvidencePage />} />
       </Routes>
     </Router>
   );
