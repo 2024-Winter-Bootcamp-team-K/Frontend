@@ -4,6 +4,7 @@ import ChoosePage from "./pages/ChoosePage";
 import FailPage from "./pages/FailPage";
 import GiveUpPage from "./pages/GiveUpPage";
 import SuccessPage from "./pages/SuccessPage";
+import PlayPage from "./pages/PlayPage";
 
 const App: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const App: React.FC = () => {
         <Route path="/fail" element={<FailPage />} />
         <Route path="/give-up" element={<GiveUpPage />} />
         <Route path="/Success" element={<SuccessPage />} />
+        <Route path="/play" element={<PlayPage />} />
       </Routes>
     </Router>
   );
