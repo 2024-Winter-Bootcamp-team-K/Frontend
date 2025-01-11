@@ -9,42 +9,70 @@ const FailPage: React.FC = () => {
       className="fixed inset-0 bg-cover bg-center bg-no-repeat"
       style={{
         backgroundImage: 'url(/images/FailPage.png)',
-        height: "105vh",
+        height: "110vh",
       }}
     >
-      <div className="absolute bottom-[51%] left-[74%] transform -translate-x-1/2 text-center animate-stamp">
+      {/* FAILURE 스탬프 */}
+      <div className="absolute bottom-[55%] left-[75%] transform -translate-x-1/2 animate-stamp">
         <img
           src="/images/FAILURE.png"
           alt="FAILURE Stamp"
-          className="rounded-lg max-w-none"
-          style={{ width: "500px", height: "300px" }}
+          className="rounded-lg"
+          style={{
+            width: "40vw", // 반응형 너비
+            height: "auto", // 비율 유지
+            maxWidth: "500px", // 최대 크기
+          }}
         />
       </div>
 
-      <div className="absolute bottom-[43%] left-[75%] transform -translate-x-1/2 text-center">
+      {/* 다시 도전하기 버튼 */}
+      <div className="absolute bottom-[45%] left-[75%] transform -translate-x-1/2 text-center">
         <button
           className="text-lg font-semibold border-2 border-red-500 bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
-          style={{ fontSize: "30px", width: "280px", height: "50px", color: "#FF0000" }}
+          style={{
+            fontSize: "2vw", // 반응형 폰트 크기
+            width: "60vw", // 반응형 너비
+            maxWidth: "280px", // 최대 크기
+            height: "8vw", // 반응형 높이
+            maxHeight: "50px", // 최대 크기
+            color: "#FF0000",
+          }}
           onClick={() => alert("다시 도전하기")}
         >
           다시 도전하기
         </button>
       </div>
 
-      <div className="absolute bottom-[33%] left-[75%] transform -translate-x-1/2 text-center">
+      {/* 포기 하기 버튼 */}
+      <div className="absolute bottom-[35%] left-[75%] transform -translate-x-1/2 text-center">
         <button
-          className="text-lg font-semibold text-red-500 border-2 border-red-500 bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
-          style={{ fontSize: "30px", width: "280px", height: "50px", color: "#FF0000"  }}
+          className="text-lg font-semibold border-2 border-red-500 bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
+          style={{
+            fontSize: "2vw", // 반응형 폰트 크기
+            width: "60vw", // 반응형 너비
+            maxWidth: "280px", // 최대 크기
+            height: "8vw", // 반응형 높이
+            maxHeight: "50px", // 최대 크기
+            color: "#FF0000",
+          }}
           onClick={() => navigate("/give-up")}
         >
           포기 하기
         </button>
       </div>
 
-      <div className="absolute bottom-[11%] left-1/2 transform -translate-x-1/2 text-center">
+      {/* 하단 텍스트 */}
+      <div className="absolute bottom-[15%] left-1/2 transform -translate-x-1/2 text-center">
         <p
           className="py-6 text-lg font-semibold text-black border-2 border-black bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
-          style={{ fontSize: "30px", width: "1200px", height: "80px" }}
+          style={{
+            fontSize: "2vw", // 반응형 폰트 크기
+            width: "90vw", // 반응형 너비
+            maxWidth: "1200px", // 최대 크기
+            height: "auto", // 높이 자동 조정
+            maxHeight: "80px", // 최대 높이
+          }}
         >
           "내가 추리에 실패하다니..."
         </p>
