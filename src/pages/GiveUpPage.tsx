@@ -1,6 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const GiveUpPage: React.FC = () => {
+  useEffect(() => {
+    // 페이지 로드 시 오디오 재생
+    const stampAudio = new Audio('/sounds/Stamp.mp3');
+    stampAudio.volume = 0.5; // 볼륨 설정
+    stampAudio.play().catch((error) => {
+      console.error("오디오 재생 오류:", error);
+    });
+    // 페이지 로드가 끝나면 오디오 멈추기
+    return () => {
+      stampAudio.pause(); // 오디오 일시정지
+      stampAudio.currentTime = 0; // 재생 위치 초기화
+    };
+  }, []); // 빈 배열을 의존성으로 설정하여 한 번만 실행
+
   return (
     <div
       className="fixed inset-0 bg-cover bg-center bg-no-repeat"
@@ -20,7 +34,7 @@ const GiveUpPage: React.FC = () => {
           className="w-[90%] max-w-[400px] h-auto shadow-md"
         />
         <div
-          className="absolute left-1/2 transform -translate-x-1/2 top-[32%]"
+          className="absolute left-1/2 transform -translate-x-1/2 top-[30%]"
         >
           <img
             src="/images/Suspect1.png"
@@ -30,6 +44,7 @@ const GiveUpPage: React.FC = () => {
               width: "20vw", // 반응형 너비
               maxWidth: "160px", // 최대 너비
               height: "auto", // 비율 유지
+              transform: "translateY(-10px)", // 살짝 위로 이동
             }}
           />
         </div>
@@ -38,6 +53,7 @@ const GiveUpPage: React.FC = () => {
           style={{
             animationDelay: '0.5s',
             animationFillMode: 'forwards',
+            transform: "translateY(-25px)", // 살짝 위로 이동
           }}
         >
           <img
@@ -48,20 +64,21 @@ const GiveUpPage: React.FC = () => {
               width: "25vw", // 반응형 너비
               maxWidth: "240px", // 최대 너비
               height: "auto", // 비율 유지
+              transform: "translateY(-25px)", // 살짝 위로 이동
             }}
           />
         </div>
-      </div>
 
-      {/* 범인 이름 */}
-      <p
-        className="absolute bottom-[17%] left-[20%] font-Binggrae text-white font-bold drop-shadow-md"
-        style={{
-          fontSize: "2vw", // 반응형 폰트 크기
-        }}
-      >
-        범인 김민수
-      </p>
+        {/* 범인 이름 */}
+        <p
+          className="mt-4 font-Binggrae text-white font-bold drop-shadow-md text-center"
+          style={{
+            fontSize: "2vw", // 반응형 폰트 크기
+          }}
+        >
+          범인 김민수
+        </p>
+      </div>
 
       {/* 범행 동기 내용 */}
       <div

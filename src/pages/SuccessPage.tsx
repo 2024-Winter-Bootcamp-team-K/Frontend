@@ -23,7 +23,7 @@ const SuccessPage: React.FC = () => {
         <p
           className="font-Binggrae font-bold drop-shadow-md leading-tight"
           style={{
-            fontSize: "6vw", // 반응형 폰트 크기
+            fontSize: "4vw", // 반응형 폰트 크기
             color: "#FFD700",
           }}
         >

@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const ChoosePage: React.FC = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+      // 페이지 로드 시 오디오 재생
+      const ChooseAudio = new Audio('/sounds/Choose.mp3');
+      ChooseAudio.volume = 0.3; // 볼륨 설정
+      ChooseAudio.play().catch((error) => {
+        console.error("오디오 재생 오류:", error);
+      });
+      // 페이지 로드가 끝나면 오디오 멈추기
+      return () => {
+        ChooseAudio.pause(); // 오디오 일시정지
+        ChooseAudio.currentTime = 0; // 재생 위치 초기화
+      };
+    }, []); // 빈 배열로 한 번만 실행
 
   // 성공 여부를 확인하는 함수
   const checkResult = () => {

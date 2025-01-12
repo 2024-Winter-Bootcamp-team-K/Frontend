@@ -5,7 +5,9 @@ const LoadingScenarioPage: React.FC = () => {
   const [text, setText] = useState('');
   const [progress, setProgress] = useState(0);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false); // 오디오 활성화 상태
+  const [isTypingComplete, setIsTypingComplete] = useState(false); // 타이핑 완료 상태
   const navigate = useNavigate();
+  const typingSoundRef = useRef<HTMLAudioElement | null>(null);
 
   const fullText = `2024년 12월 30일 밤 11시 30분 경,
 서울 현대미술관 3층 특별 전시실에서
@@ -13,64 +15,51 @@ const LoadingScenarioPage: React.FC = () => {
 
 현장을 조사하는 중입니다......`;
 
-  const typingSoundRef = useRef<HTMLAudioElement | null>(null);
-
   useEffect(() => {
-    const initAudio = async () => {
-      try {
-        typingSoundRef.current = new Audio('/sounds/typing.mp3');
-        typingSoundRef.current.volume = 0.5; // 볼륨 설정
-
-        // 오디오 초기화
-        await typingSoundRef.current.play().then(() => {
-          typingSoundRef.current?.pause(); // 재생 후 일시정지
-          setIsAudioEnabled(true); // 오디오 활성화
-        });
-      } catch (error) {
-        console.error('오디오 권한 요청 실패:', error);
-        setIsAudioEnabled(false);
-      }
-    };
-
-    initAudio(); // 오디오 초기화 및 권한 요청
+    typingSoundRef.current = new Audio('/sounds/typing.mp3');
+    typingSoundRef.current.volume = 0.5; // 볼륨 설정
   }, []);
 
+  const handleAudioPermission = async () => {
+    if (typingSoundRef.current) {
+      try {
+        await typingSoundRef.current.play();
+        typingSoundRef.current.pause(); // 재생 후 일시정지
+        setIsAudioEnabled(true); // 오디오 활성화
+      } catch (error) {
+        console.error('오디오 권한 요청 실패:', error);
+      }
+    }
+  };
+
   useEffect(() => {
-    if (!isAudioEnabled) return; // 오디오가 활성화되지 않으면 실행하지 않음
+    if (!isAudioEnabled) return;
 
     const typeInterval = setInterval(() => {
       setText((prev) => {
         if (prev.length < fullText.length) {
-          // 소리 재생 관리
+          // 타이핑 소리 재생
           if (typingSoundRef.current && (typingSoundRef.current.paused || typingSoundRef.current.ended)) {
             typingSoundRef.current.currentTime = 0;
-            typingSoundRef.current
-              .play()
-              .catch((err) => console.error('타이핑 소리 재생 오류:', err));
+            typingSoundRef.current.play().catch((err) => console.error('타이핑 소리 재생 오류:', err));
           }
           return prev + fullText[prev.length];
         } else {
           clearInterval(typeInterval);
-
-          // 타이핑 완료 시 소리 멈춤
           if (typingSoundRef.current) {
             typingSoundRef.current.pause();
           }
+          setIsTypingComplete(true); // 타이핑 완료 상태 설정
           return prev;
         }
       });
-    }, 100); // 딜레이를 100ms로 조정
+    }, 100);
 
-    return () => {
-      clearInterval(typeInterval);
-      if (typingSoundRef.current) {
-        typingSoundRef.current.pause();
-      }
-    };
+    return () => clearInterval(typeInterval);
   }, [isAudioEnabled, fullText]);
 
   useEffect(() => {
-    if (text.length === fullText.length) {
+    if (isTypingComplete) {
       const progressInterval = setInterval(() => {
         setProgress((prev) => {
           if (prev < 100) return prev + 1;
@@ -79,7 +68,7 @@ const LoadingScenarioPage: React.FC = () => {
         });
       }, 50);
     }
-  }, [text]);
+  }, [isTypingComplete]);
 
   useEffect(() => {
     if (progress === 100) {
@@ -142,6 +131,27 @@ const LoadingScenarioPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* 오디오 활성화 버튼 */}
+      {!isAudioEnabled && (
+        <button
+          className="font-intelmono font-semibold mt-8 text-center text-white"
+          style={{ fontSize: '20px' }}
+          onClick={handleAudioPermission}
+        >
+          사건 파일 작성 시작
+        </button>
+      )}
+
+      {/* 진행 중 메시지 */}
+      {isAudioEnabled && progress < 100 && (
+        <p
+          className="font-intelmono mt-8 text-center text-white text-lg font-semibold"
+          style={{ fontSize: '20px' }}
+        >
+          <br></br>
+        </p>
+      )}
 
       {/* 완료 메시지 */}
       {progress === 100 && (
