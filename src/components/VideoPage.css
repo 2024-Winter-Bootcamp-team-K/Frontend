@@ -1,0 +1,32 @@
+.video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: black;
+  }
+  
+  .video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+  }
+
+  .fade-out {
+    animation: fadeOut 5s ease-in-out forwards; /* 10초 동안 점진적으로 투명해짐 */
+  }
+  
+  @keyframes fadeOut {
+    0% {
+      opacity: 1; /* 완전히 보임 */
+    }
+    100% {
+      opacity: 0; /* 완전히 투명 */
+    }
+  }
