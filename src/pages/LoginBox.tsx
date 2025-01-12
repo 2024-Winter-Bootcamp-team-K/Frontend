@@ -7,7 +7,7 @@ const LoginBox: React.FC = () => {
   return (
     <div className="login-box">
       <div className="login-header">
-        <img src="../../public/images/Logo.png" alt="Logo" className="logo" />
+        <img src="../../images/Logo.png" alt="Logo" className="logo" />
         <div className="title-contain"
           style={{left: "10px"}}  
         >
@@ -16,7 +16,7 @@ const LoginBox: React.FC = () => {
         </div>
         <p className="subtitle">탐정 사무소 입장</p>
       </div>
-      <img src="../../public/images/profile.png" alt="Profile" className="profile"/>
+      <img src="../../images/profile.png" alt="Profile" className="profile"/>
       <div className="login-body">
         <input
           type="text"
