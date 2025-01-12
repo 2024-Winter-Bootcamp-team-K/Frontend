@@ -30,7 +30,6 @@ const FailPage: React.FC = () => {
           style={{
             width: "40vw", // 반응형 너비
             height: "auto", // 비율 유지
-            maxWidth: "500px", // 최대 크기
           }}
         />
       </div>
@@ -41,10 +40,8 @@ const FailPage: React.FC = () => {
           className="text-lg font-semibold border-2 border-red-500 bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
           style={{
             fontSize: "2vw", // 반응형 폰트 크기
-            width: "60vw", // 반응형 너비
-            maxWidth: "280px", // 최대 크기
-            height: "8vw", // 반응형 높이
-            maxHeight: "50px", // 최대 크기
+            width: "18vw", // 반응형 너비
+            height: "3.5vw", // 반응형 높이
             color: "#FF0000",
           }}
           onClick={() => alert("다시 도전하기")}
@@ -59,10 +56,8 @@ const FailPage: React.FC = () => {
           className="text-lg font-semibold border-2 border-red-500 bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
           style={{
             fontSize: "2vw", // 반응형 폰트 크기
-            width: "60vw", // 반응형 너비
-            maxWidth: "280px", // 최대 크기
-            height: "8vw", // 반응형 높이
-            maxHeight: "50px", // 최대 크기
+            width: "18vw", // 반응형 너비
+            height: "3.5vw", // 반응형 높이
             color: "#FF0000",
           }}
           onClick={() => navigate("/give-up")}
@@ -77,10 +72,8 @@ const FailPage: React.FC = () => {
           className="py-6 text-lg font-semibold text-black border-2 border-black bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
           style={{
             fontSize: "2vw", // 반응형 폰트 크기
-            width: "90vw", // 반응형 너비
-            maxWidth: "1200px", // 최대 크기
+            width: "80vw", // 반응형 너비
             height: "auto", // 높이 자동 조정
-            maxHeight: "80px", // 최대 높이
           }}
         >
           "내가 추리에 실패하다니..."
