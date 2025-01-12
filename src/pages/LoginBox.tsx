@@ -7,16 +7,14 @@ const LoginBox: React.FC = () => {
   return (
     <div className="login-box">
       <div className="login-header">
-        <img src="../../images/Logo.png" alt="Logo" className="logo" />
-        <div className="title-contain"
-          style={{left: "10px"}}  
-        >
-          <h1 className="minititle">AI.DETECTIVE</h1>
-          <h1 className="title">AILIBI</h1>
+        <img src="./images/Logo.png" className="log-logo"/>
+        <div className="log-title-contain">
+          <h1 className="log-minititle">AI.DETECTIVE</h1>
+          <h1 className="log-title">AILIBI</h1>
         </div>
-        <p className="subtitle">탐정 사무소 입장</p>
+        <p className="log-subtitle">탐정 사무소 입장</p>
+        <img src="./images/profile.png" className="log-profile" />
       </div>
-      <img src="../../images/profile.png" alt="Profile" className="profile"/>
       <div className="login-body">
         <input
           type="text"
@@ -31,9 +29,12 @@ const LoginBox: React.FC = () => {
       </div>
       <div className="login-footer">
         <button className="login-button"
-        onClick={() => navigate("/register")}
+        onClick={() => navigate("/video")}
         >Enter Office</button>
       </div>
+      <button className="signupPage"
+      onClick={() => navigate("/register")}
+      >신입 탐정인가요?</button>
     </div>
   );
 };
