@@ -8,19 +8,19 @@ const CenteredImage: React.FC = () => {
   const [startZoom, setStartZoom] = useState(false);
   const [showImages, setShowImages] = useState(false);
   const [hideWallets, setHideWallets] = useState(false);
-  const [flipCard, setFlipCard] = useState(false); // 카드 회전 상태
+  const [flipCard, setFlipCard] = useState(false);
 
   useEffect(() => {
     const zoomTimer = setTimeout(() => {
-      setStartZoom(true); // 줌인 애니메이션 시작
+      setStartZoom(true);
     }, 500);
 
     const imageTimer = setTimeout(() => {
-      setShowImages(true); // 이미지 표시
+      setShowImages(true);
     }, 1500);
 
     const hideTimer = setTimeout(() => {
-      setHideWallets(true); // 지갑 내려가면서 사라짐
+      setHideWallets(true);
     }, 3500);
 
     return () => {
@@ -31,7 +31,7 @@ const CenteredImage: React.FC = () => {
   }, []);
 
   const handleCardClick = () => {
-    setFlipCard(true); // 카드 회전
+    setFlipCard(true);
   };
 
   return (
@@ -48,8 +48,8 @@ const CenteredImage: React.FC = () => {
       {/* ID 카드 */}
       {showImages && (
         <div
-          className={`idcard-container ${flipCard ? "flip" : ""}`} // flip 클래스 추가
-          onClick={handleCardClick} // 클릭 이벤트
+          className={`idcard-container ${flipCard ? "flip" : ""}`}
+          onClick={handleCardClick}
         >
           {/* 카드 앞면: 로그인 박스 */}
           <div className="idcard-front">

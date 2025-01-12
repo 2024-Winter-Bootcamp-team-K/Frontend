@@ -8,7 +8,7 @@
     transform: translate(-51%, -55%);
     background: rgba(39, 43, 44, 10);
     width: 509px;
-    height: 335px;
+    height: 319px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     border: 2px solid white;;
@@ -17,9 +17,9 @@
 .logo {
     position: absolute;
     top: 50%;
-    left: 30%;
+    left: 28%;
     transform: translate(-50%, -50%);
-    width: 15%;
+    width: 20% !important;
 }
 
 .title-box {
@@ -31,15 +31,15 @@
 }
 
 .title {
-    font-size: 43px;
-    letter-spacing: 7px;
+    font-size: 48px !important;
+    letter-spacing: 8px !important;
     font-family: 'Frank Ruhl Libre', serif;
     font-weight: 500;
 }
 
 .minititle {
-    font-size: 10px;
-    letter-spacing: 9px;
+    font-size: 12px !important;
+    letter-spacing: 10px !important;
     font-family: 'Alegreya SC', serif;
 }
 
