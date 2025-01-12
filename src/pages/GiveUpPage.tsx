@@ -8,6 +8,11 @@ const GiveUpPage: React.FC = () => {
     stampAudio.play().catch((error) => {
       console.error("오디오 재생 오류:", error);
     });
+    // 페이지 로드가 끝나면 오디오 멈추기
+    return () => {
+      stampAudio.pause(); // 오디오 일시정지
+      stampAudio.currentTime = 0; // 재생 위치 초기화
+    };
   }, []); // 빈 배열을 의존성으로 설정하여 한 번만 실행
 
   return (

@@ -6,11 +6,16 @@ const FailPage: React.FC = () => {
 
   useEffect(() => {
     // 페이지 로드 시 오디오 재생
-    const failAudio = new Audio('/sounds/Fail.mp3');
+    const failAudio = new Audio('/sounds/Stamp.mp3');
     failAudio.volume = 0.3; // 볼륨 설정
     failAudio.play().catch((error) => {
       console.error("오디오 재생 오류:", error);
     });
+    // 페이지 로드가 끝나면 오디오 멈추기
+    return () => {
+      failAudio.pause(); // 오디오 일시정지
+      failAudio.currentTime = 0; // 재생 위치 초기화
+    };
   }, []); // 빈 배열로 한 번만 실행
 
   return (
