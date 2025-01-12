@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from 'react'; 
+import { useState } from 'react'; 
 import ZoomBackground from './ZoomBackground';
 import CenteredImage from './CenteredImage';
 import '../components/StartPage.css'; 
