@@ -10,13 +10,13 @@ const LoginPage: React.FC = () => {
       {/* 회원가입 박스 */}
       <div className="sign-box">
         <div className="sign-header">
-          <img src="../../public/images/Logo.png" alt="Logo" className="sign-logo" />
+          <img src="../../images/Logo.png" alt="Logo" className="sign-logo" />
           <div className="sign-title-contain">
             <h1 className="sign-minititle">AI.DETECTIVE</h1>
             <h1 className="sign-title">AILIBI</h1>
           </div>
           <p className="sign-subtitle">신입 탐정 등록</p>
-          <img src="../../public/images/profile.png" alt="profile" className="sign-profile" />
+          <img src="../../images/profile.png" alt="profile" className="sign-profile" />
         </div>
         <div className="sign-body">
           <input type="text" placeholder="Detective Name" className="sign-input" />

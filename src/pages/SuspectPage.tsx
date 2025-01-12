@@ -54,7 +54,7 @@ const SuspectPage: React.FC = () => {
                                         <button className="action-button" onClick={() => handleInterrogate()}>
                                             심문하기
                                         </button>
-                                        <button className="action-button" onClick={() => handleAccuse()}>
+                                        <button className="action-button" onClick={() => navigate("/choose")}>
                                             범인 지목
                                         </button>
                                     </div>
