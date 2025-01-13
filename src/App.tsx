@@ -13,6 +13,7 @@ import SuspectPage from "./pages/SuspectPage";
 import StartPage from "./pages/StartPage";
 import SignupBox from "./pages/SignupBox";
 import VideoPage from "./pages/VideoPage";
+import ChattingPage from "./pages/ChattingPage";
 
 const App: React.FC = () => {
   return (
@@ -32,6 +33,7 @@ const App: React.FC = () => {
         <Route path="/loading" element={<LoadingScenarioPage />} />
         <Route path="/evidence" element={<EvidencePage />} />
         <Route path="/suspect" element={<SuspectPage />} />
+        <Route path="/chat" element={<ChattingPage />} />
       </Routes>
     </Router>
   );
