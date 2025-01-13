@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const GiveUpPage: React.FC = () => {
+  const navigate = useNavigate();
   useEffect(() => {
     // 페이지 로드 시 오디오 재생
     const stampAudio = new Audio('/sounds/Stamp.mp3');
@@ -23,6 +25,7 @@ const GiveUpPage: React.FC = () => {
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         backgroundBlendMode: 'multiply',
       }}
+      onClick={() => navigate("/ending")}
     >
       {/* Wanted Poster */}
       <div

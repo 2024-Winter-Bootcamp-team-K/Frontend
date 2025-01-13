@@ -4,9 +4,8 @@ import PlayPage from "./pages/PlayPage";
 import LoadingScenarioPage from "./pages/LoadingScenarioPage";
 import InitChatPage from "./pages/InitChatPage";
 import ChoosePage from "./pages/ChoosePage";
-import FailPage from "./pages/FailPage";
-import GiveUpPage from "./pages/GiveUpPage";
-import SuccessPage from "./pages/SuccessPage";
+import ResultPage from "./pages/ResultPage";
+import ResultLoadingPage from "./pages/ResultLoadingPage";
 import EndingPage from "./pages/EndingPage";
 import EvidencePage from "./pages/EvidencePage";
 import SuspectPage from "./pages/SuspectPage";
@@ -26,9 +25,8 @@ const App: React.FC = () => {
         <Route path="/loading" element={<LoadingScenarioPage />} />
         <Route path="/initchat" element={<InitChatPage />} />
         <Route path="/choose" element={<ChoosePage />} />
-        <Route path="/fail" element={<FailPage />} />
-        <Route path="/give-up" element={<GiveUpPage />} />
-        <Route path="/Success" element={<SuccessPage />} />
+        <Route path="/result" element={<ResultPage />} />
+        <Route path="/resultLoading" element={<ResultLoadingPage />} />
         <Route path="/Ending" element={<EndingPage />} />
         <Route path="/loading" element={<LoadingScenarioPage />} />
         <Route path="/evidence" element={<EvidencePage />} />
