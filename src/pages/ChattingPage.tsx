@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
+import { useNavigate } from "react-router-dom";
 
 const ChattingPage: React.FC = () => {
+    const navigate = useNavigate();
     const [userInput, setUserInput] = useState("");
     const [displayText, setDisplayText] = useState("");
     const [isTyping, setIsTyping] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
 
-    const handleBackCheck = () => {};
+    const handleBackCheck = () => {navigate("/suspect")};
     const handleFolderCheck = () => {};
     
     const handleSubmit = () => {
