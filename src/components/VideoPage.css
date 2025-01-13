@@ -19,14 +19,14 @@
   }
 
   .fade-out {
-    animation: fadeOut 5s ease-in-out forwards; /* 10초 동안 점진적으로 투명해짐 */
+    animation: fadeOut 5s ease-in-out forwards;
   }
   
   @keyframes fadeOut {
     0% {
-      opacity: 1; /* 완전히 보임 */
+      opacity: 1;
     }
     100% {
-      opacity: 0; /* 완전히 투명 */
+      opacity: 0;
     }
   }

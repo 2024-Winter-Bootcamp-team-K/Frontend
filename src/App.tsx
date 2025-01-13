@@ -10,18 +10,18 @@ import SuccessPage from "./pages/SuccessPage";
 import EndingPage from "./pages/EndingPage";
 import EvidencePage from "./pages/EvidencePage";
 import SuspectPage from "./pages/SuspectPage";
-import StartPage from "./pages/StartPage";
-import SignupBox from "./pages/SignupBox";
 import VideoPage from "./pages/VideoPage";
+import LogInPage from "./pages/LogInPage";
+import SignupBox from "./pages/SignupBox";
 import ChattingPage from "./pages/ChattingPage";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/start" element={<StartPage />} />
-        <Route path="/video" element={<VideoPage />}  />
+        <Route path="/login" element={<LogInPage />} />
         <Route path="/register" element={<SignupBox />} />
+        <Route path="/video" element={<VideoPage />}  />
         <Route path="/play" element={<PlayPage />} />
         <Route path="/loading" element={<LoadingScenarioPage />} />
         <Route path="/initchat" element={<InitChatPage />} />
