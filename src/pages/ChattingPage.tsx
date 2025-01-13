@@ -1,14 +1,50 @@
 import React, { useState } from "react";
 
-const ChattingPage = () => {
+const ChattingPage: React.FC = () => {
     const [userInput, setUserInput] = useState("");
+    const [displayText, setDisplayText] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
 
     const handleBackCheck = () => {};
     const handleFolderCheck = () => {};
+    
     const handleSubmit = () => {
         if (userInput.trim()) {
-            // Handle submit logic here
+            setIsTyping(true);
+            setDisplayText("");  
+            const cleanedText = userInput.trim();  
+            let currentText = "";  
+            let index = 0;
+            
+            const typeNextCharacter = () => {
+                if (index < cleanedText.length) {
+                    currentText += cleanedText[index];
+                    setDisplayText(currentText);
+                    index++;
+
+                    const delay = getDelay(cleanedText[index - 1]);
+                    setTimeout(typeNextCharacter, delay);
+                } else {
+                    setIsTyping(false);
+                }
+            };
+
+            typeNextCharacter();  
         }
+    };
+
+    const getDelay = (char: string) => {
+        if (['.', '!', '?'].includes(char)) {
+            return 500;
+        } else if ([',', ';'].includes(char)) {
+            return 200;
+        }
+        return Math.random() * 50 + 50;  
+    };
+
+    const toggleRecording = () => {
+        setIsRecording(!isRecording);
     };
 
     return (
@@ -16,6 +52,12 @@ const ChattingPage = () => {
             <button className="back-button" onClick={handleBackCheck}>
                 <img src="/images/back.svg" alt="Back Icon" className="back-icon" />
             </button>
+
+            {displayText && (
+                <div className="speech-bubble">
+                    <div className="bubble-content">{displayText}</div>
+                </div>
+            )}
 
             <div className="paper">
                 <div className="suspect-profile">
@@ -53,6 +95,20 @@ const ChattingPage = () => {
                 <div className="chat-tip">TIP: 심문 내용을 추리 노트에 기록하세요.</div>
                 <div className="chat-bar-container">
                     <div className="chat-input-wrapper">
+                        <button 
+                            className={`mic-button ${isRecording ? 'recording' : ''}`}
+                            onClick={toggleRecording}
+                        >
+                            {isRecording ? (
+                                <div className="recording-dots">
+                                    <div className="dot dot1"></div>
+                                    <div className="dot dot2"></div>
+                                    <div className="dot dot3"></div>
+                                </div>
+                            ) : (
+                                <img src="/images/Mic.svg" alt="Mic Icon" className="mic-icon" />
+                            )}
+                        </button>
                         <input
                             type="text"
                             value={userInput}
@@ -64,6 +120,7 @@ const ChattingPage = () => {
                     <button 
                         onClick={handleSubmit}
                         className="submit-button"
+                        disabled={isTyping}
                     >
                         <span>심문</span>
                     </button>
@@ -219,9 +276,11 @@ const ChattingPage = () => {
                 }
 
                 .chat-input-wrapper {
+                    position: relative;
                     flex-grow: 1;
                     display: flex;
                     align-items: center;
+                    padding-left: 1rem;
                     background: #C0C8CD;
                     border-radius: 12px;
                     box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2), inset 0 -2px 4px rgba(255, 255, 255, 0.1);
@@ -243,7 +302,7 @@ const ChattingPage = () => {
                 }
 
                 .chat-input::placeholder {
-                    color: #56606B; 
+                    color: #56606B;
                 }
 
                 .submit-button {
@@ -284,6 +343,123 @@ const ChattingPage = () => {
                     transform: scale(1.2) rotate(15deg);
                 }
 
+                .speech-bubble {
+                    position: absolute;
+                    top: 13vh;
+                    right: 4vw;
+                    left: 56vw;
+                    background: #ffffff;
+                    padding: 1.5rem;
+                    border-radius: 16px;
+                    min-width: 20vw;
+                    max-width: fit-content;
+                    transform-origin: left center;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+
+                .speech-bubble::before {
+                    content: '';
+                    position: absolute;
+                    left: -20px;
+                    bottom: 20px;
+                    top: 70%;
+                    width: 0;
+                    height: 0;
+                    border-top: 20px solid transparent;  
+                    border-bottom: none; 
+                    border-right: 20px solid #ffffff; 
+                }
+
+                 .bubble-content {
+                    font-family: 'Press_Start_2P', monospace;
+                    font-weight: 800;
+                    font-size: 1.2rem;
+                    white-space: pre-wrap;
+                    word-break: break-word;
+                    line-height: 1.6;
+                    text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+                }
+
+                @keyframes popIn {
+                    0% {
+                        transform: scaleX(0);
+                    }
+                    20% {
+                        transform: scaleX(0.2);
+                    }
+                    40% {
+                        transform: scaleX(0.4);
+                    }
+                    60% {
+                        transform: scaleX(0.6);
+                    }
+                    80% {
+                        transform: scaleX(0.8);
+                    }
+                    100% {
+                        transform: scaleX(1);
+                    }
+                }
+
+
+                .mic-button {
+                    width: 6vh;
+                    height: 6vh;
+                    border: none;
+                    background: transparent;
+                    border-radius: 50%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    z-index: 2;
+                }
+
+                .mic-button:hover {
+                    transform: scale(1.1);
+                }
+
+                .mic-icon {
+                    width: 5.5vh;
+                    height: 5.5vh;
+                    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+                }
+
+                .recording-dots {
+                    display: flex;
+                    gap: 0.4rem;
+                }
+
+                .dot {
+                    width: 0.5rem;
+                    height: 0.5rem;
+                    background-color: white;
+                    border-radius: 50%;
+                    animation: blink 1.8s infinite;
+                }
+
+                .dot2 {
+                    animation-delay: 0.6s;
+                }
+
+                .dot3 {
+                    animation-delay: 1.2s;
+                }
+
+                @keyframes blink {
+                    0%, 100% {
+                        opacity: 0.3;
+                    }
+                    50% {
+                        opacity: 1;
+                    }
+                }
+
+                .recording {
+                    background: #89A8B2;
+                }
+
                 @media (max-width: 800px) {
                     .paper {
                         width: 40vw;
@@ -291,6 +467,11 @@ const ChattingPage = () => {
                     
                     .info-grid {
                         font-size: calc(1.2vw + 0.2vh);
+                    }
+
+                    .speech-bubble {
+                        left: 8vw;
+                        max-width: 70vw;
                     }
                 }
 
@@ -303,6 +484,11 @@ const ChattingPage = () => {
                     
                     .suspect-profile {
                         padding: 1rem;
+                    }
+
+                    .speech-bubble {
+                        left: 5vw;
+                        max-width: 85vw;
                     }
                     
                     .info-grid {
