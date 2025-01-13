@@ -6,8 +6,8 @@ const ChoosePage: React.FC = () => {
 
   useEffect(() => {
       // 페이지 로드 시 오디오 재생
-      const ChooseAudio = new Audio('/sounds/Choose.mp3');
-      ChooseAudio.volume = 0.3; // 볼륨 설정
+      const ChooseAudio = new Audio('/sounds/Choose3.mp3');
+      ChooseAudio.volume = 0.5; // 볼륨 설정
       ChooseAudio.play().catch((error) => {
         console.error("오디오 재생 오류:", error);
       });

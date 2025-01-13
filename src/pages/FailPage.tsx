@@ -6,8 +6,8 @@ const FailPage: React.FC = () => {
 
   useEffect(() => {
     // 페이지 로드 시 오디오 재생
-    const failAudio = new Audio('/sounds/Stamp.mp3');
-    failAudio.volume = 0.3; // 볼륨 설정
+    const failAudio = new Audio('/sounds/Fail2.mp3');
+    failAudio.volume = 0.5; // 볼륨 설정
     failAudio.play().catch((error) => {
       console.error("오디오 재생 오류:", error);
     });

@@ -8,6 +8,20 @@ const EndingPage: React.FC = () => {
   const animationFrameId = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
 
+  useEffect(() => {
+      // 페이지 로드 시 오디오 재생
+      const SuccessAudio = new Audio('/sounds/Ending.mp3');
+      SuccessAudio.volume = 0.5; // 볼륨 설정
+      SuccessAudio.play().catch((error) => {
+        console.error("오디오 재생 오류:", error);
+      });
+      // 페이지 로드가 끝나면 오디오 멈추기
+      return () => {
+        SuccessAudio.pause(); // 오디오 일시정지
+        SuccessAudio.currentTime = 0; // 재생 위치 초기화
+      };
+    }, []); // 빈 배열로 한 번만 실행
+
   const animate = (currentTime: number) => {
     if (!lastTimeRef.current) lastTimeRef.current = currentTime;
     const deltaTime = (currentTime - lastTimeRef.current) / 1000;
@@ -80,7 +94,7 @@ const EndingPage: React.FC = () => {
           <p>김승민 - Frontend</p>
           <p>박명남 - Frontend</p>
           <p><br /></p>
-          <p className="title">Thanks For</p>
+          <p className="title2">Thanks For</p>
           <p>Andrew Park</p>
           <p>Ryan</p>
           <p>Rena</p>
