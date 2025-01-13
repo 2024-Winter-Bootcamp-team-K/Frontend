@@ -6,8 +6,8 @@ const SuspectPage: React.FC = () => {
     const [showItems, setShowItems] = useState<number[]>([]);
     const handleBackCheck = () => {navigate("/play")};
     const handleFolderCheck = () => {};
-    const handleInterrogate = () => {};
-    const handleAccuse = () => {};
+    const handleInterrogate = () => {navigate("/chat")};
+    const handleAccuse = () => {navigate("/choose")};
 
     const suspects = [
         { id: 1, name: "화가 김민수", image: "/images/Suspect1.png" },
@@ -54,7 +54,7 @@ const SuspectPage: React.FC = () => {
                                         <button className="action-button" onClick={() => handleInterrogate()}>
                                             심문하기
                                         </button>
-                                        <button className="action-button" onClick={() => navigate("/choose")}>
+                                        <button className="action-button" onClick={() => handleAccuse()}>
                                             범인 지목
                                         </button>
                                     </div>
