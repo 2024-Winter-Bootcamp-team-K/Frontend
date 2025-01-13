@@ -25,6 +25,10 @@ const ChoosePage: React.FC = () => {
                 <source src="./sounds/rain.mp3" type="audio/mp3" />
             </audio>
 
+            <audio autoPlay>
+                <source src="./sounds/foot.mp3" type="audio/mp3" />
+            </audio>
+
         </div>
     );
 };

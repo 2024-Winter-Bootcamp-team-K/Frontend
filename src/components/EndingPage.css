@@ -50,7 +50,7 @@
       transform: translateY(0); /* 초기 위치 */
     }
     100% {
-      transform: translateY(-70%); /* 화면 끝까지 이동 */
+      transform: translateY(-75%); /* 화면 끝까지 이동 */
     }
   }
   

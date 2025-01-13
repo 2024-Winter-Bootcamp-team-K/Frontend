@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const GiveUpPage: React.FC = () => {
+const ResultPage: React.FC = () => {
   const navigate = useNavigate();
   useEffect(() => {
     // 페이지 로드 시 오디오 재생
@@ -76,7 +76,7 @@ const GiveUpPage: React.FC = () => {
         <p
           className="mt-4 font-Binggrae text-white font-bold drop-shadow-md text-center"
           style={{
-            fontSize: "2vw", // 반응형 폰트 크기
+            fontSize: "2.5vw", // 반응형 폰트 크기
           }}
         >
           범인 김민수
@@ -119,4 +119,4 @@ const GiveUpPage: React.FC = () => {
   );
 };
 
-export default GiveUpPage;
+export default ResultPage;
