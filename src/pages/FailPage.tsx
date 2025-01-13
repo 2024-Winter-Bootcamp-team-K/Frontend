@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const FailPage: React.FC = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // 페이지 로드 시 오디오 재생
+    const failAudio = new Audio('/sounds/Stamp.mp3');
+    failAudio.volume = 0.3; // 볼륨 설정
+    failAudio.play().catch((error) => {
+      console.error("오디오 재생 오류:", error);
+    });
+    // 페이지 로드가 끝나면 오디오 멈추기
+    return () => {
+      failAudio.pause(); // 오디오 일시정지
+      failAudio.currentTime = 0; // 재생 위치 초기화
+    };
+  }, []); // 빈 배열로 한 번만 실행
 
   return (
     <div
@@ -21,7 +35,6 @@ const FailPage: React.FC = () => {
           style={{
             width: "40vw", // 반응형 너비
             height: "auto", // 비율 유지
-            maxWidth: "500px", // 최대 크기
           }}
         />
       </div>
@@ -32,10 +45,8 @@ const FailPage: React.FC = () => {
           className="text-lg font-semibold border-2 border-red-500 bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
           style={{
             fontSize: "2vw", // 반응형 폰트 크기
-            width: "60vw", // 반응형 너비
-            maxWidth: "280px", // 최대 크기
-            height: "8vw", // 반응형 높이
-            maxHeight: "50px", // 최대 크기
+            width: "18vw", // 반응형 너비
+            height: "3.5vw", // 반응형 높이
             color: "#FF0000",
           }}
           onClick={() => alert("다시 도전하기")}
@@ -50,10 +61,8 @@ const FailPage: React.FC = () => {
           className="text-lg font-semibold border-2 border-red-500 bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
           style={{
             fontSize: "2vw", // 반응형 폰트 크기
-            width: "60vw", // 반응형 너비
-            maxWidth: "280px", // 최대 크기
-            height: "8vw", // 반응형 높이
-            maxHeight: "50px", // 최대 크기
+            width: "18vw", // 반응형 너비
+            height: "3.5vw", // 반응형 높이
             color: "#FF0000",
           }}
           onClick={() => navigate("/give-up")}
@@ -68,10 +77,8 @@ const FailPage: React.FC = () => {
           className="py-6 text-lg font-semibold text-black border-2 border-black bg-white bg-opacity-70 rounded-2xl shadow-md focus:outline-none"
           style={{
             fontSize: "2vw", // 반응형 폰트 크기
-            width: "90vw", // 반응형 너비
-            maxWidth: "1200px", // 최대 크기
+            width: "80vw", // 반응형 너비
             height: "auto", // 높이 자동 조정
-            maxHeight: "80px", // 최대 높이
           }}
         >
           "내가 추리에 실패하다니..."

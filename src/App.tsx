@@ -12,12 +12,14 @@ import EvidencePage from "./pages/EvidencePage";
 import SuspectPage from "./pages/SuspectPage";
 import StartPage from "./pages/StartPage";
 import SignupBox from "./pages/SignupBox";
+import VideoPage from "./pages/VideoPage";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
         <Route path="/start" element={<StartPage />} />
+        <Route path="/video" element={<VideoPage />}  />
         <Route path="/register" element={<SignupBox />} />
         <Route path="/play" element={<PlayPage />} />
         <Route path="/loading" element={<LoadingScenarioPage />} />

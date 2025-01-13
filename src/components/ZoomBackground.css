@@ -1,7 +1,7 @@
 .zoom-background {
     width: 100vw;
     height: 100vh;
-    background-image: url('../../public/images/InitPage.png'); 
+    background-image: url('../../images/InitPage.png'); 
     background-size: cover;
     background-position: center;
     animation: zoomIn 2s ease-in-out forwards; 
