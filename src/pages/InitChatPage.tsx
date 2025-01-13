@@ -1,6 +1,9 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 
 const InitChatPage: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#181818] text-white">
       {/* 제목 */}
@@ -67,6 +70,7 @@ const InitChatPage: React.FC = () => {
       <button
         className="mt-8 px-8 text-white text-lg font-intelmono font-semibold"
         style={{ fontSize: '1.5rem' }}
+        onClick={() => navigate("/play")}
       >
         수사 시작하기
       </button>

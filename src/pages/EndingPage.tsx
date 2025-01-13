@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../components/EndingPage.css";
+import { useNavigate } from "react-router-dom";
 
 const EndingPage: React.FC = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -7,6 +8,21 @@ const EndingPage: React.FC = () => {
   const [animationSpeed, setAnimationSpeed] = useState(1);
   const animationFrameId = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+      // 페이지 로드 시 오디오 재생
+      const SuccessAudio = new Audio('/sounds/Ending.mp3');
+      SuccessAudio.volume = 0.5; // 볼륨 설정
+      SuccessAudio.play().catch((error) => {
+        console.error("오디오 재생 오류:", error);
+      });
+      // 페이지 로드가 끝나면 오디오 멈추기
+      return () => {
+        SuccessAudio.pause(); // 오디오 일시정지
+        SuccessAudio.currentTime = 0; // 재생 위치 초기화
+      };
+    }, []); // 빈 배열로 한 번만 실행
 
   const animate = (currentTime: number) => {
     if (!lastTimeRef.current) lastTimeRef.current = currentTime;
@@ -60,11 +76,15 @@ const EndingPage: React.FC = () => {
     }
   }, [progress]);
 
+  const handleReturnToMain = () => {
+    navigate("/"); // 메인 페이지로 이동
+  };
+
   return (
     <div className="ending-page">
       <div className="scroll-container" ref={scrollContainerRef}>
         <div className="credits">
-          <p className="title">CASE SOLVED</p>
+          <p className="title">Ending Credits</p>
           <p><br /></p>
           <p className="title2">Play Result</p>
           <p>플레이 시간: 1시간 40분</p>
@@ -80,7 +100,7 @@ const EndingPage: React.FC = () => {
           <p>김승민 - Frontend</p>
           <p>박명남 - Frontend</p>
           <p><br /></p>
-          <p className="title">Thanks For</p>
+          <p className="title2">Thanks For</p>
           <p>Andrew Park</p>
           <p>Ryan</p>
           <p>Rena</p>
@@ -90,6 +110,24 @@ const EndingPage: React.FC = () => {
           <p>Kate</p>
         </div>
       </div>
+      <button
+        className="return-button font-Binggrae"
+        onClick={handleReturnToMain}
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "-3%",
+          transform: "translateX(-50%)",
+          padding: "5px 10px",
+          fontSize: "0.7vw",
+          color: "#FFFFFF",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        메인으로 돌아가기
+      </button>
     </div>
   );
 };
