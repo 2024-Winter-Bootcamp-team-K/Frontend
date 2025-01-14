@@ -1,32 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../components/LogInPage.css";
 
+const delay= (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const LogInPage: React.FC = () => {
+
+    useEffect(() => {
+        const stampAudio = new Audio('/sounds/startbgm.mp3');
+        stampAudio.volume = 0.3;
+        stampAudio.play().catch((error) => {
+          console.error("오디오 재생 오류:", error);
+        });
+
+        return () => {
+          stampAudio.pause(); 
+          stampAudio.currentTime = 0;
+        };
+      }, []);
+      
   const [isZooming, setIsZooming] = useState(false);
   const [showImage, setShowImage] = useState(false);
   const [startZoom, setStartZoom] = useState(false);
-  const [showImages, setShowImages] = useState(false);
+  const [showWallet, setShowWallet] = useState(false);
+  const [showBackCard, setShowBackCard] = useState(false);
   const [hideWallets, setHideWallets] = useState(false);
   const [flipCard, setFlipCard] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleStartPageClick = () => {
-    setIsZooming(true);
-    setTimeout(() => {
-      setShowImage(true);
-      setTimeout(() => {
-        setStartZoom(true);
-        setTimeout(() => {
-          setShowImages(true);
-        }, 1500);
+  const playSound = (soundPath: string) => {
+    const audio = new Audio(soundPath);
+    audio.play().catch((error) => console.error("Audio play error:", error));
+  }
 
-        setTimeout(() => {
-          setHideWallets(true);
-        }, 3500);
-      }, 1000);
-    }, 1000);
+  const handleStartPageClick = async () => {
+    
+    setIsZooming(true);
+    await delay(1000);
+
+    setShowImage(true);
+    await delay(1500);
+
+    setStartZoom(true);
+    await delay(500);
+
+    setShowWallet(true);
+    await delay(5);
+
+    setShowBackCard(true);
+    await delay(1000);
+
+    setHideWallets(true);
   };
 
   const handleCardClick = () => {
@@ -35,6 +60,7 @@ const LogInPage: React.FC = () => {
 
   return (
     <div className="unified-page">
+
       {/* StartPage */}
       {!isZooming && (
         <div className="start-page" onClick={handleStartPageClick}>
@@ -57,7 +83,7 @@ const LogInPage: React.FC = () => {
           className={`centered-image-container ${startZoom ? "zoom-in" : ""}`}
         >
           {/* 지갑 이미지 */}
-          {showImages && (
+          {showWallet && (
             <img
               src="/images/wallet.png"
               alt="Wallet"
@@ -66,7 +92,7 @@ const LogInPage: React.FC = () => {
           )}
 
           {/* ID 카드 */}
-          {showImages && (
+          {showBackCard && (
             <div
               className={`idcard-container ${flipCard ? "flip" : ""}`}
               onClick={handleCardClick}
@@ -112,7 +138,10 @@ const LogInPage: React.FC = () => {
                   </div>
                   <button
                     className="signupPage"
-                    onClick={() => navigate("/register")}
+                    onClickCapture={() => {
+                        playSound("./sounds/gun.mp3");
+                        navigate("/register");
+                    }}
                   >
                     신입 탐정인가요?
                   </button>
@@ -131,7 +160,7 @@ const LogInPage: React.FC = () => {
           )}
 
           {/* 자른 지갑 이미지 */}
-          {showImages && (
+          {showWallet && (
             <img
               src="/images/CuttingWallet.png"
               alt="Cutting Wallet"
