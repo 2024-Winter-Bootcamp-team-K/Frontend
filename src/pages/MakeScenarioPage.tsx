@@ -1,4 +1,3 @@
-//시나리오 생성 
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +7,7 @@ const MakeScenarioPage = () => {
   const [exitAnimate, setExitAnimate] = useState(false); // 배경 클릭 애니메이션
   const [showContent, setShowContent] = useState(false); // 텍스트 표시 여부
   const [difficulty, setDifficulty] = useState(""); // 난이도 상태
+  const [crimeType, setCrimeType] = useState(""); // 범행 종류 상태
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,20 +70,34 @@ const MakeScenarioPage = () => {
           className={`${animate ? "animate" : ""} ${exitAnimate ? "exit" : ""}`}
           onClick={handleStopPropagation} // Paper 클릭 시 이벤트 버블링 방지
         />
-        <Content className={showContent ? "visible" : "hidden"} onClick={handleStopPropagation}>
+        <Content
+          className={showContent ? "visible" : "hidden"}
+          onClick={handleStopPropagation} // Content 클릭 시 이벤트 버블링 방지
+        >
           <Title>시나리오 생성</Title>
           <Form>
             <Row>
               <Label>범행 장소</Label>
-              <Input type="text" placeholder="장소를 입력하세요" onClick={handleStopPropagation} />
+              <Input type="text" placeholder="장소를 입력하세요" />
             </Row>
             <Row>
               <Label>범행 날짜</Label>
-              <Input type="text" placeholder="XXXX년 XX월 XX일 XX시경" onClick={handleStopPropagation} />
+              <Input type="text" placeholder="XXXX년 XX월 XX일 XX시경" />
             </Row>
             <Row>
               <Label>범행 종류</Label>
-              <Input type="text" placeholder="살인사건 또는 도난사건 " onClick={handleStopPropagation} />
+              {/* 드롭다운 수정 */}
+              <Dropdown
+                value={crimeType}
+                onChange={(e) => setCrimeType(e.target.value)}
+                onClick={(e) => e.stopPropagation()} // 이벤트 버블링 방지
+              >
+                <option value="" disabled>
+                  살인사건 또는 도난사건 선택
+                </option>
+                <option value="살인사건">살인사건</option>
+                <option value="도난사건">도난사건</option>
+              </Dropdown>
             </Row>
             <DifficultyRow>
               <DifficultyLabel>난이도</DifficultyLabel>
@@ -110,7 +124,8 @@ const MakeScenarioPage = () => {
 
 export default MakeScenarioPage;
 
-// Styled Components
+// Styled Components (생략 가능, 기존 코드를 그대로 유지)
+
 
 const Background = styled.div`
   position: fixed;
@@ -131,6 +146,9 @@ const Background = styled.div`
   }
 `;
 
+// Styled Components 
+
+
 const PaperWrapper = styled.div`
   position: relative;
   width: 100%;
@@ -142,41 +160,22 @@ const PaperWrapper = styled.div`
 
 const PaperImage = styled.img`
   position: absolute;
-  bottom: -150%;
+  bottom: -150%; /* 초기값 설정 */
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
-  width: 50%; /* 이미지 너비 조정 */
+  width: 35%; /* 이미지 너비 조정 */
   height: auto; /* 비율 유지 */
   transition: bottom 1.5s ease-out, transform 1s ease-out;
 
   &.animate {
-    bottom: -15%;
+    bottom: 7.5%; /* 페이지 로드 시 위로 올라오는 위치 */
     transform: translate(-50%, 0);
-    animation: shake 0.5s ease-in-out infinite; /* 떨림 효과 추가 */
   }
 
   &.exit {
-    bottom: -150%;
-    transform: translate(-50%, 0%);
-  }
-
-  @keyframes shake {
-    0%, 100% {
-      transform: translate(-50%, 0); /* 원래 위치 */
-    }
-    20% {
-      transform: translate(-50%, -1px); /* 위로 약간 이동 */
-    }
-    40% {
-      transform: translate(-50%, 1px); /* 아래로 약간 이동 */
-    }
-    60% {
-      transform: translate(-50%, -1px); /* 위로 약간 이동 */
-    }
-    80% {
-      transform: translate(-50%, 1px); /* 아래로 약간 이동 */
-    }
+    bottom: -150%; /* 페이지 이동 시 아래로 내려가는 위치 */
+    transform: translate(-50%, 0);
   }
 `;
 
@@ -204,9 +203,11 @@ const Content = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 4.5rem;
+  position: relative;
+  margin-top: 55px; /* 타이틀을 50px 아래로 이동 */
+  font-size: 4rem;
   font-weight: bold;
-  margin-bottom: 10px;
+  color: black;
 `;
 
 const Form = styled.div`
@@ -224,20 +225,11 @@ const Row = styled.div`
 const Label = styled.label`
   flex: 1;
   font-weight: bold;
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: rgba(0, 0, 0, 0.8);
-  margin-right: 0px;
+  margin-left: 75px; /* 왼쪽 여백 유지 */
+  margin-bottom: -20px; /* 아래 여백 줄이기 */
   text-align: right;
-`;
-
-const DifficultyRow = styled(Row)`
-  margin-top: 50px;
-  align-items: center;
-`;
-
-const DifficultyLabel = styled(Label)`
-  margin-left: 260px;
-  text-align: left;
 `;
 
 const Input = styled.input`
@@ -247,12 +239,35 @@ const Input = styled.input`
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 0.02);
   color: black;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  
 
   &::placeholder {
     color: rgba(0, 0, 0, 0.6);
     font-style: italic;
   }
+`;
+
+const Dropdown = styled.select`
+  flex: 2;
+  padding: 7px;
+  border: 1px solid rgba(0, 0, 0, 0.01);
+  border-radius: 4px;
+  background-color: transparent;
+  color: black;
+  font-size: 2rem;
+  cursor: pointer;
+  
+`;
+
+const DifficultyRow = styled(Row)`
+  margin-top: 50px;
+  align-items: center;
+`;
+
+const DifficultyLabel = styled(Label)`
+  margin-left: 300px;
+  text-align: left;
 `;
 
 const DifficultyWrapper = styled.div`
@@ -262,12 +277,13 @@ const DifficultyWrapper = styled.div`
   transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;
+  
 `;
 
 const DifficultyOption = styled.div<{ isSelected: boolean }>`
   font-size: 3.3rem;
   font-weight: bold;
-  color: ${({ isSelected }) => (isSelected ? "red" : "black")};
+  color: ${({ isSelected }) => (isSelected ? "black" : "black")};
   margin: 0 15px;
   cursor: pointer;
   position: relative;
@@ -292,83 +308,22 @@ const Circle = styled.div`
 const Button = styled.button`
   position: relative;
   padding: 10px 20px;
-  background-color: rgba(10, 18, 42, 0); /* 배경색을 반투명하게 설정 */
-  color: white;
+  background-color: transparent;
+  color: black;
   border: none;
   border-radius: 9999px;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: bold;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.8);
   cursor: pointer;
-  overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s ease-in-out;
+  transition: transform 0.2s ease-in-out;
+
+  top: -90px; /* 위로 20px 이동 */
+
+  &:active {
+    transform: scale(2);
+  }
 
   &:hover {
-    transform: scale(1.5); /* 버튼 확대 */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9); /* 더 강한 그림자 */
-    color: red; /* 텍스트 색상을 붉게 */
-  }
-
-  &:hover::after {
-    animation: glitch_4011 0.3s steps(4, end) infinite; /* 글리치 효과 실행 속도 증가 */
-  }
-
-  &::after {
-    --move1: inset(50% 50% 50% 50%);
-    --move2: inset(31% 0 40% 0);
-    --move3: inset(39% 0 15% 0);
-    --move4: inset(45% 0 40% 0);
-    --move5: inset(45% 0 6% 0);
-    --move6: inset(14% 0 61% 0);
-    clip-path: var(--move1);
-    content: '사건 진입'; /* 글리치 텍스트 */
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    color: #ff0000; /* 피 같은 붉은 색 */
-    background-color: transparent;
-    animation: glitch_4011 0.9s steps(3, end) infinite; /* 기본 글리치 애니메이션 */
-    text-shadow: 
-      -6px -6px 5px #1df2f0, 
-      6px 6px 5px #E94BE8, 
-      10px -10px 15px rgba(0, 255, 255, 0.5), 
-      -10px 10px 15px rgba(255, 0, 255, 0.5); /* 글리치 그림자 극대화 */
-  }
-
-  @keyframes glitch_4011 {
-    0% {
-      clip-path: var(--move1);
-      transform: translate(3px, -8px); /* 움직임 더 크고 빠르게 */
-    }
-    10% {
-      clip-path: var(--move2);
-      transform: translate(-15px, 15px);
-    }
-    20% {
-      clip-path: var(--move3);
-      transform: translate(15px, -15px);
-    }
-    30% {
-      clip-path: var(--move4);
-      transform: translate(-15px, -15px);
-    }
-    40% {
-      clip-path: var(--move5);
-      transform: translate(15px, 15px);
-    }
-    50% {
-      clip-path: var(--move6);
-      transform: translate(-20px, 20px);
-    }
-    60% {
-      clip-path: var(--move1);
-      transform: translate(20px, -20px);
-    }
-    100% {
-      clip-path: var(--move1);
-      transform: translate(0);
-    }
+    opacity: 0.8;
   }
 `;
