@@ -352,27 +352,51 @@ const ChattingPage: React.FC = () => {
                     left: 56vw;
                     background: #ffffff;
                     padding: 1.5rem;
-                    border-radius: 16px;
                     min-width: 20vw;
                     max-width: fit-content;
                     transform-origin: left center;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    box-shadow: 0 -4px #fff, 
+                                0 -8px #000, 
+                                4px 0 #fff, 
+                                4px -4px #000, 
+                                8px 0 #000, 
+                                0 4px #fff, 
+                                0 8px #000, 
+                                -4px 0 #fff, 
+                                -4px 4px #000, 
+                                -8px 0 #000, 
+                                -4px -4px #000, 
+                                4px 4px #000;
+                    image-rendering: pixelated;
+                    -ms-interpolation-mode: nearest-neighbor;
+                    image-rendering: crisp-edges;
                 }
 
                 .speech-bubble::before {
                     content: '';
                     position: absolute;
-                    left: -20px;
-                    bottom: 20px;
-                    top: 70%;
-                    width: 0;
-                    height: 0;
-                    border-top: 20px solid transparent;  
-                    border-bottom: none; 
-                    border-right: 20px solid #ffffff; 
+                    height: 4px;
+                    width: 4px;
+                    top: 90%;
+                    transform: translateY(-50%);
+                    left: -8px;
+                    background: white;
+                    box-shadow: 
+                        -4px -4px #fff,
+                        -4px 0 #fff,
+                        -8px 0 #fff,
+                        0 -8px #fff,
+                        -4px 4px #000, 
+                        -8px 4px #000, 
+                        -12px 4px #000, 
+                        -16px 4px #000,
+                        -12px 0 #000, 
+                        -8px -4px #000, 
+                        -4px -8px #000,
+                        0 -4px #fff;
                 }
 
-                 .bubble-content {
+                .bubble-content {
                     font-family: 'Press_Start_2P', monospace;
                     font-weight: 800;
                     font-size: 1.2rem;
@@ -380,8 +404,11 @@ const ChattingPage: React.FC = () => {
                     word-break: break-word;
                     line-height: 1.6;
                     text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+                    image-rendering: pixelated;
+                    -ms-interpolation-mode: nearest-neighbor;
+                    image-rendering: crisp-edges;
                 }
-
+                    
                 @keyframes popIn {
                     0% {
                         transform: scaleX(0);
