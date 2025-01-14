@@ -7,7 +7,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-51%, -55%);
+    transform: translate(-50.6%, -55%);
     background: rgba(39, 43, 44, 10);
     width: 509px;
     height: 319px;
@@ -44,11 +44,6 @@
     letter-spacing: 10px !important;
     font-family: 'Alegreya SC', serif;
 }
-
-/* 스크롤 숨기기 */
-body, html {
-    overflow: hidden; /* 스크롤 비활성화 */
-  }
 
 .start-page {
     width: 100vw;
@@ -148,6 +143,7 @@ body, html {
 }
 
 .login-input {
+    color: white;
     height: 50px;
     border-radius: 5px;
     font-family: 'Source Serif Pro', serif;
@@ -209,7 +205,7 @@ body, html {
     height: auto;
     object-fit: contain;
     opacity: 1;
-    transition: transform 2s ease-in-out, opacity 3s ease-in-out;
+    transition: transform 2.4s ease-in-out, opacity 5s ease-in-out;
   }
   
   .cutting-wallet {
@@ -221,7 +217,7 @@ body, html {
     height: auto;
     object-fit: contain;
     opacity: 1;
-    transition: transform 2s ease-in-out, opacity 3s ease-in-out;
+    transition: transform 2s ease-in-out, opacity 5s ease-in-out;
   }
   
   .wallet-image.move-down,
@@ -255,10 +251,6 @@ body, html {
   .idcard-container.flip .idcard-back {
     transform: rotateY(0deg);
   }
-  
-  
-
-  
 
   .zoom-background {
     width: 100vw;
