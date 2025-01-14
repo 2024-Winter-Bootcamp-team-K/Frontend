@@ -64,11 +64,13 @@ const ChattingPage: React.FC = () => {
             <div className="paper">
                 <div className="suspect-profile">
                     <div className="suspect-image-wrapper">
+                        <div className="tape-section"></div>
                         <img 
                             src="/images/Suspect1.png" 
                             alt="Suspect" 
                             className="suspect-image"
                         />
+                        <div className="tape-section"></div>
                     </div>
                     <div className="suspect-info">
                         <div className="info-grid">
@@ -184,14 +186,38 @@ const ChattingPage: React.FC = () => {
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    position: relative;
+                }
+
+                .tape-section {
+                    position: absolute;
+                    width: 68%;
+                }
+
+                .tape-section:first-of-type {
+                    top: -1%;
+                }
+
+                .tape-section:first-of-type::before {
+                    content: "";
+                    width: 14vmin;
+                    height: 4.2vmin;
+                    position: absolute;
+                    background-color: #E7E7E7;
+                    opacity: 0.8;
+                    border-right: 1px dotted #C7C0B9;
+                    border-left: 1px dotted #C7C0B9;
+                    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+                    transform: rotate(-45deg);
+                    left: -4vmin;
                 }
 
                 .suspect-image {
-                    height: 90%;
+                    height: 105%;
                     width: auto;
                     max-width: 80%;
                     object-fit: contain;
-                    image-rendering: pixelated;
+                    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
                 }
 
                 .suspect-info {
@@ -265,8 +291,18 @@ const ChattingPage: React.FC = () => {
                     margin-bottom: 0.5rem;
                     font-family: 'Press_Start_2P';
                     font-weight: 400;
-                    opacity: 0.8;
+                    opacity: 1;
                     text-shadow: 0 0.3px 0.3px black;
+                    animation: fadeInOut 2.5s ease-in-out infinite; 
+                }
+
+                @keyframes fadeInOut {
+                    0%, 100% {
+                        opacity: 0.7; 
+                    }
+                    50% {
+                        opacity: 1; 
+                    }
                 }
 
                 .chat-bar-container {
@@ -326,6 +362,11 @@ const ChattingPage: React.FC = () => {
                     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
                 }
 
+                .submit-button:active {
+                    transform: translateY(2px); 
+                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); 
+                }
+
                 .folder-button {
                     position: fixed;
                     bottom: 2vw;
@@ -352,27 +393,51 @@ const ChattingPage: React.FC = () => {
                     left: 56vw;
                     background: #ffffff;
                     padding: 1.5rem;
-                    border-radius: 16px;
                     min-width: 20vw;
                     max-width: fit-content;
                     transform-origin: left center;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    box-shadow: 0 -4px #fff, 
+                                0 -8px #000, 
+                                4px 0 #fff, 
+                                4px -4px #000, 
+                                8px 0 #000, 
+                                0 4px #fff, 
+                                0 8px #000, 
+                                -4px 0 #fff, 
+                                -4px 4px #000, 
+                                -8px 0 #000, 
+                                -4px -4px #000, 
+                                4px 4px #000;
+                    image-rendering: pixelated;
+                    -ms-interpolation-mode: nearest-neighbor;
+                    image-rendering: crisp-edges;
                 }
 
                 .speech-bubble::before {
                     content: '';
                     position: absolute;
-                    left: -20px;
-                    bottom: 20px;
-                    top: 70%;
-                    width: 0;
-                    height: 0;
-                    border-top: 20px solid transparent;  
-                    border-bottom: none; 
-                    border-right: 20px solid #ffffff; 
+                    height: 4px;
+                    width: 4px;
+                    top: 90%;
+                    transform: translateY(-50%);
+                    left: -8px;
+                    background: white;
+                    box-shadow: 
+                        -4px -4px #fff,
+                        -4px 0 #fff,
+                        -8px 0 #fff,
+                        0 -8px #fff,
+                        -4px 4px #000, 
+                        -8px 4px #000, 
+                        -12px 4px #000, 
+                        -16px 4px #000,
+                        -12px 0 #000, 
+                        -8px -4px #000, 
+                        -4px -8px #000,
+                        0 -4px #fff;
                 }
 
-                 .bubble-content {
+                .bubble-content {
                     font-family: 'Press_Start_2P', monospace;
                     font-weight: 800;
                     font-size: 1.2rem;
@@ -380,6 +445,9 @@ const ChattingPage: React.FC = () => {
                     word-break: break-word;
                     line-height: 1.6;
                     text-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+                    image-rendering: pixelated;
+                    -ms-interpolation-mode: nearest-neighbor;
+                    image-rendering: crisp-edges;
                 }
 
                 @keyframes popIn {
