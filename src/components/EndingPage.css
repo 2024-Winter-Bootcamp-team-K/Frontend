@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Hahmlet:wght@400;700&display=swap');
+
+
 /* 전체 컨테이너 스타일 */
 .ending-page {
     position: fixed;
@@ -24,6 +27,7 @@
     transform: translateY(-50%);
     font-family: Arial, sans-serif;
     color: black;
+    font-family: 'Hahmlet', serif;
   }
   
   .credits p.title {

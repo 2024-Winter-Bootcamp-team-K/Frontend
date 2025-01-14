@@ -115,11 +115,11 @@ const EndingPage: React.FC = () => {
         onClick={handleReturnToMain}
         style={{
           position: "absolute",
-          top: "10px",
-          right: "-3%",
+          top: "21px",
+          right: "-4.6%",
           transform: "translateX(-50%)",
           padding: "5px 10px",
-          fontSize: "0.7vw",
+          fontSize: "1.4vw",
           color: "#FFFFFF",
           border: "none",
           borderRadius: "5px",
