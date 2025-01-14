@@ -64,11 +64,13 @@ const ChattingPage: React.FC = () => {
             <div className="paper">
                 <div className="suspect-profile">
                     <div className="suspect-image-wrapper">
+                        <div className="tape-section"></div>
                         <img 
                             src="/images/Suspect1.png" 
                             alt="Suspect" 
                             className="suspect-image"
                         />
+                        <div className="tape-section"></div>
                     </div>
                     <div className="suspect-info">
                         <div className="info-grid">
@@ -186,6 +188,29 @@ const ChattingPage: React.FC = () => {
                     align-items: center;
                 }
 
+                .tape-section {
+                    position: absolute;
+                    width: 68%;
+                }
+
+                .tape-section:first-of-type {
+                    top: -1%;
+                }
+
+                .tape-section:first-of-type::before {
+                    content: "";
+                    width: 14vmin;
+                    height: 4.2vmin;
+                    position: absolute;
+                    background-color: #E7E7E7;
+                    opacity: 0.8;
+                    border-right: 1px dotted #C7C0B9;
+                    border-left: 1px dotted #C7C0B9;
+                    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+                    transform: rotate(-45deg);
+                    left: -4vmin;
+                }
+
                 .suspect-image {
                     height: 90%;
                     width: auto;
@@ -265,8 +290,18 @@ const ChattingPage: React.FC = () => {
                     margin-bottom: 0.5rem;
                     font-family: 'Press_Start_2P';
                     font-weight: 400;
-                    opacity: 0.8;
+                    opacity: 1;
                     text-shadow: 0 0.3px 0.3px black;
+                    animation: fadeInOut 2.5s ease-in-out infinite; 
+                }
+
+                @keyframes fadeInOut {
+                    0%, 100% {
+                        opacity: 0.7; 
+                    }
+                    50% {
+                        opacity: 1; 
+                    }
                 }
 
                 .chat-bar-container {
@@ -324,6 +359,11 @@ const ChattingPage: React.FC = () => {
                 .submit-button:hover {
                     transform: translateY(-2px);
                     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+                }
+
+                .submit-button:active {
+                    transform: translateY(2px); 
+                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); 
                 }
 
                 .folder-button {
@@ -408,7 +448,7 @@ const ChattingPage: React.FC = () => {
                     -ms-interpolation-mode: nearest-neighbor;
                     image-rendering: crisp-edges;
                 }
-                    
+
                 @keyframes popIn {
                     0% {
                         transform: scaleX(0);
