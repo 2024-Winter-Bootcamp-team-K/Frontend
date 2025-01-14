@@ -1,10 +1,22 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../components/VideoPage.css";
 
 const VideoPage: React.FC = () => {
+    const navigate = useNavigate();
+
+    const handleVideoEnd = () => {
+        navigate("/MainPage");
+    }
+
     return (
         <div className="video-container">
-            <video className="video fade-out" autoPlay muted>
+            <video 
+            className="video fade-out" 
+            autoPlay 
+            muted
+            onEnded={handleVideoEnd}
+            >
                 <source src="./mp4/Shot.mp4" type="video/mp4" />
             </video>
 
