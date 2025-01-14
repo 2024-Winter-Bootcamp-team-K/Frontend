@@ -186,6 +186,7 @@ const ChattingPage: React.FC = () => {
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    position: relative;
                 }
 
                 .tape-section {
@@ -212,11 +213,11 @@ const ChattingPage: React.FC = () => {
                 }
 
                 .suspect-image {
-                    height: 90%;
+                    height: 105%;
                     width: auto;
                     max-width: 80%;
                     object-fit: contain;
-                    image-rendering: pixelated;
+                    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
                 }
 
                 .suspect-info {
