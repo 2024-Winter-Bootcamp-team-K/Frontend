@@ -1,79 +1,211 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
 const InitChatPage: React.FC = () => {
+  const [visibleSuspect, setVisibleSuspect] = useState(0);
   const navigate = useNavigate();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisibleSuspect((prev) => (prev < 3 ? prev + 1 : prev));
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const suspects = [
+    {
+      name: '화가 김민수',
+      imgSrc: '/images/Suspect1.png',
+      text: '그날 밤 사무실에서 다음 전시 준비 중이었습니다.',
+    },
+    {
+      name: '경비원 이지원',
+      imgSrc: '/images/Suspect2.png',
+      text: '순찰 일지에 따르면 사건 발생 시각에 1층에서 순찰 중이었습니다.',
+    },
+    {
+      name: '큐레이터 장현우',
+      imgSrc: '/images/Suspect3.png',
+      text: 'CCTV에 그날 밤 9시에 퇴근하는 모습이 찍혔습니다만...',
+    },
+  ];
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#181818] text-white">
-      {/* 제목 */}
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#181818] text-white font-intelmono">
       <h1
-        className="font-intelmono text-xl font-bold text-center mb-8"
-        style={{ fontSize: '2rem' }}
+        style={{
+          fontSize: '3vw',
+          marginBottom: '4vh',
+        }}
+        className="font-intelmono font-bold text-center"
       >
         기밀 사건 파일 #2024-12-30
       </h1>
 
-      {/* 파란색 창 */}
       <div
-        className="font-intelmono relative p-6 rounded-lg w-full max-w-4xl flex flex-col justify-center"
         style={{
           backgroundColor: '#1E305A',
           boxShadow: 'inset 0px 10px 30px rgba(24, 23, 32, 0.7), inset 0px -10px 30px rgba(0, 0, 0, 0.7)',
-          width: '1000px',
-          height: '400px',
+          width: '70vw',
+          height: '52vh',
+          padding: '6vh 3vw 6vh 3vw',
         }}
+        className="font-intelmono relative rounded-lg"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 items-center">
-          {/* 인물 1 */}
-          <div className="flex flex-col items-center">
-            <p className="text-center text-sm sm:text-base mb-4 w-3/4 sm:w-full">
-              그날 밤 사무실에서 다음 전시 준비 중이었습니다.
-            </p>
-            <img
-              src="/images/Suspect1.png"
-              alt="화가 김민수"
-              className="w-20 h-20 sm:w-32 sm:h-32 mb-4"
-            />
-            <p className="text-center text-lg font-bold">화가 김민수</p>
-          </div>
-
-          {/* 인물 2 */}
-          <div className="flex flex-col items-center">
-            <p className="text-center text-sm sm:text-base mb-4 w-3/4 sm:w-full">
-              순찰 일지에 따르면 사건 발생 시각에 1층에서 순찰 중이었습니다.
-            </p>
-            <img
-              src="/images/Suspect2.png"
-              alt="경비원 이지원"
-              className="w-20 h-20 sm:w-32 sm:h-32 mb-4"
-            />
-            <p className="text-center text-lg font-bold">경비원 이지원</p>
-          </div>
-
-          {/* 인물 3 */}
-          <div className="flex flex-col items-center">
-            <p className="text-center text-sm sm:text-base mb-4 w-3/4 sm:w-full">
-              CCTV에 그날 밤 9시에 퇴근하는 모습이 찍혔습니다만...
-            </p>
-            <img
-              src="/images/Suspect3.png"
-              alt="큐레이터 장현우"
-              className="w-20 h-20 sm:w-32 sm:h-32 mb-4"
-            />
-            <p className="text-center text-lg font-bold">큐레이터 장현우</p>
-          </div>
+        <div style={{ 
+          display: 'flex',
+          justifyContent: 'space-between',
+          height: '100%',
+        }}>
+          {suspects.map((suspect, index) => (
+            <div
+              key={index}
+              style={{
+                flex: '1',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                margin: '0 1vw',
+              }}
+              className={`transition-opacity duration-1000 ${
+                visibleSuspect > index ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <div
+                style={{
+                  flex: '1',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                  minHeight: '15vh',
+                }}
+              >
+                <div className="bubble medium bottom">
+                  <p style={{ 
+                    fontSize: '1.2vw',
+                    wordBreak: 'keep-all',
+                    whiteSpace: 'pre-line',
+                  }}>
+                    {visibleSuspect > index ? suspect.text : ''}
+                  </p>
+                </div>
+              </div>
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+              }}>
+                <img
+                  src={suspect.imgSrc}
+                  alt={suspect.name}
+                  style={{
+                    width: '10vw',
+                    height: '10vw',
+                    marginBottom: '3vh',
+                  }}
+                />
+                <p style={{ fontSize: '1.5vw' }} className="text-center font-intelmono">
+                  {suspect.name}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* 수사 시작하기 버튼 */}
       <button
-        className="mt-8 px-8 text-white text-lg font-intelmono font-semibold"
-        style={{ fontSize: '1.5rem' }}
+        style={{
+          marginTop: '4vh',
+          padding: '1vh 2vw',
+          fontSize: '2vw',
+        }}
+        className="text-white font-intelmono"
         onClick={() => navigate("/play")}
       >
         수사 시작하기
       </button>
+
+      <style>{`
+        .bubble {
+          position: relative;
+          display: inline-block;
+          text-align: center;
+          line-height: 1.5;
+          background-color: white;
+          color: black;
+          padding: 1.5vh 1.5vw;
+          box-shadow: 
+            0 -4px white, 
+            0 -8px black, 
+            4px 0 white, 
+            4px -4px black, 
+            8px 0 black, 
+            0 4px white, 
+            0 8px black, 
+            -4px 0 white, 
+            -4px 4px black, 
+            -8px 0 black, 
+            -4px -4px black, 
+            4px 4px black;
+          box-sizing: border-box;
+          width: 18vw;
+          margin-bottom: 4vh;
+          font-family: 'Inter Mono';
+        }
+
+        .bubble::after {
+          content: '';
+          display: block;
+          position: absolute;
+          box-sizing: border-box;
+        }
+
+        .bubble.bottom::after {
+          height: 4px;
+          width: 4px;
+          bottom: -8px;
+          left: 32px;
+          box-shadow: 
+            0 4px black, 
+            0 8px black, 
+            0 12px black, 
+            0 16px black, 
+            -4px 12px black, 
+            -8px 8px black, 
+            -12px 4px black, 
+            -4px 4px white, 
+            -8px 4px white, 
+            -4px 8px white, 
+            -4px 0 white, 
+            -8px 0 white, 
+            -12px 0 white;
+        }
+
+        @media (max-width: 768px) {
+          .bubble {
+            width: 50vw;
+            margin-bottom: 3vh !important;
+          }
+          .bubble p {
+            font-size: 2.5vw !important;
+          }
+          img {
+            width: 20vw !important;
+            height: 20vw !important;
+          }
+          h1 {
+            font-size: 5vw !important;
+          }
+          button {
+            font-size: 4vw !important;
+          }
+          p.text-center {
+            font-size: 3vw !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };
