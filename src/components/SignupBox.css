@@ -76,6 +76,14 @@
     padding: 10px;
 }
 
+.error-message {
+    position: absolute;
+    color: red;
+    font-size: 12px;
+    text-align: left;
+    margin-top: 72%;
+}
+
 .sign-button {
     position: absolute;
     bottom: 4%;
