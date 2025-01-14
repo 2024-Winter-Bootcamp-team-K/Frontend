@@ -79,61 +79,19 @@ const ScenarioButtonWrapper = styled.div`
 `;
 
 const PlayButton = styled.button`
-  background-color: #0a122a; /* 기본 배경색 */
-  color: white; /* 기본 텍스트 색상 */
+  background-color: rgba(10, 18, 42, 0.8); /* 반투명한 배경색 */
+  color: white; /* 텍스트 색상 */
   font-size: 1.25rem;
   font-weight: bold;
   padding: 0.75rem 1.5rem;
   border-radius: 9999px;
-  position: relative;
-  overflow: hidden;
+  border: none; /* 경계선 제거 */
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
+  transition: transform 0.2s ease-in-out; /* 눌림 효과를 위한 부드러운 전환 */
 
-  /* 버튼의 hover 효과 */
-  &:hover {
-    color: #fff;
-    background-color: #8b0000; /* 피에 물든 듯한 전체 배경색 */
-    box-shadow: 0 8px 15px rgba(139, 0, 0, 0.5); /* 붉은 그림자 */
-    animation: shake 0.5s ease-in-out infinite; /* 떨림 애니메이션 */
-  }
-
-  /* 위에서 아래로 색 채우기 */
-  &::before {
-    content: '';
-    position: absolute;
-    top: -100%;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #ff0000; /* 피 같은 붉은 색 */
-    z-index: -1;
-    opacity: 0;
-    transition: all 0.5s ease-in-out;
-  }
-
-  &:hover::before {
-    top: 0;
-    opacity: 1;
-  }
-
-  /* 떨림 애니메이션 */
-  @keyframes shake {
-    0%, 100% {
-      transform: translate(0, 0); /* 원래 위치 */
-    }
-    20% {
-      transform: translate(-5px, 4px); /* 왼쪽 아래 */
-    }
-    40% {
-      transform: translate(5px, -4px); /* 오른쪽 위 */
-    }
-    60% {
-      transform: translate(-5px, -4px); /* 왼쪽 위 */
-    }
-    80% {
-      transform: translate(5px, 4px); /* 오른쪽 아래 */
-    }
+  /* 눌림 효과 */
+  &:active {
+    transform: scale(2); /* 버튼이 살짝 눌리는 효과 */
   }
 `;
 
