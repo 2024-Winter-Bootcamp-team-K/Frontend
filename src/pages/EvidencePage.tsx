@@ -249,17 +249,23 @@ const EvidencePage: React.FC = () => {
                     background-color: transparent;
                     color: #ff0000;
                     border: none;
-                    padding: 1vh 2vw;
+                    padding: 1vh 0.7vw;
                     border-radius: 10px;
                     cursor: pointer;
                     transition: all 0.3s ease;
-                    font-size: 2vw;
+                    font-size: 1.5vw;
                     font-family: 'BinggraeII';
                 }
 
                 .investigate-button:hover {
-                    background-color: rgba(0, 0, 0, 0.2);
                     transform: translateY(-4px) scale(1.1);
+                    background: linear-gradient(
+                        120deg,
+                        transparent,
+                        rgba(128, 128, 128, 1),
+                        transparent
+                      );
+                      transition: 0.5s;
                 }
 
                 .popup-overlay {
