@@ -117,17 +117,27 @@ const LogInPage: React.FC = () => {
                     />
                   </div>
                   <div className="login-body">
-                    <input
-                      type="text"
-                      placeholder="Detective E-mail"
-                      className="login-input"
-                    />
-                    <input
-                      type="password"
-                      placeholder="Password"
-                      className="login-input"
-                    />
-                  </div>
+                    <div className="input-group">
+                        <input
+                            required
+                            type="text"
+                            className="login-input"
+                            name="email"
+                            autoComplete="off"
+                        />
+                        <label className="user-label">Detective E-mail</label>
+                    </div>
+                    <div className="input-group">
+                        <input
+                            required
+                            type="password"
+                            className="login-input"
+                            name="password"
+                            autoComplete="off"
+                        />
+                        <label className="user-label">Password</label>
+                    </div>
+                </div>
                   <div className="login-footer">
                     <button
                       className="login-button"

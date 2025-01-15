@@ -66,14 +66,68 @@
     gap: 18px;
 }
 
+.sign-group {
+    position: relative;
+    width: 100%;
+}
+
 .sign-input {
-    color: white;
-    height: 45px;
+    width: 100%;
+    height: 42px;
     border-radius: 5px;
     font-family: 'Source Serif Pro', serif;
     background-color: rgba(72, 75, 75, 0.7);
     box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3);
-    padding: 10px;
+    border: solid 1.5px rgba(255, 255, 255, 0.2);
+    padding: 10px 15px;
+    color: white;
+    transition: border 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+.sign-user-label {
+    position: absolute;
+    left: 15px;
+    width: 150px; 
+    text-align: left;
+    color: rgba(255, 255, 255, 0.5); 
+    pointer-events: none;
+    transform: translateY(9px);
+    transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Source Serif Pro', serif;
+    border: 1px solid transparent; 
+    padding: 0 8px;
+    border-radius: 4px;
+}
+  
+.sign-input:focus,
+.sign-input:valid {
+    outline: none;
+    border: 1.5px solid rgba(255, 255, 255, 0.6); 
+    background-color: rgba(72, 75, 75, 0.85);
+    padding: 15px 15px 5px;
+}
+  
+.sign-input:focus ~ .sign-user-label,
+.sign-input:valid ~ .sign-user-label {
+    transform: translateY(-50%) translateX(-20px) scale(0.8);
+    background-color: rgba(72, 75, 75, 1);
+    padding: 0 8px;
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.6);  
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+
+    transition: 
+          transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+          background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+          color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sign-input:focus ~ .sign-user-label {
+    color: rgba(255, 255, 255, 1);  
+    border: 1.5px solid rgba(255, 255, 255, 0.8);  
 }
 
 .error-message {
