@@ -30,9 +30,9 @@ function NotePage() {
         <div 
           className="absolute"
           style={{
-            top: "30%", // 이미지 기준 상단에서 15%
-            left: "10%", // 이미지 기준 좌측에서 10%
-            width: "80%", // 전체 너비의 80%
+            top: "30%",
+            left: "10%",
+            width: "80%",
             textAlign: "center",
           }}
         >
@@ -57,6 +57,7 @@ function NotePage() {
             height: "50%", // 전체 높이의 50%
             fontFamily: "'THEFACESHOP_INKLIPQUID'",
             fontSize: "1.25rem",
+            overflow: "auto", // 스크롤 활성화
           }}
           placeholder="추리 내용을 입력하세요."
         ></textarea>
@@ -68,6 +69,29 @@ function NotePage() {
           textarea::placeholder {
             color: #666;
           }
+
+          textarea {
+            scrollbar-width: thin; /* Firefox */
+            scrollbar-color:rgb(139, 64, 29) transparent; /* 스크롤바와 트랙 색상 (트랙 투명) */
+          }
+
+          textarea::-webkit-scrollbar {
+            width: 8px; /* 스크롤바 너비 */
+          }
+
+          textarea::-webkit-scrollbar-track {
+            background: transparent; /* 스크롤바 트랙 배경 투명 */
+          }
+
+          textarea::-webkit-scrollbar-thumb {
+            background-color:rgb(139, 64, 29); /* 스크롤바 색상 (더 진한 갈색) */
+            border-radius: 4px; /* 스크롤바 모서리 둥글게 */
+          }
+
+          textarea::-webkit-scrollbar-thumb:hover {
+            background-color: rgb(139, 64, 29); /* 호버 시 색상 (짙은 갈색) */
+          }
+
         `}
       </style>
     </div>
