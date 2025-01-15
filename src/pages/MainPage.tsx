@@ -1,18 +1,17 @@
-//MainPage
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useAudio } from "./MainAudioContext";
 
 const MainPage = () => {
   const navigate = useNavigate();
+  const { bgmRef } = useAudio();
   const [isBlurred, setIsBlurred] = useState(false);
 
   const playSound = () => {
     const audio = new Audio("/sounds/book.mp3");
     audio.play();
   };
-
-  
 
   const handleNavigation = (path: string) => {
     setIsBlurred(true); // Blur 효과 시작
@@ -50,11 +49,11 @@ const MainPage = () => {
 
 export default MainPage;
 
-// Styled Components
+// Styled Components (기존과 동일)
 const Background = styled.div`
   position: fixed;
   inset: 0;
-  background-image: url(/images/background.jpg);
+  background-image: url(/images/background2.jpg);
   background-size: cover;
   background-position: center;
   transition: filter 0.5s ease-in-out;
@@ -66,20 +65,40 @@ const Background = styled.div`
 
 const PlayButtonWrapper = styled.div`
   position: absolute;
-  top: 50%;
-  left: 7%;
+  top: 53%;
+  left: 8%;
   transform: translateY(-50%);
+
+  @media (max-width: 768px) {
+    top: 35%;
+    left: 5%;
+  }
+
+  @media (max-width: 480px) {
+    top: 30%;
+    left: 5%;
+  }
 `;
 
 const ScenarioButtonWrapper = styled.div`
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 55%;
+  left: 49%;
   transform: translate(-50%, -50%);
+
+  @media (max-width: 768px) {
+    top: 50%;
+    left: 50%;
+  }
+
+  @media (max-width: 480px) {
+    top: 55%;
+    left: 50%;
+  }
 `;
 
 const PlayButton = styled.button`
-  background-color: rgba(10, 18, 42, 0.8); /* 반투명한 배경색 */
+  background-color: rgba(58, 59, 59, 0.5); /* 반투명한 배경색 */
   color: white; /* 텍스트 색상 */
   font-size: 1.25rem;
   font-weight: bold;
@@ -91,10 +110,18 @@ const PlayButton = styled.button`
 
   /* 눌림 효과 */
   &:active {
-    transform: scale(2); /* 버튼이 살짝 눌리는 효과 */
+    transform: scale(0.95); /* 버튼이 살짝 눌리는 효과 */
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
   }
 `;
-
-
 
 const ScenarioButton = styled(PlayButton)``;
