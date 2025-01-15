@@ -73,35 +73,51 @@ const SignupBox: React.FC = () => {
           <p className="sign-subtitle">신입 탐정 등록</p>
           <img src="../../images/profile.png" alt="profile" className="sign-profile" />
         </div>
-        <div className="sign-body">
-          <input type="text"
-           name="name"
-           placeholder="Detective Name"
-           className="sign-input"
-           value={formData.name}
-           onChange={handleInputChange}
-           />
-          <input type="text"
-          name="email"
-          placeholder="Detective E-mail" 
-          className="sign-input" 
-          value={formData.email}
-          onChange={handleInputChange}
-          />
-          <input type="password" 
-          name="password"
-          placeholder="Password" 
-          className="sign-input" 
-          value={formData.password}
-          onChange={handleInputChange}
-          />
-          <input type="password"
-           name="confirmPassword"
-           placeholder="Password Check"
-           className="sign-input" 
-          value={formData.confirmPassword}
-          onChange={handleInputChange}
-          />
+        <div className="sign-body"> 
+          <div className="sign-group">
+            <input 
+              required
+              type="text"
+              name="name"
+              className="sign-input"
+              value={formData.name}
+              onChange={handleInputChange}
+            />
+            <label className="sign-user-label">Detective Name</label>
+          </div>
+          <div className="sign-group">
+            <input 
+              required
+              type="text"
+              name="email"
+              className="sign-input" 
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+            <label className="sign-user-label">Detective E-mail</label>
+          </div>
+          <div className="sign-group">
+            <input 
+              required
+              type="password" 
+              name="password"
+              className="sign-input" 
+              value={formData.password}
+              onChange={handleInputChange}
+            />
+            <label className="sign-user-label">Password</label>
+          </div>
+          <div className="sign-group">
+            <input 
+              required
+              type="password"
+              name="confirmPassword"
+              className="sign-input" 
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+            />
+            <label className="sign-user-label">Password Check</label>
+          </div>
           {error && <p className="error-message">{error}</p>}
         </div>
         <div className="sign-footer">
