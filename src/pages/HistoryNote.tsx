@@ -1,24 +1,10 @@
-import React, { useState } from "react";
-interface NoteProps {
+import React from "react";
+
+interface HistoryNoteProps {
   onClose: () => void; // 부모에서 닫기 동작을 제어할 수 있도록 prop으로 받음
 }
 
-const NotePage: React.FC<NoteProps> = ({ onClose }) => {
-  const [inputText, setInputText] = useState("");
-
-  // 엔터 키를 눌렀을 때 소리 재생
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      const audio = new Audio("/sounds/note.wav"); // Typing.mp3 파일 경로
-      audio.play();
-    }
-  };
-
-  // 텍스트 입력 값 업데이트
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputText(e.target.value);
-  };
-
+const HistoryNote: React.FC<HistoryNoteProps> = ({ onClose }) => {
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
@@ -30,9 +16,9 @@ const NotePage: React.FC<NoteProps> = ({ onClose }) => {
           backgroundImage: "url('images/note.png')",
           bottom: "5vh",
           width: "100vw",
-          maxWidth: "800px", // 최대 너비
+          maxWidth: "800px",
           height: "100vh",
-          maxHeight: "600px", // 최대 높이
+          maxHeight: "600px",
         }}
         onClick={(e) => e.stopPropagation()} // 팝업 내용 클릭 시 이벤트 전파 막기
       >
@@ -56,10 +42,7 @@ const NotePage: React.FC<NoteProps> = ({ onClose }) => {
             추리 노트
           </h2>
         </div>
-
-        {/* 텍스트 입력 영역 */}
-        <textarea
-          className="absolute bg-transparent text-black p-4 resize-none focus:outline-none font-bold"
+        <p className="absolute bg-transparent text-black p-4 resize-none focus:outline-none font-bold"
           style={{
             top: "35%", // 이미지 기준 상단에서 30%
             left: "15%", // 이미지 기준 좌측에서 10%
@@ -68,42 +51,35 @@ const NotePage: React.FC<NoteProps> = ({ onClose }) => {
             fontFamily: "'THEFACESHOP_INKLIPQUID'",
             fontSize: "1.25rem",
             overflow: "auto", // 스크롤 활성화
-          }}
-          placeholder="추리 내용을 입력하세요."
-          value={inputText} // 입력된 텍스트 값
-          onChange={handleChange} // 텍스트 값 업데이트
-          onKeyDown={handleKeyPress} // 엔터 키를 눌렀을 때
-        ></textarea>
+          }}>
+                아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다
+        </p>
       </div>
 
       {/* 추가 CSS */}
       <style>
         {`
-          textarea::placeholder {
-            color: #666;
-          }
-
-          textarea {
+          p {
             scrollbar-width: thin; /* Firefox */
             scrollbar-color: transparent transparent; /* 스크롤 버튼은 숨기고, 트랙은 투명하게 */
           }
 
-          textarea::-webkit-scrollbar {
+          p::-webkit-scrollbar {
             width: 8px; /* 스크롤바 너비 */
             background-color: transparent; /* 배경을 투명하게 설정 */
           }
 
-          textarea::-webkit-scrollbar-track {
+          p::-webkit-scrollbar-track {
             background: transparent; /* 트랙을 투명하게 설정 */
           }
 
-          textarea::-webkit-scrollbar-thumb {
+          p::-webkit-scrollbar-thumb {
             display: none; /* 스크롤바 버튼(thumb) 숨기기 */
           }
         `}
       </style>
     </div>
   );
-}
+};
 
-export default NotePage;
+export default HistoryNote;

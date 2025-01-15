@@ -14,13 +14,12 @@ import LogInPage from "./pages/LogInPage";
 import SignupBox from "./pages/SignupBox";
 import ChattingPage from "./pages/ChattingPage";
 import MainPage from "./pages/MainPage"; // 메인 페이지
-import HistoryPage from "./pages/HistoryPage"; // 플레이 기록 페이지
 import MakeScenarioPage from "./pages/MakeScenarioPage"; // 시나리오 생성 페이지
 import NextPage from "./pages/NextPage";
 import NextPage2 from "./pages/NextPage2";
 import LoginBox from "./pages/LoginBox";
-import NotePage from "./pages/NotePage";
 import { AudioProvider } from "./pages/MainAudioContext";
+import PlayHistoryPage from "./pages/PlayHistoryPage";
 
 const App: React.FC = () => {
   return (
@@ -41,7 +40,6 @@ const App: React.FC = () => {
         <Route path="/NextPage" element={<NextPage />} />
         <Route path="/NextPage2" element={<NextPage2 />} />
         <Route path="/loginbox" element={<LoginBox />} />
-        <Route path="/note" element={<NotePage />} />
         <Route
           path="/MainPage"
           element={
@@ -51,10 +49,10 @@ const App: React.FC = () => {
           }
         />
         <Route
-          path="/HistoryPage"
+          path="/history"
           element={
             <AudioProvider>
-              <HistoryPage />
+              <PlayHistoryPage />
             </AudioProvider>
           }
         />
