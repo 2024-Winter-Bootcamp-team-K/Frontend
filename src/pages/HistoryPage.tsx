@@ -20,7 +20,7 @@ const HistoryPage = () => {
       setTimeout(() => setShowImage(true), 0);
     }, 0);
     return () => clearTimeout(timer);
-  }, []);
+  }, [popupText]);
 
   const handleBackgroundClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
