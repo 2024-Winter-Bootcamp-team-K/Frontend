@@ -5,9 +5,30 @@ const SuspectPage: React.FC = () => {
     const navigate = useNavigate();
     const [showItems, setShowItems] = useState<number[]>([]);
     const handleBackCheck = () => {navigate("/play")};
-    const handleFolderCheck = () => {};
+    
     const handleInterrogate = () => {navigate("/chat")};
     const handleAccuse = () => {navigate("/choose")};
+     // const handleFolderCheck = () => {};
+
+   /* const handleIconClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setPopupImage("/images/Note2.png");
+      setPopupText("추리 내용을 입력하세요...");
+      setIsNotePopup(true);
+      setShowPopup(true);
+    }; */
+  
+    
+    const handleFolderCheck = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        const audio = new Audio("/sounds/book.mp3");
+        audio.play();
+        setTimeout(() => {
+          navigate("/note");
+        }, 500);
+      };
+  
+  
 
     const suspects = [
         { id: 1, name: "화가 김민수", image: "/images/Suspect1.png" },
