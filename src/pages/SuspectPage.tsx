@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import NotePage from "./NotePage.tsx";
 
 const SuspectPage: React.FC = () => {
     const navigate = useNavigate();
+    const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
     const [showItems, setShowItems] = useState<number[]>([]);
     const handleBackCheck = () => {navigate("/play")};
-    const handleFolderCheck = () => {};
+    const handleFolderCheck = () => openPopup();
     const handleInterrogate = () => {navigate("/chat")};
     const handleAccuse = () => {navigate("/choose")};
     
+    const openPopup = () => {
+        setActivePopup(true); // 팝업 열기
+      };
+    
+      const closePopup = () => {
+        setActivePopup(false); // 팝업 닫기
+      };    
 
     const suspects = [
         { id: 1, name: "화가 김민수", image: "/images/Suspect1.png" },
@@ -72,6 +81,7 @@ const SuspectPage: React.FC = () => {
                     </button>
                 </div>
             </div>
+            {activePopup && <NotePage onClose={closePopup} />}
 
             <style>{`
                 .suspect-page-container {

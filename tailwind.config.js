@@ -10,6 +10,7 @@ export default {
       fontFamily:{
         'Binggrae':['BinggraeII'],
         'intelmono': ['Intelone_mono_font_family_regular', 'monospace'],
+        'cursive': ['THEFACESHOP_INKLIPQUID']
       },
       textStroke: {
         '1': '1px',

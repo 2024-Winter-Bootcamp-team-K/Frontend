@@ -2,7 +2,7 @@ import React, { useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
-
+import NotePage from "./NotePage.tsx";
 
 const ChattingPage: React.FC = () => {
     const navigate = useNavigate();
@@ -10,9 +10,18 @@ const ChattingPage: React.FC = () => {
     const [displayText, setDisplayText] = useState("");
     const [isTyping, setIsTyping] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
+    const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
 
     const handleBackCheck = () => {navigate("/suspect")};
-    const handleFolderCheck = () => {};
+    const handleFolderCheck = () => openPopup();
+
+    const openPopup = () => {
+      setActivePopup(true); // 팝업 열기
+    };
+  
+    const closePopup = () => {
+      setActivePopup(false); // 팝업 닫기
+    };    
     
     const handleSubmit = () => {
         if (userInput.trim()) {
@@ -140,6 +149,7 @@ const ChattingPage: React.FC = () => {
             <button className="folder-button" onClick={handleFolderCheck}>
                 <img src="/images/Folder.svg" alt="Folder Icon" className="folder-icon" />
             </button>
+            {activePopup && <NotePage onClose={closePopup} />}
 
             <style>{`
                 .chatting-page-container {

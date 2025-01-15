@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import NotePage from "./NotePage.tsx";
 
 interface Evidence {
     id: number;
@@ -11,10 +12,19 @@ interface Evidence {
 
 const EvidencePage: React.FC = () => {
     const navigate = useNavigate();
+    const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
     const [selectedEvidence, setSelectedEvidence] = useState<Evidence | null>(null);
     const [showItems, setShowItems] = useState<number[]>([]);
     const handleBackCheck = () => {navigate("/play")};
-    const handleFolderCheck = () => {};
+    const handleFolderCheck = () => openPopup();
+
+    const openPopup = () => {
+        setActivePopup(true); // 팝업 열기
+      };
+    
+      const closePopup = () => {
+        setActivePopup(false); // 팝업 닫기
+      };    
 
     const evidenceData = [
         {
@@ -101,6 +111,7 @@ const EvidencePage: React.FC = () => {
                     </div>
                 </div>
             )}
+              {activePopup && <NotePage onClose={closePopup} />}
 
             <style>{`
                 .evidence-page-container {

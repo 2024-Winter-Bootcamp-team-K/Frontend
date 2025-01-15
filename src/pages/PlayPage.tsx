@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import NotePage from "./NotePage.tsx";
 
 const PlayPage: React.FC = () => {
   const navigate = useNavigate();
+  const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
   const handleSuspectCheck = () => {navigate("/suspect")};
   const handleEvidenceCheck = () => {navigate("/evidence")};
-  const handleFolderCheck = () => {};
+  const handleFolderCheck = () => openPopup();
 
-  
+  const openPopup = () => {
+    setActivePopup(true); // 팝업 열기
+  };
+
+  const closePopup = () => {
+    setActivePopup(false); // 팝업 닫기
+  };    
 
   return (
     <div className="playpage-container">
@@ -79,7 +87,7 @@ const PlayPage: React.FC = () => {
           </button>
         </div>
       </div>
-
+      {activePopup && <NotePage onClose={closePopup} />}
       <style>{`
         .playpage-container {
           background-image: url(/images/playpage_back.png);

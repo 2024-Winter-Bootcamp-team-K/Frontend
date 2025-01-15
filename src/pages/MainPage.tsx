@@ -26,7 +26,7 @@ const MainPage = () => {
         <PlayButton
           onClick={() => {
             playSound();
-            handleNavigation("/HistoryPage");
+            handleNavigation("/history");
           }}
         >
           플레이 기록
