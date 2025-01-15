@@ -49,23 +49,29 @@ const InitChatPage: React.FC = () => {
           width: '70vw',
           height: '52vh',
           padding: '6vh 3vw 6vh 3vw',
+          display: 'flex',
+          alignItems: 'center', 
+          justifyContent: 'center', 
         }}
         className="font-intelmono relative rounded-lg"
       >
         <div style={{ 
           display: 'flex',
-          justifyContent: 'space-between',
-          height: '100%',
+          justifyContent: 'space-around',
+          width: '100%', 
+          maxWidth: '1200px', 
+          gap: '4vw',
         }}>
           {suspects.map((suspect, index) => (
             <div
               key={index}
               style={{
-                flex: '1',
+                flex: '0 1 auto',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                margin: '0 1vw',
+                justifyContent: 'center',
+                width: '26%', 
               }}
               className={`transition-opacity duration-1000 ${
                 visibleSuspect > index ? 'opacity-100' : 'opacity-0'
@@ -76,7 +82,7 @@ const InitChatPage: React.FC = () => {
                   flex: '1',
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'flex-start',
+                  justifyContent: 'center',
                   alignItems: 'center',
                   minHeight: '15vh',
                 }}
@@ -95,7 +101,7 @@ const InitChatPage: React.FC = () => {
                 display: 'flex', 
                 flexDirection: 'column', 
                 alignItems: 'center',
-                justifyContent: 'flex-end',
+                justifyContent: 'center',
               }}>
                 <img
                   src={suspect.imgSrc}
@@ -132,10 +138,10 @@ const InitChatPage: React.FC = () => {
           position: relative;
           display: inline-block;
           text-align: center;
-          line-height: 1.5;
+          line-height: 1.3;
           background-color: white;
           color: black;
-          padding: 1.5vh 1.5vw;
+          padding: 1.2vh 1.2vw;
           box-shadow: 
             0 -4px white, 
             0 -8px black, 
@@ -151,6 +157,7 @@ const InitChatPage: React.FC = () => {
             4px 4px black;
           box-sizing: border-box;
           width: 18vw;
+          max-width: 380px;
           margin-bottom: 4vh;
           font-family: 'Inter Mono';
         }
