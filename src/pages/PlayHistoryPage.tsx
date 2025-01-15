@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import LeftPage from "./LeftPage";
 import RightPage from "./RightPage";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,8 @@ const PlayHistoryPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBackgroundClick = () => {
+    const audio = new Audio("/sounds/book.mp3");
+      audio.play();
     navigate("/MainPage");
   };
     
@@ -30,6 +32,9 @@ const PlayHistoryPage: React.FC = () => {
             className="w-full h-auto"
             alt="Play History"
           />
+          <button>
+
+          </button>
         </div>
       </div>
 
