@@ -70,6 +70,10 @@ const LogInPage: React.FC = () => {
               alt="start-text"
               className="start-text"
             />
+            <img
+              src="/images/click.png"
+              alt="click-text"
+              className="click-text" />
           </div>
         </div>
       )}
