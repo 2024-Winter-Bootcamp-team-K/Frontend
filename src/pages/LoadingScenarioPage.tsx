@@ -155,12 +155,14 @@ const LoadingScenarioPage: React.FC = () => {
       {/* 오디오 활성화 버튼 */}
       {!isAudioEnabled && (
         <button
-          className="font-intelmono font-semibold mt-8 text-center text-white"
-          style={{ fontSize: '20px' }}
+          className="font-intelmono font-semibold mt-8 text-center text-white animated-button"
+          
           onClick={handleAudioPermission}
         >
           사건 파일 작성 시작
         </button>
+        
+
       )}
 
       {/* 진행 중 메시지 */}
@@ -182,6 +184,33 @@ const LoadingScenarioPage: React.FC = () => {
           현장 조사 데이터 분석이 완료되었습니다.
         </p>
       )}
+
+      <style>{`
+      .animated-button {
+        font-size: 18px;
+        border: 2px solid white;
+        padding: 4px 10px;
+        border-radius: 8px;
+        position: relative;
+        animation: pulse 2s infinite;
+      }
+
+      .animation-button:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.07);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      `}</style>
     </div>
   );
 };
