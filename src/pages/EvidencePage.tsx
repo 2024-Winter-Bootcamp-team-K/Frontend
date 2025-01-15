@@ -14,27 +14,8 @@ const EvidencePage: React.FC = () => {
     const [selectedEvidence, setSelectedEvidence] = useState<Evidence | null>(null);
     const [showItems, setShowItems] = useState<number[]>([]);
     const handleBackCheck = () => {navigate("/play")};
-    // const handleFolderCheck = () => {};
+    const handleFolderCheck = () => {};
 
-   /* const handleIconClick = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setPopupImage("/images/Note2.png");
-      setPopupText("추리 내용을 입력하세요...");
-      setIsNotePopup(true);
-      setShowPopup(true);
-    }; */
-  
-    
-    const handleFolderCheck = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        const audio = new Audio("/sounds/book.mp3");
-        audio.play();
-        setTimeout(() => {
-          navigate("/note");
-        }, 500);
-      };
-  
-  
     const evidenceData = [
         {
             id: 1,
