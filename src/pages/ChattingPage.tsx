@@ -1,5 +1,8 @@
 import React, { useState} from "react";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+
 
 const ChattingPage: React.FC = () => {
     const navigate = useNavigate();
@@ -57,7 +60,10 @@ const ChattingPage: React.FC = () => {
 
             {displayText && (
                 <div className="speech-bubble">
-                    <div className="bubble-content">{displayText}</div>
+                    <div className="bubble-content">
+                        <FontAwesomeIcon icon={faVolumeHigh}
+                        className="volume-icon" />
+                    {displayText}</div>
                 </div>
             )}
 
@@ -172,6 +178,7 @@ const ChattingPage: React.FC = () => {
                 }
 
                 .suspect-profile {
+                    width: 75%;
                     height: 100%;
                     display: flex;
                     flex-direction: column;
@@ -187,15 +194,16 @@ const ChattingPage: React.FC = () => {
                     justify-content: center;
                     align-items: center;
                     position: relative;
+                    top: 0%;
                 }
 
                 .tape-section {
                     position: absolute;
-                    width: 68%;
+                    width: 105%;
                 }
 
                 .tape-section:first-of-type {
-                    top: -1%;
+                    top: 2.7%;
                 }
 
                 .tape-section:first-of-type::before {
@@ -212,20 +220,21 @@ const ChattingPage: React.FC = () => {
                     left: -4vmin;
                 }
 
-                .suspect-image {
-                    height: 105%;
-                    width: auto;
-                    max-width: 80%;
-                    object-fit: contain;
-                    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-                }
-
-                .suspect-info {
-                    flex-grow: 1;
+                .suspect-image-wrapper {
+                    position: relative; /* 테이프와 이미지를 하나의 컨테이너로 묶음 */
+                    width: 70%;
+                    height: auto;
                     display: flex;
-                    flex-direction: column;
-                    padding: 0 2rem;
-                }
+                    justify-content: center;
+                    align-items: center;
+                    margin: 0 auto;
+                  }
+                
+                  .suspect-image {
+                    width: 100%; /* 프로필 이미지가 부모 요소에 맞게 반응형으로 조정 */
+                    height: auto; 
+                    object-fit: contain;
+                  }
                 
                 .info-grid {
                     display: grid;
@@ -448,6 +457,18 @@ const ChattingPage: React.FC = () => {
                     image-rendering: pixelated;
                     -ms-interpolation-mode: nearest-neighbor;
                     image-rendering: crisp-edges;
+                }
+
+                .volume-icon {
+                    margin-right: 8px;
+                    color: #b0b0b0;
+                    font-size: 1.2rem;
+                    cursor: pointer;
+                    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+                }
+
+                .volume-icon:hover {
+                    transform: scale(1.2) ;
                 }
 
                 @keyframes popIn {
