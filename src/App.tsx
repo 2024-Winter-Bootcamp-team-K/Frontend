@@ -19,6 +19,7 @@ import MakeScenarioPage from "./pages/MakeScenarioPage"; // 시나리오 생성�
 import NextPage from "./pages/NextPage";
 import NextPage2 from "./pages/NextPage2";
 import LoginBox from "./pages/LoginBox";
+import NotePage from "./pages/NotePage";
 
 const App: React.FC = () => {
   return (
@@ -44,6 +45,7 @@ const App: React.FC = () => {
         <Route path="/NextPage" element={<NextPage />} />
         <Route path="/NextPage2" element={<NextPage2 />} />
         <Route path="/loginbox" element={<LoginBox />} />
+        <Route path="/note" element={<NotePage />} />
       </Routes>
     </Router>
   );
