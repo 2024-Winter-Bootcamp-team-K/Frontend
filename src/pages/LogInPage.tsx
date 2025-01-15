@@ -85,7 +85,7 @@ const LogInPage: React.FC = () => {
           {/* 지갑 이미지 */}
           {showWallet && (
             <img
-              src="/images/wallet.png"
+              src="/images/wallet(2).png"
               alt="Wallet"
               className={`wallet-image ${hideWallets ? "move-down" : ""}`}
             />
@@ -172,7 +172,7 @@ const LogInPage: React.FC = () => {
           {/* 자른 지갑 이미지 */}
           {showWallet && (
             <img
-              src="/images/CuttingWallet.png"
+              src="/images/CuttingWallet(2).png"
               alt="Cutting Wallet"
               className={`cutting-wallet ${hideWallets ? "move-down" : ""}`}
             />

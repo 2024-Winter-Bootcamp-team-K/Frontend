@@ -30,7 +30,7 @@ const SuspectPage: React.FC = () => {
     return (
         <div className="suspect-page-container">
             <div className="content-wrapper">
-                {/* 뒤러가기 버튼 */}
+                {/* 뒤로가기 버튼 */}
                 <div className="back-button-container">
                     <button className="back-button" onClick={handleBackCheck}>
                         <img src="/images/back.svg" alt="Back Icon" className="back-icon" />
@@ -237,8 +237,14 @@ const SuspectPage: React.FC = () => {
                 }
 
                 .action-button:hover {
-                    background-color: rgba(0, 0, 0, 0.2);
                     transform: translateY(-4px) scale(1.1);
+                    background: linear-gradient(
+                        120deg,
+                        transparent,
+                        rgba(128, 128, 128, 1),
+                        transparent
+                      );
+                      transition: 0.5s;
                 }
 
                 .folder-button-container {
