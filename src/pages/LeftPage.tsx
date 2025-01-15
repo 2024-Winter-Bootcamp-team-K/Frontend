@@ -10,10 +10,14 @@ const LeftPage: React.FC = () => {
 
   const openPopup = () => {
     setActivePopup(true); // 팝업 열기
+    const audio = new Audio("/sounds/book.mp3");
+      audio.play();
   };
 
   const closePopup = () => {
     setActivePopup(false); // 팝업 닫기
+    const audio = new Audio("/sounds/book.mp3");
+      audio.play();
   };    
   return (
     <div className="w-full h-full bg-cover bg-center relative">

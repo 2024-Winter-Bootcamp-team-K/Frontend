@@ -7,6 +7,7 @@ const MainPage = () => {
   const navigate = useNavigate();
   const { bgmRef } = useAudio();
   const [isBlurred, setIsBlurred] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const playSound = () => {
     const audio = new Audio("/sounds/book.mp3");
@@ -20,17 +21,26 @@ const MainPage = () => {
     }, 500); // Blur 효과 지속 시간
   };
 
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
   return (
     <Background className={isBlurred ? "blur" : ""}>
       <PlayButtonWrapper>
-        <PlayButton
-          onClick={() => {
-            playSound();
-            handleNavigation("/history");
-          }}
-        >
-          플레이 기록
-        </PlayButton>
+        <DropdownButton onClick={toggleDropdown}>플레이 기록</DropdownButton>
+        {isDropdownOpen && (
+          <DropdownMenu>
+            <DropdownItem
+              onClick={() => {
+                playSound();
+                handleNavigation("/history");
+              }}
+            >
+              사건 일지 #001
+            </DropdownItem>
+          </DropdownMenu>
+        )}
       </PlayButtonWrapper>
 
       <ScenarioButtonWrapper>
@@ -49,7 +59,7 @@ const MainPage = () => {
 
 export default MainPage;
 
-// Styled Components (기존과 동일)
+// Styled Components
 const Background = styled.div`
   position: fixed;
   inset: 0;
@@ -80,6 +90,51 @@ const PlayButtonWrapper = styled.div`
   }
 `;
 
+const DropdownButton = styled.button`
+  background-color: rgba(58, 59, 59, 0.5);
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+  }
+`;
+
+const DropdownMenu = styled.div`
+  background-color: rgba(58, 59, 59, 0.5);
+  border: 1px solid rgba(58, 59, 59, 0.2);
+  border-radius: 9999px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: flex items-center justify-center;
+`;
+
+const DropdownItem = styled.div`
+  padding: 0.5rem 1rem;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: rgba(58, 59, 59, 0.1);
+  }
+`;
+
 const ScenarioButtonWrapper = styled.div`
   position: absolute;
   top: 55%;
@@ -97,31 +152,4 @@ const ScenarioButtonWrapper = styled.div`
   }
 `;
 
-const PlayButton = styled.button`
-  background-color: rgba(58, 59, 59, 0.5); /* 반투명한 배경색 */
-  color: white; /* 텍스트 색상 */
-  font-size: 1.25rem;
-  font-weight: bold;
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  border: none; /* 경계선 제거 */
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out; /* 눌림 효과를 위한 부드러운 전환 */
-
-  /* 눌림 효과 */
-  &:active {
-    transform: scale(0.95); /* 버튼이 살짝 눌리는 효과 */
-  }
-
-  @media (max-width: 768px) {
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 0.875rem;
-    padding: 0.5rem 0.75rem;
-  }
-`;
-
-const ScenarioButton = styled(PlayButton)``;
+const ScenarioButton = styled(DropdownButton)``;

@@ -6,10 +6,14 @@ const RightPage: React.FC = () => {
 
   const openPopup = (id: string) => {
     setActivePopup(id); // 팝업 열기
+    const audio = new Audio("/sounds/book.mp3");
+      audio.play();
   };
 
   const closePopup = () => {
     setActivePopup(null); // 팝업 닫기
+    const audio = new Audio("/sounds/book.mp3");
+      audio.play();
   };
 
   return (
