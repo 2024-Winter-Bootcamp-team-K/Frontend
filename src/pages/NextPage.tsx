@@ -1,4 +1,4 @@
-//NextPage
+//넥스트트
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -24,8 +24,7 @@ const NextPage = () => {
 
   const handleBackgroundClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-  
-    // 클릭된 요소가 `Background`이거나 상위 요소일 경우 처리
+
     if (e.currentTarget === e.target || target.classList.contains("Background")) {
       if (!showPopup && !exitAnimate) {
         setExitAnimate(true);
@@ -37,36 +36,27 @@ const NextPage = () => {
       }
     }
   };
-  
 
   const handleStopPropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
   const handleIconClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // 클릭 전파 방지
-    setPopupImage("/images/Note2.png"); // 팝업 이미지 경로 설정
-    setPopupText("추리 내용을 입력하세요..."); // 팝업 텍스트
-    setIsNotePopup(true); // Note2 팝업 여부 true로 설정
-    setShowPopup(true); // 팝업 표시
+    e.stopPropagation();
+    setPopupImage("/images/Note2.png");
+    setPopupText("추리 내용을 입력하세요...");
+    setIsNotePopup(true);
+    setShowPopup(true);
   };
-  
-  
-  const handleImageClick = (
-    imageSrc: string,
-    text: string,
-    ...additionalTexts: string[]
-  ) => {
-    setPopupImage(imageSrc); // 클릭된 이미지 설정
-    setPopupText([text, ...additionalTexts].join("\n")); // 텍스트 설정
-    setShowPopup(true); // 팝업 표시
+
+  const handleImageClick = (imageSrc: string, text: string, ...additionalTexts: string[]) => {
+    setPopupImage(imageSrc);
+    setPopupText([text, ...additionalTexts].join("\n"));
+    setShowPopup(true);
     const audio = new Audio("/sounds/book.mp3");
     audio.play();
   };
-  
- 
 
-  
   const handleClosePopup = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowPopup(false);
@@ -94,12 +84,11 @@ const NextPage = () => {
     }, 500);
   };
 
-
   return (
     <Background
-    onClick={handleBackgroundClick}
-    className={`${animate ? "fade-in" : "fade-out"} ${exitAnimate ? "exit" : ""} Background`}
-  >
+      onClick={handleBackgroundClick}
+      className={`${animate ? "fade-in" : "fade-out"} ${exitAnimate ? "exit" : ""} Background`}
+    >
       {!showImage && <LoadingMessage>LOADING~</LoadingMessage>}
       {showImage && (
         <>
@@ -109,151 +98,137 @@ const NextPage = () => {
               alt="PlayHistory"
               onClick={handleStopPropagation}
             />
-                        <ArrowButtonLeft onClick={handlePrevPageClick}>&lt;</ArrowButtonLeft>
-                        <ArrowButtonRight onClick={handleNextPageClick}>&gt;</ArrowButtonRight>
+            <ArrowButtonLeft onClick={handlePrevPageClick}>&lt;</ArrowButtonLeft>
+            <ArrowButtonRight onClick={handleNextPageClick}>&gt;</ArrowButtonRight>
           </HistoryWrapper>
-          <IconImage
-            src="/images/Icon.png"
-            alt="Icon"
-            onClick={handleIconClick}
-          />
-           <Tips>
+          <IconImage src="/images/Icon.png" alt="Icon" onClick={handleIconClick} />
+          <Tips>
             Tips: 책 아래를 눌러서 메인 페이지로 돌아갈 수 있습니다
-           </Tips>
-           {showPopup && (
-  <PopupWrapper onClick={handleClosePopup}>
-    <Popup onClick={handleStopPropagation}>
-      {/* Note2 관련 팝업 */}
-      {isNotePopup && (
-        <>
-          <NoteHeader>추리노트</NoteHeader>
-          {popupImage && <PopupImage src={popupImage} alt="Note2 Image" />}
-          <NoteTextarea
-            value={noteContent}
-            onChange={(e) => setNoteContent(e.target.value)}
-            placeholder="추리 내용을 입력하세요..."
-          />
-        </>
-      )}
+          </Tips>
+          {showPopup && (
+            <PopupWrapper onClick={handleClosePopup}>
+              <Popup onClick={handleStopPropagation}>
+                {isNotePopup && (
+                  <>
+                    <NoteHeader>추리노트</NoteHeader>
+                    {popupImage && <PopupImage src={popupImage} alt="Note2 Image" />}
+                    <NoteTextarea
+                      value={noteContent}
+                      onChange={(e) => setNoteContent(e.target.value)}
+                      placeholder="추리 내용을 입력하세요..."
+                    />
+                  </>
+                )}
 
-      {/* Evidence 및 Suspect 팝업 */}
-      {!isNotePopup && popupImage && (
-        <>
-          {/* CheckEv 큰 이미지 */}
-          <CheckEvImage src="/images/CheckEv.png" alt="CheckEv Image" /> 
+                {!isNotePopup && popupImage && (
+                  <>
+                    <CheckEvImage src="/images/CheckEv.png" alt="CheckEv Image" />
 
-          {/* 클릭된 이미지에 따른 텍스트와 작은 이미지 표시 */}
-          {popupImage === "/images/Suspect1.png" && (
-            <ImageTextWrapper>
-              <Suspect1Image src="/images/Suspect1.png" alt="Suspect 1" />
-              <PopupContent>
-                <h2>화가 김민수</h2>
-                <p>name: 김민수</p>
-                <p>age: 42세</p>
-                <p>gender: 남성</p>
-                <p>job: 미술관 큐레이터</p>
-                <p>init statement: 그날 밤 사무실에서 전시 준비 중이었음.</p>
-              </PopupContent>
+                    {popupImage === "/images/Suspect1.png" && (
+                      <ImageTextWrapper>
+                        <Suspect1Image src="/images/Suspect1.png" alt="Suspect 1" />
+                        <WANTEDImage2 src="/images/WANTED.png" alt="WANTED" />
+                        <PopupContent>
+                          <h2>화가 김민수</h2>
+                          <p>name: 김민수</p>
+                          <p>age: 42세</p>
+                          <p>gender: 남성</p>
+                          <p>job: 미술관 큐레이터</p>
+                          <p>init statement: 그날 밤 사무실에서 전시 준비 중이었음.</p>
+                        </PopupContent>
 
-  <QuestionAnswerWrapper>
-    <QuestionAnswerText>
-      <strong>Q:</strong> 넌 어디서 뭘 했지? <br />
-      <strong>A:</strong> 전 여기서 이걸 했습니다.
-    </QuestionAnswerText>
-    <QuestionAnswerText>
-      <strong>Q:</strong> CCTV에는 너가 이때 미술관에 들어왔어. 맞아? <br />
-      <strong>A:</strong> 맞습니다.
-    </QuestionAnswerText>
-    <QuestionAnswerText>
-      <strong>Q:</strong> 미술관에 들어와서 뭘 했지? <br />
-      <strong>A:</strong> 앞서 말했듯, 사무실에서 다음 전시를 준비하고 있었습니다.
-    </QuestionAnswerText>
-  </QuestionAnswerWrapper>
-            </ImageTextWrapper>
+                        <QuestionAnswerWrapper>
+                          <QuestionAnswerText>
+                            <strong>Q:</strong> 넌 어디서 뭘 했지? <br />
+                            <strong>A:</strong> 전 여기서 이걸 했습니다.
+                          </QuestionAnswerText>
+                          <QuestionAnswerText>
+                            <strong>Q:</strong> CCTV에는 너가 이때 미술관에 들어왔어. 맞아? <br />
+                            <strong>A:</strong> 맞습니다.
+                          </QuestionAnswerText>
+                          <QuestionAnswerText>
+                            <strong>Q:</strong> 미술관에 들어와서 뭘 했지? <br />
+                            <strong>A:</strong> 앞서 말했듯, 사무실에서 다음 전시를 준비하고 있었습니다.
+                          </QuestionAnswerText>
+                        </QuestionAnswerWrapper>
+                      </ImageTextWrapper>
+                    )}
+
+                    {popupImage === "/images/Suspect2.png" && (
+                      <ImageTextWrapper>
+                        <Suspect2Image src="/images/Suspect2.png" alt="Suspect 2" />
+                        <PopupContent>
+                          <h2>경비원 이지원</h2>
+                          <p>name: 이지원</p>
+                          <p>age: 35세</p>
+                          <p>gender: 여성</p>
+                          <p>job: 미술관 경비원</p>
+                          <p>init statement: 순찰 중 이상 상황은 없었다고 진술함.</p>
+                        </PopupContent>
+
+                        <QuestionAnswerWrapper2>
+                          <QuestionAnswerText2>
+                            <strong>Q:</strong> 넌 어디서 뭘 했지? <br />
+                            <strong>A:</strong> 전 여기서 이걸 했습니다.
+                          </QuestionAnswerText2>
+                          <QuestionAnswerText2>
+                            <strong>Q:</strong> CCTV에는 너가 이때 미술관에 들어왔어. 맞아? <br />
+                            <strong>A:</strong> 맞습니다.
+                          </QuestionAnswerText2>
+                          <QuestionAnswerText2>
+                            <strong>Q:</strong> 미술관에 들어와서 뭘 했지? <br />
+                            <strong>A:</strong> 앞서 말했듯, 사무실에서 다음 전시를 준비하고 있었습니다.
+                          </QuestionAnswerText2>
+                        </QuestionAnswerWrapper2>
+                      </ImageTextWrapper>
+                    )}
+
+                    {popupImage === "/images/Evidence1.png" && (
+                      <ImageTextWrapper>
+                        <Evidence1Image src="/images/Evidence1.png" alt="Evidence 1" />
+                        <PopupContent2>
+                          <h2>장갑</h2>
+                          <p>미술관 지하 주차장에서 발견된 장갑.</p>
+                          <p>검은색 가죽 장갑, 복원 작업실에서 사용하던 제품과 동일.</p>
+                          <p>내부에서 김민수의 ID 카드 조각이 발견됨.</p>
+                        </PopupContent2>
+                      </ImageTextWrapper>
+                    )}
+
+                    {popupImage === "/images/Evidence2.png" && (
+                      <ImageTextWrapper>
+                        <Evidence2Image src="/images/Evidence2.png" alt="Evidence 2" />
+                        <PopupContent2>
+                          <h2>보안실 로그</h2>
+                          <p>보안실 모니터링 로그.</p>
+                          <p>남성 실루엣이 특정 시간대에 감지됨.</p>
+                        </PopupContent2>
+                      </ImageTextWrapper>
+                    )}
+                  </>
+                )}
+              </Popup>
+            </PopupWrapper>
           )}
-
-          {popupImage === "/images/Suspect2.png" && (
-            <ImageTextWrapper>
-              <Suspect2Image src="/images/Suspect2.png" alt="Suspect 2" />
-              <PopupContent>
-                <h2>경비원 이지원</h2>
-                <p>name: 이지원</p>
-                <p>age: 35세</p>
-                <p>gender: 여성</p>
-                <p>job: 미술관 경비원</p>
-                <p>init statement: 순찰 중 이상 상황은 없었다고 진술함.</p>
-              </PopupContent>
-              <QuestionAnswerWrapper2>
-    <QuestionAnswerText2>
-      <strong>Q:</strong> 넌 어디서 뭘 했지? <br />
-      <strong>A:</strong> 전 여기서 이걸 했습니다.
-    </QuestionAnswerText2>
-    <QuestionAnswerText2>
-      <strong>Q:</strong> CCTV에는 너가 이때 미술관에 들어왔어. 맞아? <br />
-      <strong>A:</strong> 맞습니다.
-    </QuestionAnswerText2>
-    <QuestionAnswerText2>
-      <strong>Q:</strong> 미술관에 들어와서 뭘 했지? <br />
-      <strong>A:</strong> 앞서 말했듯, 사무실에서 다음 전시를 준비하고 있었습니다.
-    </QuestionAnswerText2>
-  </QuestionAnswerWrapper2>
-            </ImageTextWrapper>
-          )}
-
-          {popupImage === "/images/Evidence1.png" && (
-            <ImageTextWrapper>
-              <Evidence1Image src="/images/Evidence1.png" alt="Evidence 1" />
-              <PopupContent2>
-                <h2>장갑</h2>
-                <p>미술관 지하 주차장에서 발견된 장갑.</p>
-                <p>검은색 가죽 장갑, 복원 작업실에서 사용하던 제품과 동일.</p>
-                <p>내부에서 김민수의 ID 카드 조각이 발견됨.</p>
-              </PopupContent2>
-            </ImageTextWrapper>
-          )}
-
-          {popupImage === "/images/Evidence2.png" && (
-            <ImageTextWrapper>
-              <Evidence2Image src="/images/Evidence2.png" alt="Evidence 2" />
-              <PopupContent2>
-                <h2>보안실 로그</h2>
-                <p>보안실 모니터링 로그.</p>
-                <p>남성 실루엣이 특정 시간대에 감지됨.</p>
-              </PopupContent2>
-            </ImageTextWrapper>
-          )}
-        </>
-      )}
-    </Popup>
-  </PopupWrapper>
-)}
-
-
 
           <CasePlaceImage
             src="/images/Case_place.png"
             alt="Case Place"
-            onClick={() =>
-              handleImageClick("/images/CheckEv.png",
-                "미술관 내부 사건 장소", 
-                "아주 비싸보이는 미술품들과", 
-                "고대의유물들이있다",
-                "도둑들이 탐나보이는게 아주 많다")
-            }
+
           />
-              <CasePlaceText>
-                <TitleText>level: Easy / Attempts: 2</TitleText>
-                <DetailText>
-                  <strong>Date:</strong> 2024.12.30 23:30<br />
-                  <strong>Location:</strong> 미술관<br />
-                  <strong>Type:</strong> 도난 사건
-                </DetailText>
-                <DescriptionText>
-                  2024년 12월 30일 밤 11시 30분 경,<br />
-                  서울 현대미술관 3층 특별 전시실에서 반 고흐의<br />
-                  ’해바라기’ 복제화 작품이 도난 되는데,,,
-                </DescriptionText>
-              </CasePlaceText>
+          <CasePlaceText>
+            <TitleText>level: Easy / Attempts: 2</TitleText>
+            <DetailText>
+              <strong>Date:</strong> 2024.12.30 23:30<br />
+              <strong>Location:</strong> 미술관<br />
+              <strong>Type:</strong> 도난 사건
+            </DetailText>
+            <DescriptionText>
+              2024년 12월 30일 밤 11시 30분 경,<br />
+              서울 현대미술관 3층 특별 전시실에서 반 고흐의<br />
+              ’해바라기’ 복제화 작품이 도난 되는데...
+            </DescriptionText>
+          </CasePlaceText>
           <LeftText>미술관 도난 사건</LeftText>
           <RightTextTop>Suspect List</RightTextTop>
           <SuspectImage1
@@ -264,18 +239,9 @@ const NextPage = () => {
             }
           />
           <ImageText1>화가 김민수</ImageText1>
-          <FailureImage
-            src="/images/FAILURE.png"
-            alt="Failure"
-          />
-          <SuccessImage
-            src="/images/Success.png"
-            alt="Success"
-          />
-          <WANTEDImage
-            src="/images/WANTED.png"
-            alt="WANTED"
-          />
+          <FailureImage src="/images/FAILURE.png" alt="Failure" />
+          <SuccessImage src="/images/Success.png" alt="Success" />
+          <WANTEDImage src="/images/WANTED.png" alt="WANTED" />
           <SuspectImage2
             src="/images/Suspect2.png"
             alt="Suspect 2"
@@ -296,7 +262,7 @@ const NextPage = () => {
             src="/images/Evidence2.png"
             alt="Evidence 2"
             onClick={() =>
-              handleImageClick("/images/Evidence2.png", "보안실 모니터링 시스템 로그", "남성으로 보이는 실루엣이","몇시 몇분경에 찍혀있다.")
+              handleImageClick("/images/Evidence2.png", "보안실 모니터링 시스템 로그", "남성으로 보이는 실루엣이", "몇 시 몇 분경에 찍혀있다.")
             }
           />
           <ImageText4>보안실 시스템 로그</ImageText4>
@@ -393,7 +359,19 @@ const PopupContent2 = styled.div`
   border: none !important; /* 테두리 제거 */
   box-shadow: none !important; /* 그림자 제거 */
   outline: none !important; /* 외곽선 제거 */
+
+  h2 {
+    font-weight: 800; /* h2만 더 진하게 설정 */
+    margin-bottom: 15px; /* h2와 p 사이 간격 추가 */
+  }
+
+  p {
+  font-weight: 400;
+    margin-top: 25px; /* p 위쪽에 간격 추가 */
+  }
 `;
+
+
 
 const CheckEvImage = styled.img`
   width: 70%;
@@ -404,6 +382,7 @@ const CheckEvImage = styled.img`
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 `;
+
 
 const Suspect1Image = styled.img`
   float: left; /* 왼쪽으로 띄우기 */
@@ -488,18 +467,24 @@ const CasePlaceText = styled.div`
 `;
 
 const TitleText = styled.div`
-  font-size: 1.5rem; /* 폰트 크기 줄임 */
-  font-weight: bold;
+  margin-top: -50px; /* 위로 올리기 */
+  font-size: 1.3rem; /* 폰트 크기 줄임 */
+  font-weight: 400;
 `;
 
 const DetailText = styled.div`
+  margin-top: 15px; /* 위로 올리기 */
   font-size: 1rem; /* 폰트 크기 줄임 */
   margin-bottom: 15px;
+  
+  font-weight: 400;
 `;
 
 const DescriptionText = styled.div`
   font-size: 1.2rem; /* 설명 텍스트 폰트 크기 */
   line-height: 1.4; /* 줄 간격을 작게 */
+  font-weight: 800;
+  margin-bottom: -55px;
 `;
 
 
@@ -522,9 +507,9 @@ const HistoryImage = styled.img`
 
 const CasePlaceImage = styled.img`
   position: absolute;
-  top: 15%;
-  left: 20%;
-  width: 400px;
+  top: 17%;
+  left: 22.5%;
+  width: 330px;
   height: auto;
   z-index: 2;
   cursor: pointer;
@@ -533,27 +518,28 @@ const CasePlaceImage = styled.img`
 const SuspectImage1 = styled.img`
   position: absolute;
   top: 24%;
-  right: 35%;
-  width: 150px;
+  right: 36%;
+  width: 130px;
   height: auto;
   z-index: 3;
   cursor: pointer;
 `;
 const ImageText1 = styled.div`
   position: absolute;
-  top: 46%;
+  top: 44%;
   right: 37%;
   color: black;
   font-family: 'THEFACESHOP_INKLIPQUID', sans-serif;
   font-size: 1.5rem;
+  font-weight: bold;
   text-align: center;
 `;
 
 const SuspectImage2 = styled.img`
   position: absolute;
   top: 24%;
-  right: 22%;
-  width: 150px;
+  right: 21%;
+  width: 130px;
   height: auto;
   z-index: 3;
   cursor: pointer;
@@ -561,11 +547,12 @@ const SuspectImage2 = styled.img`
 
 const ImageText2 = styled.div`
   position: absolute;
-  top: 46%;
+  top: 44%;
   right: 23%;
   color: black;
   font-family: 'THEFACESHOP_INKLIPQUID', sans-serif;
   font-size: 1.5rem;
+  font-weight: bold;
   text-align: center;
 `;
 
@@ -622,9 +609,9 @@ const FailureImage = styled.img`
 
 const SuccessImage = styled.img`
   position: absolute;
-  top: 0%;
+  top: 2%;
   left: 20%;
-  width: 450px;
+  width: 410px;
   height: auto;
   z-index: 3;
   pointer-events: none;
@@ -634,7 +621,7 @@ const SuccessImage = styled.img`
 const WANTEDImage = styled.img`
   position: absolute;
   top: 23%;
-  right: 33%;
+  right: 32%;
   width: 230px;
   height: auto;
   z-index: 3;
@@ -642,11 +629,23 @@ const WANTEDImage = styled.img`
   opacity: 1;
 `;
 
+const WANTEDImage2 = styled.img`
+  position: absolute;
+  top: 8%;
+  right: 37%;
+  width: 250px;
+  height: auto;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 1;
+`;
+
+
 const IconImage = styled.img`
   position: absolute;
   bottom: 115px;
   left: 670px;
-  width: 30px;
+  width: 28px;
   height: auto;
   cursor: pointer;
   &:hover {
@@ -748,7 +747,6 @@ const NoteTextarea = styled.textarea`
   }
 `;
 
-
 const ArrowButtonLeft = styled.button`
   position: absolute;
   top: 48%;
@@ -784,10 +782,10 @@ const ArrowButtonRight = styled.button`
 
 const LeftText = styled.div`
   position: absolute;
-  top: 43%;
-  left: 26%;
+  top: 42%;
+  left: 27%;
   font-family: 'THEFACESHOP_INKLIPQUID', sans-serif;
-  font-size: 3rem;
+  font-size: 2.4rem;
   color: black;
   font-weight: bold;
 `;
@@ -798,7 +796,7 @@ const RightTextTop = styled.div`
   right: 28%;
   font-family: 'THEFACESHOP_INKLIPQUID', sans-serif;
   font-size: 2.5rem;
-  font-weight: bold;
+  font-weight: 500;
 `;
 
 const RightTextBottom = styled.div`
@@ -807,5 +805,5 @@ const RightTextBottom = styled.div`
   right: 28%;
   font-family: 'THEFACESHOP_INKLIPQUID', sans-serif;
   font-size: 2.5rem;
-  font-weight: bold;
+  font-weight: 500;
   `;
