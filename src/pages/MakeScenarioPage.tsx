@@ -77,6 +77,7 @@ const MakeScenarioPage: React.FC = () => {
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
                       onClick={(e) => e.stopPropagation()}
+                      isSelected={!!location}
                     >
                       <option value="" disabled>
                         범행 장소 선택
@@ -109,6 +110,7 @@ const MakeScenarioPage: React.FC = () => {
                     value={crimeType}
                     onChange={(e) => setCrimeType(e.target.value)}
                     onClick={(e) => e.stopPropagation()}
+                    isSelected={!!location}
                   >
                     <option value="" disabled>
                       범행 종류 선택
@@ -296,10 +298,11 @@ const Input = styled.input`
   border: none;
   background-color: transparent;
   color: black;
-  font-size: clamp(0.2rem, calc(0.6rem + 0.6vw), 3rem);
+  font-size: clamp(0.8rem, calc(0.6rem + 1vw), 8rem);
   font-family: 'Handlee', cursive;
   
   &::placeholder {
+    font-size: clamp(0.2rem, calc(0.2rem + 0.9vw), 3rem);
     color: rgba(0, 0, 0, 0.4);
     font-style: italic;
   }
@@ -336,7 +339,7 @@ const InputLine = styled.div`
 
 const SelectWrapper = styled(InputWrapper)``;
 
-const Dropdown = styled.select`
+const Dropdown = styled.select<{ isSelected?: boolean }>`
   width: 100%;
   padding: clamp(0.4rem, 0.8vh, 0.8rem);
   border: none;
@@ -345,7 +348,7 @@ const Dropdown = styled.select`
   font-family: 'Handlee', cursive;
   cursor: pointer;
   transition: color 0.3s ease;
-  color: rgba(0, 0, 0, 0.5);
+  color: ${({ isSelected }) => (isSelected ? "black" : "rgba(0, 0, 0, 0.5)")}; 
 
   &:focus {
     outline: none;
@@ -353,12 +356,12 @@ const Dropdown = styled.select`
 
   &:hover,
   &:focus {
-    color: black; /* 선택하거나 포커스될 때 글자 색을 검정으로 */
+    color: black; 
   }
 
   option {
-    background-color: #9e805a; /* 드롭다운 옵션의 배경색 */
-    color: black; /* 드롭다운 옵션의 글자 색 */
+    background-color: #9e805a; 
+    color: black; 
   }
 `;
 
