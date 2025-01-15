@@ -18,18 +18,29 @@ function NotePage() {
         className="relative bg-no-repeat bg-cover"
         style={{
           backgroundImage: "url('images/note.png')",
-          width: "800px", // 이미지 크기와 동일하게 설정
-          height: "600px", // 이미지 크기와 동일하게 설정
+          bottom: "5vh",
+          width: "100vw",
+          maxWidth: "800px", // 최대 너비
+          height: "100vh",
+          maxHeight: "600px", // 최대 높이
         }}
         onClick={(e) => e.stopPropagation()} // 팝업 내용 클릭 시 이벤트 전파 막기
       >
         {/* 추리 노트 제목 */}
-        <div className="absolute top-[30%] left-[15%] w-[70%] text-center">
+        <div 
+          className="absolute"
+          style={{
+            top: "30%", // 이미지 기준 상단에서 15%
+            left: "10%", // 이미지 기준 좌측에서 10%
+            width: "80%", // 전체 너비의 80%
+            textAlign: "center",
+          }}
+        >
           <h2
             className="text-3xl font-bold text-black"
             style={{
-              fontFamily: "'THEFACESHOP_INKLIPQUID'", // 폰트 패밀리 설정
-              fontSize: "40px", // 텍스트 색상 설정
+              fontFamily: "'THEFACESHOP_INKLIPQUID'",
+              fontSize: "2rem",
             }}
           >
             추리 노트
@@ -38,10 +49,14 @@ function NotePage() {
 
         {/* 텍스트 입력 영역 */}
         <textarea
-          className="absolute top-[35%] left-[15%] w-[70%] h-[50%] bg-transparent text-black p-4 resize-none focus:outline-none font-bold"
+          className="absolute bg-transparent text-black p-4 resize-none focus:outline-none font-bold"
           style={{
-            fontFamily: "'THEFACESHOP_INKLIPQUID'", // 폰트 패밀리 설정
-            fontSize: "25px", // 텍스트 색상 설정
+            top: "35%", // 이미지 기준 상단에서 30%
+            left: "15%", // 이미지 기준 좌측에서 10%
+            width: "70%", // 전체 너비의 80%
+            height: "50%", // 전체 높이의 50%
+            fontFamily: "'THEFACESHOP_INKLIPQUID'",
+            fontSize: "1.25rem",
           }}
           placeholder="추리 내용을 입력하세요."
         ></textarea>
