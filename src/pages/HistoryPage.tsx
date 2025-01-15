@@ -41,22 +41,12 @@ const HistoryPage = () => {
     e.stopPropagation();
   };
 
- /* const handleIconClick = (e: React.MouseEvent) => {
+  const handleIconClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setPopupImage("/images/Note2.png");
     setPopupText("추리 내용을 입력하세요...");
     setIsNotePopup(true);
     setShowPopup(true);
-  }; */
-
-  
-  const handleIconClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const audio = new Audio("/sounds/book.mp3");
-    audio.play();
-    setTimeout(() => {
-      navigate("/note");
-    }, 500);
   };
 
   const handleImageClick = (imageSrc: string, text: string, ...additionalTexts: string[]) => {

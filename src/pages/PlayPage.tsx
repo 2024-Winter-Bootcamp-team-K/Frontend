@@ -5,25 +5,9 @@ const PlayPage: React.FC = () => {
   const navigate = useNavigate();
   const handleSuspectCheck = () => {navigate("/suspect")};
   const handleEvidenceCheck = () => {navigate("/evidence")};
- // const handleFolderCheck = () => {};
+  const handleFolderCheck = () => {};
 
-   /* const handleIconClick = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setPopupImage("/images/Note2.png");
-      setPopupText("추리 내용을 입력하세요...");
-      setIsNotePopup(true);
-      setShowPopup(true);
-    }; */
   
-    
-    const handleFolderCheck = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      const audio = new Audio("/sounds/book.mp3");
-      audio.play();
-      setTimeout(() => {
-        navigate("/note");
-      }, 500);
-    };
 
   return (
     <div className="playpage-container">
