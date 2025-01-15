@@ -122,12 +122,12 @@ const InitChatPage: React.FC = () => {
       </div>
 
       <button
+        className="text-white font-intelmono font-semibold animated-button"
         style={{
           marginTop: '4vh',
-          padding: '1vh 2vw',
-          fontSize: '2vw',
+          padding: '0.5vh 1vw',
+          fontSize: '1.7vw',
         }}
-        className="text-white font-intelmono"
         onClick={() => navigate("/play")}
       >
         수사 시작하기
@@ -188,6 +188,30 @@ const InitChatPage: React.FC = () => {
             -4px 0 white, 
             -8px 0 white, 
             -12px 0 white;
+        }
+
+        .animated-button {
+          font-size: 20px;
+          padding: 4px 10px;
+          border-radius: 8px;
+          position: relative;
+          animation: pulse 2s infinite;
+        }
+  
+        .animation-button:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
+  
+        @keyframes pulse {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.13);
+          }
+          100% {
+            transform: scale(1);
+          }
         }
 
         @media (max-width: 768px) {

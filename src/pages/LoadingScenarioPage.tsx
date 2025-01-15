@@ -103,8 +103,11 @@ const LoadingScenarioPage: React.FC = () => {
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#181818] text-white">
       {/* 제목 */}
       <h1
+        style={{ 
+          fontSize: '3vw',
+          marginBottom: '4vh',
+         }}
         className="font-intelmono text-xl font-bold text-center mb-8"
-        style={{ fontSize: '2rem' }}
       >
         기밀 사건 파일 #2024-12-30
       </h1>
@@ -115,15 +118,21 @@ const LoadingScenarioPage: React.FC = () => {
         style={{
           backgroundColor: '#1E305A',
           boxShadow: 'inset 0px 10px 30px rgba(24, 23, 32, 0.7), inset 0px -10px 30px rgba(0, 0, 0, 0.7)',
-          width: '1000px',
-          height: '400px',
+          width: '70vw',
+          height: '52vh',
+          padding: '6vh 3vw 6vh 3vw',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
         {/* 타이핑 텍스트 */}
         <div className="absolute top-10 left-16 overflow-hidden h-[200px]">
           <p
             className="whitespace-pre-wrap text-sm leading-6 flex items-center"
-            style={{ fontSize: '20px', lineHeight: '1.6', display: 'inline' }}
+            style={{ fontSize: '1.3vw', 
+                     lineHeight: '1.6', 
+                     display: 'inline' }}
           >
             {text}
             <span
@@ -155,8 +164,12 @@ const LoadingScenarioPage: React.FC = () => {
       {/* 오디오 활성화 버튼 */}
       {!isAudioEnabled && (
         <button
-          className="font-intelmono font-semibold mt-8 text-center text-white animated-button"
-          
+          className="font-intelmono font-semibold mt-8 text-center text-white animated-button glow-effect-inner"
+          style={{
+            marginTop: '4vh',
+            padding: '0.5vh 1vw',
+            fontSize: '1.7vw',
+          }}
           onClick={handleAudioPermission}
         >
           사건 파일 작성 시작
@@ -179,7 +192,10 @@ const LoadingScenarioPage: React.FC = () => {
       {progress === 100 && (
         <p
           className="font-intelmono mt-8 text-center text-white text-lg font-semibold"
-          style={{ fontSize: '20px' }}
+          style={{ 
+            marginTop: '4vh',
+            fontSize: '2vw',
+           }}
         >
           현장 조사 데이터 분석이 완료되었습니다.
         </p>
@@ -187,8 +203,7 @@ const LoadingScenarioPage: React.FC = () => {
 
       <style>{`
       .animated-button {
-        font-size: 18px;
-        border: 2px solid white;
+        font-size: 20px;
         padding: 4px 10px;
         border-radius: 8px;
         position: relative;
@@ -204,7 +219,7 @@ const LoadingScenarioPage: React.FC = () => {
           transform: scale(1);
         }
         50% {
-          transform: scale(1.07);
+          transform: scale(1.13);
         }
         100% {
           transform: scale(1);
