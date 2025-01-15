@@ -13,13 +13,14 @@ import VideoPage from "./pages/VideoPage";
 import LogInPage from "./pages/LogInPage";
 import SignupBox from "./pages/SignupBox";
 import ChattingPage from "./pages/ChattingPage";
-import MainPage from "./pages/MainPage"; // 메인인 페이지
+import MainPage from "./pages/MainPage"; // 메인 페이지
 import HistoryPage from "./pages/HistoryPage"; // 플레이 기록 페이지
-import MakeScenarioPage from "./pages/MakeScenarioPage"; // 시나리오 생성성 페이지
+import MakeScenarioPage from "./pages/MakeScenarioPage"; // 시나리오 생성 페이지
 import NextPage from "./pages/NextPage";
 import NextPage2 from "./pages/NextPage2";
 import LoginBox from "./pages/LoginBox";
 import NotePage from "./pages/NotePage";
+import { AudioProvider } from "./pages/MainAudioContext";
 
 const App: React.FC = () => {
   return (
@@ -27,25 +28,52 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/login" element={<LogInPage />} />
         <Route path="/register" element={<SignupBox />} />
-        <Route path="/video" element={<VideoPage />}  />
+        <Route path="/video" element={<VideoPage />} />
         <Route path="/play" element={<PlayPage />} />
-        <Route path="/loading" element={<LoadingScenarioPage />} />
         <Route path="/initchat" element={<InitChatPage />} />
         <Route path="/choose" element={<ChoosePage />} />
         <Route path="/result" element={<ResultPage />} />
         <Route path="/resultLoading" element={<ResultLoadingPage />} />
         <Route path="/Ending" element={<EndingPage />} />
-        <Route path="/loading" element={<LoadingScenarioPage />} />
         <Route path="/evidence" element={<EvidencePage />} />
         <Route path="/suspect" element={<SuspectPage />} />
         <Route path="/chat" element={<ChattingPage />} />
-        <Route path="/MainPage" element={<MainPage />} />
-        <Route path="/HistoryPage" element={<HistoryPage />} />
-        <Route path="/MakeScenarioPage" element={<MakeScenarioPage />} />
         <Route path="/NextPage" element={<NextPage />} />
         <Route path="/NextPage2" element={<NextPage2 />} />
         <Route path="/loginbox" element={<LoginBox />} />
         <Route path="/note" element={<NotePage />} />
+        <Route
+          path="/MainPage"
+          element={
+            <AudioProvider>
+              <MainPage />
+            </AudioProvider>
+          }
+        />
+        <Route
+          path="/HistoryPage"
+          element={
+            <AudioProvider>
+              <HistoryPage />
+            </AudioProvider>
+          }
+        />
+        <Route
+          path="/MakeScenarioPage"
+          element={
+            <AudioProvider>
+              <MakeScenarioPage />
+            </AudioProvider>
+          }
+        />
+        <Route
+          path="/loading"
+          element={
+            <AudioProvider>
+              <LoadingScenarioPage />
+            </AudioProvider>
+          }
+        />
       </Routes>
     </Router>
   );

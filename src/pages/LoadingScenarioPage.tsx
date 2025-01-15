@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAudio } from "./MainAudioContext"; // AudioContext 사용
 
 const LoadingScenarioPage: React.FC = () => {
   const [text, setText] = useState('');
@@ -8,6 +9,25 @@ const LoadingScenarioPage: React.FC = () => {
   const [isTypingComplete, setIsTypingComplete] = useState(false); // 타이핑 완료 상태
   const navigate = useNavigate();
   const typingSoundRef = useRef<HTMLAudioElement | null>(null);
+  const { bgmRef } = useAudio(); // AudioContext에서 bgmRef 가져오기
+
+  useEffect(() => {
+    // BGM 일시정지 또는 정지
+    if (bgmRef.current) {
+      bgmRef.current.pause(); // BGM을 일시정지
+    }
+  
+    // Typing sound 초기화
+    typingSoundRef.current = new Audio("/sounds/typing.mp3");
+    typingSoundRef.current.volume = 0.5;
+  
+    return () => {
+      if (bgmRef.current) {
+        bgmRef.current.pause(); // 페이지를 벗어나도 미 실행
+      }
+    };
+  }, [bgmRef]);
+  
 
   const fullText = `2024년 12월 30일 밤 11시 30분 경,
 서울 현대미술관 3층 특별 전시실에서
