@@ -3,19 +3,19 @@ import { useNavigate } from "react-router-dom";
 
 const ResultPage: React.FC = () => {
   const navigate = useNavigate();
-
   useEffect(() => {
     const stampAudio = new Audio("/sounds/Stamp.mp3");
-    stampAudio.volume = 0.5; // 볼륨 설정
+    stampAudio.volume = 0.5;
     stampAudio.play().catch((error) => console.error("오디오 재생 오류:", error));
     return () => {
       stampAudio.pause();
-      stampAudio.currentTime = 0; // 재생 위치 초기화
+      stampAudio.currentTime = 0;
     };
   }, []);
+
   return (
     <div
-      className="fixed inset-0 bg-cover bg-center bg-no-repeat"
+      className="fixed inset-0 bg-cover bg-center bg-no-repeat flex items-center justify-center"
       style={{
         backgroundImage: 'url("/images/GiveUpPage.png")',
         backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -23,121 +23,104 @@ const ResultPage: React.FC = () => {
       }}
       onClick={() => navigate("/ending")}
     >
-      {/* Wanted Poster */}
-      <div
-        className="absolute"
-        style={{
-          top: "50%",
-          left: "27%",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
-        {/* Wanted Poster Image */}
-        <img
-          src="/images/WantedSuspect.png"
-          alt="Wanted Suspect"
-          style={{
-            width: "25vw", // 반응형 너비
-            maxWidth: "400px",
-            height: "auto",
-          }}
-        />
-        {/* 범인 사진 */}
-        <div
-          style={{
-            marginTop: "2vh",
-          }}
-        >
+      <div className="w-full h-full flex items-center justify-center">
+        {/* Left Side - Wanted Poster Container */}
+        <div className="relative" style={{ marginRight: "15vw" }}>
+          {/* 용의자 사진 */}
+          <div style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 1,
+            width: "10.4vw",
+          }}>
+            <img
+              src="/images/Suspect1.png"
+              alt="Suspect"
+              style={{
+                width: "100%",
+                height: "auto",
+                objectFit: "contain",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
+              }}
+            />
+          </div>
+
+          {/* Wanted Poster Image */}
           <img
-            src="/images/Suspect1.png"
-            alt="Suspect"
+            src="/images/WantedSuspect.png"
+            alt="Wanted Suspect"
             style={{
-              position: "absolute",
-              left: "30%",
-              top: "32.3%",
-              width: "10.4vw", // 반응형 너비
+              width: "25vw",
               height: "auto",
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
+              position: "relative",
+              zIndex: 2,
             }}
           />
-        </div>
-        </div>
 
-        {/* WANTED Stamp */}
-        <div
-            className="absolute"
-            style={{
-            top: "49%",
-            left: "27.3%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
+          {/* WANTED Stamp */}
           <img
             src="/images/WANTED.png"
             alt="WANTED Stamp"
             style={{
-              width: "17vw", // 반응형 너비
+              position: "absolute",
+              top: "0",
+              left: "50%",
+              transform: "translate(-50%, 80%)",
+              width: "17vw",
               height: "auto",
+              zIndex: 3,
             }}
           />
+
+          {/* 범인 이름 */}
+          <div
+            className="absolute w-full text-center"
+            style={{
+              bottom: "-10%",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          >
+            <p
+              className="font-Binggrae text-white font-bold drop-shadow-md"
+              style={{
+                fontSize: "2.5vw",
+              }}
+            >
+              범인 김민수
+            </p>
+          </div>
         </div>
 
-        {/* 범인 이름 */}
-        <p
-            className="absolute"
-            style={{
-            top: "85%",
-            left: "26.8%",
-            transform: "translate(-50%, -50%)",
-          }}
-          >
-          <p
-          className="font-Binggrae text-white font-bold drop-shadow-md text-center"
-          style={{
-            fontSize: "2.5vw",
-          }}
-        >
-          범인 김민수
-        </p>
-        </p>
-      
-      {/* 범행 동기 내용 */}
-      <div
-        className="flex items-center justify-center fixed inset-0"
-      >
+        {/* Right Side - 범행 동기 내용 */}
         <div
-          className="absolute p-4 rounded-lg shadow-md text-white"
+          className="p-4 rounded-lg shadow-md text-white flex items-center justify-center"
           style={{
-            left: "73%",
-            top: "51%",
-            transform: "translate(-50%, -50%)",
-            width: "80vw", // 반응형 너비
-            maxWidth: "460px",
+            width: "40vw",
             backgroundColor: "rgba(0, 0, 0, 0.5)",
             border: "1px solid white",
             borderRadius: "6px",
-            textAlign: "center",
+            minHeight: "40vh",
+            padding: "2vw",
           }}
         >
-          <p
-            className="font-Binggrae text-white"
+          <div
+            className="font-Binggrae text-white text-center flex flex-col gap-8 w-full"
             style={{
-              fontSize: "1.7vw", // 반응형 폰트 크기
+              fontSize: "1.7vw",
               lineHeight: "1.9",
+              wordBreak: "keep-all",
+              overflowWrap: "break-word",
             }}
           >
-            범행 동기 : 지나친 소유욕
-            <br />
-            <br />
-            너무 갖고 싶은 작품이었는데  
-            가질 수 있는 방법이 없어  
-            훔치기로 결정.
-            <br />
-            <br />
-            00년 00월 00일 박물관에 잡입 후  
-            지문이 남지 않도록 장갑을 착용한 채  
-            미술품을 훔쳐 달아났지만 CCTV에 모습이 찍힘.
-          </p>
+            <p>범행 동기 : 지나친 소유욕</p>
+            
+            <p>너무 갖고 싶은 작품이었는데 가질 수 있는 방법이 없어 훔치기로 결정.</p>
+            
+            <p>00년 00월 00일 박물관에 잡입 후 지문이 남지 않도록 장갑을 착용한 채 미술품을 훔쳐 달아났지만 CCTV에 모습이 찍힘.</p>
+          </div>
         </div>
       </div>
     </div>
