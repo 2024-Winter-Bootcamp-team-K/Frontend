@@ -41,7 +41,7 @@ const RightPage: React.FC = () => {
             <img
             src="/images/WANTED.png"
             alt="WANTED"
-            className="absolute top-[40%] left-1/2 object-contain transform -translate-x-1/2 -translate-y-1/2 object-contain"
+            className="absolute top-[40%] left-1/2 object-contain transform -translate-x-1/2 -translate-y-1/2"
           />
 
           <p className="mt-2 text-center text-lg sm:text-xl md:text-2xl font-cursive font-semibold">
