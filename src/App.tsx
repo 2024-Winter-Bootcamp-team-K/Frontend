@@ -32,10 +32,10 @@ const App: React.FC = () => {
         <Route path="/initchat" element={<InitChatPage />} />
         <Route path="/choose" element={<ChoosePage />} />
         <Route path="/result" element={<ResultPage />} />
-        <Route path="/resultLoading" element={<ResultLoadingPage />} />
+        <Route path="/resultLoading/:suspectId" element={<ResultLoadingPage />} />
         <Route path="/Ending" element={<EndingPage />} />
-        <Route path="/evidence" element={<EvidencePage />} />
-        <Route path="/suspect" element={<SuspectPage />} />
+        <Route path="/evidence/:id" element={<EvidencePage />} />
+        <Route path="/suspect/:id" element={<SuspectPage />} />
         <Route path="/chat" element={<ChattingPage />} />
         <Route path="/NextPage" element={<NextPage />} />
         <Route path="/NextPage2" element={<NextPage2 />} />

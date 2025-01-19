@@ -1,29 +1,84 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NotePage from "./NotePage.tsx";
+import axios from "axios";
+import axiosInstance from  "../hooks/axiosInstance.ts";
+interface SuspectsResponse {
+    suspects: Suspect[];
+}
 
-const SuspectPage: React.FC = () => {
+interface Suspect {
+    id: number;
+    name: string;
+    gender: number;
+    age: number;
+    job: string;
+    personality: string;
+    image: string;
+    init_chat: string;
+}
+
+
+// API 서비스 함수
+const suspectService = {
+    getSuspects: (scenarioId: number) => 
+        axiosInstance.get<SuspectsResponse>('/suspects', {
+            params: { scenario_id: scenarioId }
+        })
+};
+
+const SuspectPage: React.FC<{ scenarioId?: number }> = ({ scenarioId = 1 })  => {
     const navigate = useNavigate();
     const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
     const [showItems, setShowItems] = useState<number[]>([]);
+    const [suspects, setSuspects] = useState<Suspect[]>([]);
+    const [isLoading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    
+
     const handleBackCheck = () => {navigate("/play")};
     const handleFolderCheck = () => openPopup();
-    const handleInterrogate = () => {navigate("/chat")};
-    const handleAccuse = () => {navigate("/choose")};
     
-    const openPopup = () => {
-        setActivePopup(true); // 팝업 열기
-      };
-    
-      const closePopup = () => {
-        setActivePopup(false); // 팝업 닫기
-      };    
+    const handleInterrogate = (id: number) => {navigate(`/chat/${id}`); };
+    const handleAccuse = (id: number) => {navigate(`/choose/${id}`); };
 
+    const openPopup = () => {setActivePopup(true);};
+    const closePopup = () => {setActivePopup(false);}; 
+
+    useEffect(() => {
+        const fetchSuspects = async () => {
+            try {
+                setLoading(true); // 로딩 시작
+                const response = await suspectService.getSuspects(scenarioId);
+                setSuspects(response.data.suspects); 
+            } catch (err: unknown) {
+                if (axios.isAxiosError(err)) {
+                    const status = err.response?.status;
+                    setError(
+                        status === 500
+                            ? "서버에 에러가 발생하였습니다."
+                            : status === 502
+                            ? "서버로부터 잘못된 요청이 전송되었습니다."
+                            : "용의자 데이터를 불러오는 데 실패했습니다."
+                    );
+                } else {
+                    setError("예기치 못한 에러가 발생했습니다.");
+                }
+            } finally {
+                setLoading(false); // 로딩 종료
+            }
+        };
+
+        fetchSuspects();
+    }, [scenarioId]);
+
+    /*
     const suspects = [
         { id: 1, name: "화가 김민수", image: "/images/Suspect1.png" },
         { id: 2, name: "경비인 이지원", image: "/images/Suspect2.png" },
         { id: 3, name: "큐레이터 장현우", image: "/images/Suspect3.png" },
     ];
+    */
 
     useEffect(() => {
         const showItemsWithDelay = () => {
@@ -31,11 +86,28 @@ const SuspectPage: React.FC = () => {
                 setTimeout(() => {
                     setShowItems((prev) => [...prev, index]);
                 }, index * 800);
-            }, 1000);
+            });
         };
 
-        showItemsWithDelay();
-    });
+        if (suspects.length > 0) {
+            showItemsWithDelay();
+        }
+    }, [suspects]);
+
+
+    if (isLoading) return (
+        <div className="loading-container">
+            <p>용의자 정보를 불러오는 중...</p>
+        </div>
+    );
+
+    if (error) {
+        return <div className="error-message">{error}</div>;
+    }
+
+    if (!isLoading && suspects.length === 0) {
+        return <p>용의자 데이터가 없습니다.</p>;
+    }
 
     return (
         <div className="suspect-page-container">
@@ -52,19 +124,23 @@ const SuspectPage: React.FC = () => {
                 {/* 용의자 컨테이너 */}
                 <div className="suspect-container">
                     {suspects.map((suspect, index) => (
-                        <div key={suspect.id} className={`suspect-item ${showItems.includes(index) ? 'show' : ''}`}>
+                        <div key={`${suspect.id}-${index}`} className={`suspect-item ${showItems.includes(index) ? 'show' : ''}`}>
                             <div className="suspect-card">
                                 <div className="suspect-background">
-                                    <img src={suspect.image} alt={`Suspect ${suspect.id}`} className="suspect-image" />
+                                    <img 
+                                        src={suspect.image} 
+                                        alt={`Suspect ${suspect.id}`} 
+                                        className="suspect-image" 
+                                    />
                                     <div className="wanted-poster"></div>
                                 </div>
                                 <div className="suspect-details">
-                                    <p className="suspect-name">{suspect.name}</p>
+                                    <p className="suspect-name">{`${suspect.job} ${suspect.name}`}</p>
                                     <div className="button-container">
-                                        <button className="action-button" onClick={() => handleInterrogate()}>
+                                        <button className="action-button" onClick={() => handleInterrogate(suspect.id)}>
                                             심문하기
                                         </button>
-                                        <button className="action-button" onClick={() => handleAccuse()}>
+                                        <button className="action-button" onClick={() => handleAccuse(suspect.id)}>
                                             범인 지목
                                         </button>
                                     </div>
