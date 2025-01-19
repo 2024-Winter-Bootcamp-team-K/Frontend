@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAudio } from "./MainAudioContext"; // AudioContext 사용
+import { fetchScenario } from "../services/apiService"; // API 서비스 가져오기
+import { useParams } from "react-router-dom"; // URL에서 scenario_id 가져오기
+
 
 const LoadingScenarioPage: React.FC = () => {
   const [text, setText] = useState('');
@@ -10,6 +13,43 @@ const LoadingScenarioPage: React.FC = () => {
   const navigate = useNavigate();
   const typingSoundRef = useRef<HTMLAudioElement | null>(null);
   const { bgmRef } = useAudio(); // AudioContext에서 bgmRef 가져오기
+
+  const { scenario_id } = useParams<{ scenario_id: string }>(); // URL에서 scenario_id 가져오기
+  const [scenarioData, setScenarioData] = useState<any>(null); // API에서 가져올 데이터 상태
+  const [loadingError, setLoadingError] = useState(false); // 로딩 에러 상태
+  
+
+
+
+      // API 호출로 시나리오 데이터 가져오기
+      useEffect(() => {
+        const fetchData = async () => {
+          try {
+            if (!scenario_id) {
+              console.error("scenario_id가 없습니다.");
+              return;
+            }
+            const data = await fetchScenario(scenario_id); // API 호출
+            setScenarioData(data); // 데이터 저장
+            console.log("시나리오 데이터:", data);
+          } catch (error) {
+            console.error("시나리오 데이터를 가져오는 중 오류 발생:", error);
+            setLoadingError(true); // 에러 상태 업데이트
+          }
+        };
+
+        fetchData();
+      }, [scenario_id]);
+
+      // 로딩 에러 발생 시 처리
+      useEffect(() => {
+        if (loadingError) {
+          alert("시나리오 데이터를 불러오는 데 실패했습니다.");
+          navigate("/error"); // 에러 페이지로 이동
+        }
+      }, [loadingError, navigate]);
+  
+
 
   useEffect(() => {
     // BGM 일시정지 또는 정지
@@ -102,6 +142,14 @@ const LoadingScenarioPage: React.FC = () => {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#181818] text-white">
       {/* 제목 */}
+                        {scenarioData ? (
+                    <div className="absolute top-20 text-center text-lg">
+                      <p>시나리오 제목: {scenarioData.title || "제목 없음"}</p>
+                      <p>설명: {scenarioData.description || "설명 없음"}</p>
+                    </div>
+                  ) : (
+                    <p>데이터를 불러오는 중입니다...</p>
+                  )}
       <h1
         style={{ 
           fontSize: '3vw',

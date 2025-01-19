@@ -1,8 +1,12 @@
-import React, { useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import NotePage from "./NotePage.tsx";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { fetchSuspect, createChat } from "../services/apiService";
+
+
 
 const ChattingPage: React.FC = () => {
     const navigate = useNavigate();
@@ -11,6 +15,44 @@ const ChattingPage: React.FC = () => {
     const [isTyping, setIsTyping] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
+
+    const { suspect_id } = useParams<{ suspect_id: string | undefined }>();
+    const [suspectData, setSuspectData] = useState<any>(null); // 용의자 정보 상태
+    const [chatInput, setChatInput] = useState(""); // 사용자 입력값 상태
+    const [chatHistory, setChatHistory] = useState<{ message: string; response: any }[]>([]); // 채팅 기록 상태
+
+
+            // 1. 용의자 정보 가져오기 (GET /suspects/{suspect_id})
+        useEffect(() => {
+            const loadSuspect = async () => {
+            if (!suspect_id) return;
+            try {
+                const data = await fetchSuspect(suspect_id);
+                setSuspectData(data);
+            } catch (error) {
+                console.error("용의자 정보를 가져오는 중 오류 발생:", error);
+            }
+            };
+            loadSuspect();
+        }, [suspect_id]);
+
+        // 2. 심문(채팅) 생성 (POST /chats?suspect_id={suspectId})
+        const handleChatSubmit = async () => {
+            if (!suspect_id || !chatInput.trim()) {
+                console.error("유효하지 않은 suspect_id 또는 빈 입력값입니다.");
+                return;
+            }
+        
+            try {
+                const chatResponse = await createChat(suspect_id, chatInput.trim());
+                setChatHistory([...chatHistory, { message: chatInput.trim(), response: chatResponse }]);
+                setChatInput(""); // 입력 초기화
+            } catch (error) {
+                console.error("심문 생성 중 오류 발생:", error);
+            }
+        };
+        
+    
 
     const handleBackCheck = () => {navigate("/suspect")};
     const handleFolderCheck = () => openPopup();

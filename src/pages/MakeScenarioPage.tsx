@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { createScenario } from "../services/apiService"; // API 서비스 가져오기
 
 const MakeScenarioPage: React.FC = () => {
   const [animate, setAnimate] = useState(false);
@@ -9,8 +10,8 @@ const MakeScenarioPage: React.FC = () => {
   const [difficulty, setDifficulty] = useState("");
   const [crimeType, setCrimeType] = useState("");
   const [location, setLocation] = useState(""); 
-  const [selectedDate, setSelectedDate] = useState("")
-  const navigate = useNavigate();;
+  const [selectedDate, setSelectedDate] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,7 +28,7 @@ const MakeScenarioPage: React.FC = () => {
       const audio = new Audio("/sounds/book.mp3");
       audio.play();
       setTimeout(() => {
-        navigate("/MainPage")
+        navigate("/MainPage");
       }, 1500);
     }
   };
@@ -42,15 +43,60 @@ const MakeScenarioPage: React.FC = () => {
     audio.play();
   };
 
-  const handleScenarioButtonClick = (e: React.MouseEvent) => {
+
+
+  const [hour, setHour] = useState<number | null>(null); // 시간
+  const [minute, setMinute] = useState<number | null>(null); // 분
+
+
+  // API 호출 추가
+  const handleScenarioButtonClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const audio = new Audio("/sounds/fear.wav");
     audio.play();
-    setTimeout(() => {
-      navigate("/loading"); 
-    }, 500);
+  
+    if (
+      !location ||
+      !selectedDate ||
+      !crimeType ||
+      !difficulty ||
+      hour === null ||
+      minute === null ||
+      hour < 0 || hour > 23 ||
+      minute < 0 || minute > 59
+    ) {
+      alert("모든 필드를 올바르게 입력해주세요.");
+      return;
+    }
+  
+    try {
+      const [year, month, day] = selectedDate.split("-").map(Number);
+  
+      const scenarioData = {
+        user_id: 1, // 사용자 ID
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        location,
+        event_type: crimeType,
+        evidence_count: 2,
+        suspect_count: 3,
+      };
+  
+      console.log("전송 데이터:", scenarioData);
+  
+      const response = await createScenario(scenarioData);
+      console.log("시나리오 생성 성공:", response);
+  
+      navigate(`/loading/${response.id}`);
+    } catch (error) {
+      console.error("시나리오 생성 실패:", error);
+      alert("시나리오 생성에 실패했습니다. 다시 시도해주세요.");
+    }
   };
-
+  
   return (
     <Background
       onClick={handleBackgroundClick}
@@ -72,55 +118,76 @@ const MakeScenarioPage: React.FC = () => {
             <FormContent>
               <Row>
                 <Label>범행 장소</Label>
-                  <SelectWrapper>
-                    <Dropdown
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      onClick={(e) => e.stopPropagation()}
-                      isSelected={!!location}
-                    >
-                      <option value="" disabled>
-                        범행 장소 선택
-                      </option>
-                      <option value="미술관">미술관</option>
-                      <option value="은행">은행</option>
-                      <option value="대학교">대학교</option>
-                    </Dropdown>
-                    <InputLine />
-                  </SelectWrapper>
-                </Row>
-              <Row>
-                <Label>범행 날짜</Label>
-                <InputWrapper>
-                  <DateInputContainer>
-                    <Input
-                      type="text"
-                      placeholder="XXXX년 XX월 XX일 XX시경"
-                      value={selectedDate}
-                      onChange={(e) => setSelectedDate(e.target.value)}
-                    />
-                  </DateInputContainer>
-                  <InputLine />
-                </InputWrapper>
-              </Row>
-              <Row>
-                <Label>범행 종류</Label>
                 <SelectWrapper>
                   <Dropdown
-                    value={crimeType}
-                    onChange={(e) => setCrimeType(e.target.value)}
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
                     onClick={(e) => e.stopPropagation()}
                     isSelected={!!location}
                   >
                     <option value="" disabled>
-                      범행 종류 선택
+                      범행 장소 선택
                     </option>
-                    <option value="살인사건">살인사건</option>
-                    <option value="도난사건">도난사건</option>
+                    <option value="미술관">미술관</option>
+                    <option value="은행">은행</option>
+                    <option value="대학교">대학교</option>
                   </Dropdown>
                   <InputLine />
                 </SelectWrapper>
               </Row>
+                                  <Row>
+                        <Label>범행 날짜</Label>
+                        <InputWrapper>
+                          <DateInputContainer>
+                            <Input
+                              type="text"
+                              placeholder="YYYY-MM-DD"
+                              value={selectedDate}
+                              onChange={(e) => setSelectedDate(e.target.value)}
+                            />
+                          </DateInputContainer>
+                          <InputLine />
+                        </InputWrapper>
+                      </Row>
+                      {/* 시간 입력 필드 추가 */}
+                                <Row>
+                                  <Label>시간 (시:분)</Label>
+                                  <InputWrapper>
+                                    <DateInputContainer>
+                                      <Input
+                                        type="number"
+                                        placeholder="시 (0-23)"
+                                        value={hour !== null ? hour.toString() : ""}
+                                        onChange={(e) => setHour(Number(e.target.value))}
+                                      />
+                                      <Input
+                                        type="number"
+                                        placeholder="분 (0-59)"
+                                        value={minute !== null ? minute.toString() : ""}
+                                        onChange={(e) => setMinute(Number(e.target.value))}
+                                      />
+                                    </DateInputContainer>
+                                    <InputLine />
+                                  </InputWrapper>
+                                </Row>
+                                <Row>
+                          <Label>범행 종류</Label>
+                          <SelectWrapper>
+                            <Dropdown
+                              value={crimeType}
+                              onChange={(e) => setCrimeType(e.target.value)}
+                              onClick={(e) => e.stopPropagation()}
+                              isSelected={!!crimeType}
+                            >
+                              <option value="" disabled>
+                                범행 종류 선택
+                              </option>
+                              <option value="살인사건">살인사건</option>
+                              <option value="도난사건">도난사건</option>
+                            </Dropdown>
+                            <InputLine />
+                          </SelectWrapper>
+                        </Row>
               <DifficultyRow>
                 <DifficultyLabel>난이도</DifficultyLabel>
                 <DifficultyWrapper>
