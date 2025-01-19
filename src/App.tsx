@@ -13,18 +13,20 @@ import VideoPage from "./pages/VideoPage";
 import LogInPage from "./pages/LogInPage";
 import SignupBox from "./pages/SignupBox";
 import ChattingPage from "./pages/ChattingPage";
-import MainPage from "./pages/MainPage"; // 메인 페이지
-import MakeScenarioPage from "./pages/MakeScenarioPage"; // 시나리오 생성 페이지
+import MainPage from "./pages/MainPage";
+import MakeScenarioPage from "./pages/MakeScenarioPage";
 import NextPage from "./pages/NextPage";
 import NextPage2 from "./pages/NextPage2";
 import LoginBox from "./pages/LoginBox";
 import { AudioProvider } from "./pages/MainAudioContext";
 import PlayHistoryPage from "./pages/PlayHistoryPage";
+import NotePage from "./pages/NotePage";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
+        {/* 기본 페이지 라우팅 */}
         <Route path="/login" element={<LogInPage />} />
         <Route path="/register" element={<SignupBox />} />
         <Route path="/video" element={<VideoPage />} />
@@ -36,10 +38,40 @@ const App: React.FC = () => {
         <Route path="/Ending" element={<EndingPage />} />
         <Route path="/evidence" element={<EvidencePage />} />
         <Route path="/suspect" element={<SuspectPage />} />
-        <Route path="/chat" element={<ChattingPage />} />
+
+        {/* 주요 API 연동 페이지 라우팅 */}
+        <Route
+          path="/MakeScenarioPage"
+          element={
+            <AudioProvider>
+              <MakeScenarioPage />
+            </AudioProvider>
+          }
+        />
+        <Route
+          path="/loading/:scenario_id"
+          element={
+            <AudioProvider>
+              <LoadingScenarioPage />
+            </AudioProvider>
+          }
+        />
+        <Route
+          path="/note/:scenario_id"
+          element={<NotePage />}
+        />
+        <Route
+          path="/chat/:suspect_id"
+          element={<ChattingPage />}
+        />
+
+
+        {/* 추가 라우팅 */}
         <Route path="/NextPage" element={<NextPage />} />
         <Route path="/NextPage2" element={<NextPage2 />} />
         <Route path="/loginbox" element={<LoginBox />} />
+        
+        {/* 오디오가 필요한 페이지 */}
         <Route
           path="/MainPage"
           element={
@@ -53,22 +85,6 @@ const App: React.FC = () => {
           element={
             <AudioProvider>
               <PlayHistoryPage />
-            </AudioProvider>
-          }
-        />
-        <Route
-          path="/MakeScenarioPage"
-          element={
-            <AudioProvider>
-              <MakeScenarioPage />
-            </AudioProvider>
-          }
-        />
-        <Route
-          path="/loading"
-          element={
-            <AudioProvider>
-              <LoadingScenarioPage />
             </AudioProvider>
           }
         />
