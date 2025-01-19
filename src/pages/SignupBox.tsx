@@ -2,9 +2,9 @@ import React from "react";
 import {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import '../components/SignupBox.css';
+import axios from "axios";
 
 const SignupBox: React.FC = () => {
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -15,6 +15,7 @@ const SignupBox: React.FC = () => {
   });
 
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -50,10 +51,32 @@ const SignupBox: React.FC = () => {
     return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if(validateForm()) {
-      alert ("회원가입 성공");
-      navigate("/loginbox");
+      try {
+        const {name, email, password} = formData;
+
+        const response = await axios.post("https://ailibi.click/api/v1/auth", {
+          name,
+          email,
+          password,
+        });
+
+        if (response.status === 201) {
+          setSuccess("회원가입이 성공적으로 완료되었습니다!");
+          setError("");
+
+          setTimeout(() => navigate("/loginbox"), 2000);
+        }
+      } catch (error: any) {
+        if(axios.isAxiosError(error)) {
+          if(error.response?.status === 400) {
+            setError("입력값이 유효하지 않습니다. 다시 확인해주세요.");
+          } else {
+            setError("네트워크 오류가 발생했습니다.");
+          }
+        }
+      }
     }
   };
 
@@ -119,6 +142,7 @@ const SignupBox: React.FC = () => {
             <label className="sign-user-label">Password Check</label>
           </div>
           {error && <p className="error-message">{error}</p>}
+          {success && <p className="success-message">{success}</p>}
         </div>
         <div className="sign-footer">
           <button className="sign-button" 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../components/LogInPage.css";
+import axios from "axios";
 
 const delay= (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -26,6 +27,9 @@ const LogInPage: React.FC = () => {
   const [showBackCard, setShowBackCard] = useState(false);
   const [hideWallets, setHideWallets] = useState(false);
   const [flipCard, setFlipCard] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
@@ -56,6 +60,32 @@ const LogInPage: React.FC = () => {
 
   const handleCardClick = () => {
     setFlipCard(true);
+  };
+
+  const handleLogin = async () => {
+    try{
+      const response = await axios.post("https://ailibi.click/api/v1/auth/login", {
+        email,
+        password,
+      });
+      console.log("로그인 성공:", response.data);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      setError('');
+      navigate('/video');
+    } catch (error: any) {
+      if(axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        setError(
+          status === 400
+          ? "잘못된 형식입니다."
+          :status === 401
+          ? "존재하지 않는 아이디이거나, 잘못된 비밀번호입니다."
+          : "알 수 없는 에러가 발생했습니다."
+        );
+      } else {
+        setError("예기치 못한 에러가 발생했습니다.");
+      }
+    }
   };
 
   return (
@@ -126,6 +156,8 @@ const LogInPage: React.FC = () => {
                             required
                             type="text"
                             className="login-input"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             name="email"
                             autoComplete="off"
                         />
@@ -136,16 +168,20 @@ const LogInPage: React.FC = () => {
                             required
                             type="password"
                             className="login-input"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             name="password"
                             autoComplete="off"
                         />
                         <label className="user-label">Password</label>
                     </div>
                 </div>
+
+                {error && <p className="error-message">{error}</p>}
                   <div className="login-footer">
                     <button
                       className="login-button"
-                      onClick={() => navigate("/video")}
+                      onClick={handleLogin}
                     >
                       Enter Office
                     </button>
