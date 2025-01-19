@@ -1,9 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const LoginBox: React.FC = () => {
-
   const navigate = useNavigate();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post("https://ailibi.click/api/v1/auth/login", {
+        email,
+        password,
+      });
+      console.log("로그인 성공:", response.data);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      setError('');
+      navigate('/video');
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        setError(
+            status === 400
+            ? "잘못된 형식입니다."
+            : status === 401
+            ? "존재하지 않는 아이디이거나, 잘못된 비밀번호입니다."
+            : "알 수 없는 에러가 발생했습니다."
+          );
+        } else {
+          setError("예기치 못한 에러가 발생했습니다.");
+        }
+    }
+  };
 
   return (
     <div className="login-page">
@@ -31,14 +61,18 @@ const LoginBox: React.FC = () => {
                       alt="profile"
                     />
                   </div>
+
                   <div className="login-body">
                     <div className="input-group">
                         <input
                             required
                             type="text"
                             className="login-input"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             name="email"
                             autoComplete="off"
+                            placeholder="Enter your email"
                         />
                         <label className="user-label">Detective E-mail</label>
                     </div>
@@ -47,25 +81,29 @@ const LoginBox: React.FC = () => {
                             required
                             type="password"
                             className="login-input"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             name="password"
                             autoComplete="off"
+                            placeholder="Enter your password"
                         />
                         <label className="user-label">Password</label>
                     </div>
                   </div>
+
+                  {/* 에러 메시지 */}
+                  {error && <p className="error-message">{error}</p>}
+
                   <div className="login-footer">
                     <button
                       className="login-button"
-                      onClick={() => navigate("/video")}
-                    >
+                      onClick={handleLogin}>
                       Enter Office
                     </button>
                   </div>
                   <button
                     className="signupPage"
-                    onClickCapture={() => {
-                        navigate("/register");
-                    }}
+                    onClick={() => navigate('/register')} 
                   >
                     신입 탐정인가요?
                   </button>
