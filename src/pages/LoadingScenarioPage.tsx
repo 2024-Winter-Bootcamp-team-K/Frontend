@@ -1,3 +1,4 @@
+//로딩
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAudio } from "./MainAudioContext"; // AudioContext 사용

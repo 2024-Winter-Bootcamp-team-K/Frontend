@@ -1,3 +1,4 @@
+//시나리오 생성
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -49,53 +50,70 @@ const MakeScenarioPage: React.FC = () => {
   const [minute, setMinute] = useState<number | null>(null); // 분
 
 
-  // API 호출 추가
-  const handleScenarioButtonClick = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const audio = new Audio("/sounds/fear.wav");
-    audio.play();
-  
+// API 호출 추가
+const handleScenarioButtonClick = async (e: React.MouseEvent) => {
+  e.stopPropagation();
+  const audio = new Audio("/sounds/fear.wav");
+  audio.play();
+
+  if (
+    !location ||
+    !selectedDate ||
+    !crimeType ||
+    !difficulty ||
+    hour === null ||
+    minute === null ||
+    hour < 0 ||
+    hour > 23 ||
+    minute < 0 ||
+    minute > 59
+  ) {
+    alert("모든 필드를 올바르게 입력해주세요.");
+    return;
+  }
+
+  try {
+    // 공백을 기준으로 split
+    const [year, month, day] = selectedDate.split(" ").map(Number);
+
+    // 날짜 유효성 검증
     if (
-      !location ||
-      !selectedDate ||
-      !crimeType ||
-      !difficulty ||
-      hour === null ||
-      minute === null ||
-      hour < 0 || hour > 23 ||
-      minute < 0 || minute > 59
+      year < 2000 ||
+      year > 2024 ||
+      month < 1 ||
+      month > 12 ||
+      day < 1 ||
+      day > 30
     ) {
-      alert("모든 필드를 올바르게 입력해주세요.");
+      alert("날짜를 2000년부터 2024년까지, 월은 1~12, 일은 1~30 사이로 입력해주세요.");
       return;
     }
-  
-    try {
-      const [year, month, day] = selectedDate.split("-").map(Number);
-  
-      const scenarioData = {
-        user_id: 1, // 사용자 ID
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        location,
-        event_type: crimeType,
-        evidence_count: 2,
-        suspect_count: 3,
-      };
-  
-      console.log("전송 데이터:", scenarioData);
-  
-      const response = await createScenario(scenarioData);
-      console.log("시나리오 생성 성공:", response);
-  
-      navigate(`/loading/${response.id}`);
-    } catch (error) {
-      console.error("시나리오 생성 실패:", error);
-      alert("시나리오 생성에 실패했습니다. 다시 시도해주세요.");
-    }
-  };
+
+    const scenarioData = {
+      user_id: 1, // 사용자 ID
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      location,
+      event_type: crimeType,
+      evidence_count: 2,
+      suspect_count: 3,
+    };
+
+    console.log("전송 데이터:", scenarioData);
+
+    const response = await createScenario(scenarioData);
+    console.log("시나리오 생성 성공:", response);
+
+    navigate(`/loading/${response.id}`);
+  } catch (error) {
+    console.error("시나리오 생성 실패:", error);
+    alert("시나리오 생성에 실패했습니다. 다시 시도해주세요.");
+  }
+};
+
   
   return (
     <Background
@@ -141,7 +159,7 @@ const MakeScenarioPage: React.FC = () => {
                           <DateInputContainer>
                             <Input
                               type="text"
-                              placeholder="YYYY-MM-DD"
+                              placeholder="YYYY MM DD"
                               value={selectedDate}
                               onChange={(e) => setSelectedDate(e.target.value)}
                             />
