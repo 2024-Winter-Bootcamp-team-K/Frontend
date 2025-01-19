@@ -32,7 +32,7 @@ const App: React.FC = () => {
         <Route path="/video" element={<VideoPage />} />
         <Route path="/play" element={<PlayPage />} />
         <Route path="/initchat" element={<InitChatPage />} />
-        <Route path="/choose" element={<ChoosePage />} />
+        <Route path="/choose/:suspectId" element={<ChoosePage />} />
         <Route path="/result" element={<ResultPage />} />
         <Route path="/resultLoading/:suspectId" element={<ResultLoadingPage />} />
         <Route path="/Ending" element={<EndingPage />} />
@@ -75,7 +75,7 @@ const App: React.FC = () => {
         
         {/* 오디오가 필요한 페이지 */}
         <Route
-          path="/MainPage"
+          path="/MainPage/:userId"
           element={
             <AudioProvider>
               <MainPage />
