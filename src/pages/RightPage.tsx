@@ -22,14 +22,9 @@ interface Evidence {
   image: string;
 }
 
-interface ChatMessage {
-  role: 'user' | 'assistant';
-  message: string;
-  timestamp: string;
-}
-
 interface ChatHistory {
-  messages: ChatMessage[];
+  user_chat: Array<{ message: string[] }>;
+  suspect_chat: Array<{ message: string[] }>;
 }
 
 interface RightPageProps {
@@ -48,7 +43,7 @@ const RightPage: React.FC<RightPageProps> = ({ suspects, evidences }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axiosInstance.get<ChatHistory>('/chat-histories', {
+      const response = await axiosInstance.get<ChatHistory>('/histories', {
         params: {
           scenario_id: scenarioId,
           suspect_id: suspectId

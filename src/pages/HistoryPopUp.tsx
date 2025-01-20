@@ -18,14 +18,20 @@ interface Evidence {
   image: string;
 }
 
-interface ChatMessage {
-  role: 'user' | 'assistant';
-  message: string;
-  timestamp: string;
+interface ChatHistory {
+  user_chat: Array<{ message: string[] }>;
+  suspect_chat: Array<{ message: string[] }>;
 }
 
-interface ChatHistory {
-  messages: ChatMessage[];
+interface CheckEvProps {
+  id: string;
+  type: "suspect" | "evidence";
+  onClose: () => void;
+  chatHistory: ChatHistory | null;
+  isLoading: boolean;
+  error: string | null;
+  suspects: Suspect[];
+  evidences: Evidence[];
 }
 
 interface CheckEvProps {
@@ -64,6 +70,37 @@ const CheckEv: React.FC<CheckEvProps> = ({
   const suspect = type === "suspect" ? getSuspect(id) : null;
   const evidence = type === "evidence" ? getEvidence(id) : null;
 
+  
+
+  const renderChatHistory = () => {
+    if (isLoading) {
+      return <p className="text-center font-cursive text-xl">대화 내역을 불러오는 중...</p>;
+    }
+
+    if (error) {
+      return <p className="text-center font-cursive text-xl text-red-600">{error}</p>;
+    }
+
+    if (!chatHistory?.user_chat || !chatHistory?.suspect_chat) {
+      return <p className="text-center font-cursive text-xl">대화 내역이 없습니다.</p>;
+    }
+
+    return chatHistory.user_chat.map((userChat, chatIndex) => (
+      <React.Fragment key={chatIndex}>
+        {userChat.message.map((userMsg, msgIndex) => (
+          <div key={`user-${chatIndex}-${msgIndex}`} className="mb-4 font-cursive font-semibold text-xl">
+            <strong>Q:</strong> {userMsg}
+          </div>
+        ))}
+        {chatHistory.suspect_chat[chatIndex]?.message.map((suspectMsg, msgIndex) => (
+          <div key={`suspect-${chatIndex}-${msgIndex}`} className="mb-4 font-cursive font-semibold text-xl">
+            <strong>A:</strong> {suspectMsg}
+          </div>
+        ))}
+      </React.Fragment>
+    ));
+  };
+  
   if (type === "suspect" && !suspect) {
     return <div>용의자 정보를 찾을 수 없습니다.</div>;
   }
@@ -111,23 +148,7 @@ const CheckEv: React.FC<CheckEvProps> = ({
           </div>
           <hr className="my-4" />
           <div className="border border-black rounded-md p-4 max-h-60 overflow-y-auto">
-            {isLoading ? (
-              <p className="text-center font-cursive text-xl">대화 내역을 불러오는 중...</p>
-            ) : error ? (
-              <p className="text-center font-cursive text-xl text-red-600">{error}</p>
-            ) : chatHistory?.messages ? (
-              chatHistory.messages.map((message, index) => (
-                <div key={index} className="mb-4 font-cursive font-semibold text-xl">
-                  <strong>{message.role === 'user' ? 'Q:' : 'A:'}</strong>{' '}
-                  {message.message}
-                  <div className="text-sm text-gray-500 mt-1">
-                    {new Date(message.timestamp).toLocaleString()}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-center font-cursive text-xl">대화 내역이 없습니다.</p>
-            )}
+            {renderChatHistory()}
           </div>
         </div>
       </div>
