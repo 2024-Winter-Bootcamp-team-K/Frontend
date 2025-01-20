@@ -51,7 +51,7 @@ const NotePage: React.FC<NoteProps> = ({ onClose }) => {
       <div
         className="relative bg-no-repeat bg-cover"
         style={{
-          backgroundImage: "url('images/note.png')",
+          backgroundImage: "url('/images/note.png')",
           bottom: "5vh",
           width: "100vw",
           maxWidth: "800px", // 최대 너비

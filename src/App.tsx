@@ -31,15 +31,18 @@ const App: React.FC = () => {
         <Route path="/register" element={<SignupBox />} />
         <Route path="/video" element={<VideoPage />} />
         <Route path="/play" element={<PlayPage />} />
-        
+        <Route path="/initchat" element={<InitChatPage />} />
         <Route path="/choose" element={<ChoosePage />} />
+        <Route path="/choose/:suspectId" element={<ChoosePage />} />
         <Route path="/result" element={<ResultPage />} />
-        <Route path="/resultLoading" element={<ResultLoadingPage />} />
+        <Route path="/resultLoading/:suspectId" element={<ResultLoadingPage />} />
         <Route path="/Ending" element={<EndingPage />} />
-        <Route path="/evidence" element={<EvidencePage />} />
-        <Route path="/suspect" element={<SuspectPage />} />
-
-        {/* 주요 API 연동 페이지 라우팅 */}
+        <Route path="/evidence/:id" element={<EvidencePage />} />
+        <Route path="/suspect/:id" element={<SuspectPage />} />
+        <Route path="/chat" element={<ChattingPage />} />
+        <Route path="/NextPage" element={<NextPage />} />
+        <Route path="/NextPage2" element={<NextPage2 />} />
+        <Route path="/loginbox" element={<LoginBox />} />
         <Route
           path="/MakeScenarioPage"
           element={
@@ -78,7 +81,7 @@ const App: React.FC = () => {
         
         {/* 오디오가 필요한 페이지 */}
         <Route
-          path="/MainPage"
+          path="/MainPage/:userId"
           element={
             <AudioProvider>
               <MainPage />
@@ -86,7 +89,7 @@ const App: React.FC = () => {
           }
         />
         <Route
-          path="/history"
+          path="/history/:scenario_id"
           element={
             <AudioProvider>
               <PlayHistoryPage />

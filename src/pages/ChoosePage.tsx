@@ -1,19 +1,19 @@
 import React, {useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "../components/VideoPage.css";
 
 const ChoosePage: React.FC = () => {
   const navigate = useNavigate();
-
+  const { suspectId } = useParams<{ suspectId: string }>();
     // 배경 클릭 핸들러
       useEffect(() => {
         // Navigate to result page after 5 seconds
         const timeout = setTimeout(() => {
-          navigate("/resultLoading");
+          navigate('/resultLoading/${suspectId}');
         }, 5000);
     
         return () => clearTimeout(timeout);
-      }, [navigate]);
+      }, [navigate, suspectId]);
 
     return (
         <div className="video-container">

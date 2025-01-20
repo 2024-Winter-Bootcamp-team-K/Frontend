@@ -1,20 +1,46 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NotePage from "./NotePage.tsx";
+import axios from "axios";
+import axiosInstance from  "../hooks/axiosInstance.ts";
 
+interface EvidenceResponse {
+    evidences: Evidence[];
+}
 interface Evidence {
     id: number;
-    image: string;
+    name: string;
     description: string;
-    detailTitle: string;
-    detailedDescription: string;
+    image: string;
+}
+interface DetailedEvidence {
+    name: string;
+    description: string;
+    image: string;
 }
 
-const EvidencePage: React.FC = () => {
+// API 서비스 함수
+const evidenceService = {
+    getEvidences: (scenarioId: number) => 
+        axiosInstance.get<EvidenceResponse>('/evidences', {
+            params: { scenario_id: scenarioId }
+        }),
+
+    getEvidenceDetail: (evidenceId: number) =>
+        axiosInstance.get<DetailedEvidence>(`/evidences/${evidenceId}`)
+};
+
+const EvidencePage: React.FC <{ scenarioId?: number }> = ({ scenarioId = 1 }) => {
     const navigate = useNavigate();
     const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
     const [selectedEvidence, setSelectedEvidence] = useState<Evidence | null>(null);
+    const [detailedEvidence, setDetailedEvidence] = useState<DetailedEvidence | null>(null);
     const [showItems, setShowItems] = useState<number[]>([]);
+    const [evidences, setEvidences] = useState<Evidence[]>([]);
+    const [isLoading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    
+
     const handleBackCheck = () => {navigate("/play")};
     const handleFolderCheck = () => openPopup();
 
@@ -26,37 +52,107 @@ const EvidencePage: React.FC = () => {
         setActivePopup(false); // 팝업 닫기
       };    
 
+    /*
     const evidenceData = [
         {
             id: 1,
             image: "/images/Evidence1.png",
-            description: "바닥에 떨어져 있던 장갑 한 쪽",
-            detailTitle: "미술관 지하 주차장에서 발견된 장갑",
-            detailedDescription: "검은색 가죽 장갑, 복원 작업실에서사용하는 것과 동일한 제품, 내부에서 김민수의 ID카드 잔여 지문 발견"
+            name: "바닥에 떨어져 있던 장갑 한 쪽",
+            description: "검은색 가죽 장갑, 복원 작업실에서사용하는 것과 동일한 제품, 내부에서 김민수의 ID카드 잔여 지문 발견"
         },
         {
             id: 2,
             image: "/images/Evidence2.png",
-            description: "사건 당시 작동하던 CCTV",
-            detailTitle: "박물관 CCTV 기록",
-            detailedDescription: "23:15-23:45 사이 3층 카메라 신호 일시적 중단 - 담당자: 이지원 (보안팀장)"
+            name: "사건 당시 작동하던 CCTV",
+            description: "23:15-23:45 사이 3층 카메라 신호 일시적 중단 - 담당자: 이지원 (보안팀장)"
         }
     ];
+    */
+
+    // 증거 목록 조회
+    useEffect(() => {
+        const fetchSuspects = async () => {
+            try {
+                setLoading(true); // 로딩 시작
+                const response = await evidenceService.getEvidences(scenarioId);
+                setEvidences(response.data.evidences); 
+            } catch (err: unknown) {
+                if (axios.isAxiosError(err)) {
+                    const status = err.response?.status;
+                    setError(
+                        status === 500
+                            ? "서버에 에러가 발생하였습니다."
+                            : status === 502
+                            ? "서버로부터 잘못된 요청이 전송되었습니다."
+                            : "증거 데이터를 불러오는 데 실패했습니다."
+                    );
+                } else {
+                    setError("예기치 못한 에러가 발생했습니다.");
+                }
+
+            } finally {
+                setLoading(false); // 로딩 종료
+            }
+        };
+
+        fetchSuspects();
+    }, [scenarioId]);
+
+    // 선택됭 증거 상제 정보 조회
+    useEffect(() => {
+        const fetchEvidenceDetail = async () => {
+            if (selectedEvidence) {
+                try {
+                    const response = await evidenceService.getEvidenceDetail(selectedEvidence.id);
+                    setDetailedEvidence(response.data);
+                } catch (err: unknown) {
+                    if (axios.isAxiosError(err)) {
+                        const status = err.response?.status;
+                        setError(
+                            status === 500
+                                ? "서버에 에러가 발생하였습니다."
+                                : status === 502
+                                ? "서버로부터 잘못된 요청이 전송되었습니다."
+                                : "증거 데이터를 불러오는 데 실패했습니다."
+                        );
+                    } else {
+                        setError("예기치 못한 에러가 발생했습니다.");
+                    }
+                }
+            }
+        };
+
+        fetchEvidenceDetail();
+    }, [selectedEvidence]);
+
+
 
     useEffect(() => {
         const showItemsWithDelay = () => {
-            evidenceData.forEach((_, index) => {
+            evidences.forEach((_, index) => {
                 setTimeout(() => {
                     setShowItems((prev) => [...prev, index]);
                 }, index * 800);
             }, 1000);
         };
 
-        showItemsWithDelay();
-    }); 
+        if (evidences.length > 0) {
+            showItemsWithDelay();
+        }
+    }, [evidences]); 
 
-    function handleBackButtonClick() {
-        handleBackCheck();
+    if (isLoading) return (
+        <div className="loading-container">
+            <p>증거 정보를 불러오는 중...</p>
+        </div>
+    );
+
+    if (error) {
+        return <div className="error-message">{error}</div>;
+    }
+
+    if (!isLoading && evidences.length === 0) {
+        return <p>증거 데이터가 없습니다.</p>;
     }
 
     return (
@@ -64,7 +160,7 @@ const EvidencePage: React.FC = () => {
             <div className="content-wrapper">
                 {/* 돌아가기 버튼 */}
                 <div className="back-button-container">
-                    <button className="back-button" onClick={handleBackButtonClick}>
+                    <button className="back-button" onClick={handleBackCheck}>
                         <img src="/images/back.svg" alt="Back Icon" className="back-icon" />
                     </button>
                 </div>
@@ -74,7 +170,7 @@ const EvidencePage: React.FC = () => {
 
                 {/* 증거 컨테이너 */}
                 <div className="evidence-container">
-                    {evidenceData.map((evidence, index) => (
+                    {evidences.map((evidence, index) => (
                         <div key={evidence.id} className={`evidence-item ${showItems.includes(index) ? 'show' : ''}`}>
                             <div className="evidence-wrapper">
                                 <div className="evidence-content">
@@ -82,7 +178,7 @@ const EvidencePage: React.FC = () => {
                                         <img src={evidence.image} alt={`Evidence ${evidence.id}`} className="evidence-image" />
                                     </div>
                                     <div className="evidence-details">
-                                        <p className="evidence-description">{evidence.description}</p>
+                                        <p className="evidence-description">{evidence.name}</p>
                                         <button className="investigate-button" onClick={() => setSelectedEvidence(evidence)}>
                                             조사하기
                                         </button>
@@ -102,12 +198,12 @@ const EvidencePage: React.FC = () => {
             </div>
 
             {/* 팝업 */}
-            {selectedEvidence && (
+            {selectedEvidence && detailedEvidence && (
                 <div className="popup-overlay" onClick={() => setSelectedEvidence(null)}>
                     <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-                        <img src={selectedEvidence.image} alt={`Evidence ${selectedEvidence.id} Detail`} className="popup-image" />
-                        <p className="popup-description-title">{selectedEvidence.detailTitle}</p>
-                        <p className="popup-description">{selectedEvidence.detailedDescription}</p>
+                        <img src={detailedEvidence.image} alt={`Evidence Detail`} className="popup-image" />
+                            <p className="popup-description-title">{detailedEvidence.name}</p>
+                            <p className="popup-description">{detailedEvidence.description}</p>
                     </div>
                 </div>
             )}

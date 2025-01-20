@@ -2,9 +2,10 @@ import React from "react";
 
 interface HistoryNoteProps {
   onClose: () => void; // 부모에서 닫기 동작을 제어할 수 있도록 prop으로 받음
+  note: string;
 }
 
-const HistoryNote: React.FC<HistoryNoteProps> = ({ onClose }) => {
+const HistoryNote: React.FC<HistoryNoteProps> = ({ onClose, note }) => {
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
@@ -13,7 +14,7 @@ const HistoryNote: React.FC<HistoryNoteProps> = ({ onClose }) => {
       <div
         className="relative bg-no-repeat bg-cover"
         style={{
-          backgroundImage: "url('images/note.png')",
+          backgroundImage: "url('/images/note.png')",
           bottom: "5vh",
           width: "100vw",
           maxWidth: "800px",
@@ -49,10 +50,10 @@ const HistoryNote: React.FC<HistoryNoteProps> = ({ onClose }) => {
             width: "70%", // 전체 너비의 80%
             height: "50%", // 전체 높이의 50%
             fontFamily: "'THEFACESHOP_INKLIPQUID'",
-            fontSize: "1.25rem",
+            fontSize: "1.75rem",
             overflow: "auto", // 스크롤 활성화
           }}>
-                아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다아 퇴근하고 싶다
+            {note}
         </p>
       </div>
 
