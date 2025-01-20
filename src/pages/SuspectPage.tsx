@@ -10,10 +10,11 @@ interface SuspectsResponse {
 interface Suspect {
     id: number;
     name: string;
-    gender: number;
+    gender: boolean;
     age: number;
     job: string;
-    personality: string;
+    description: string;
+    is_theif: boolean;
     image: string;
     init_chat: string;
 }

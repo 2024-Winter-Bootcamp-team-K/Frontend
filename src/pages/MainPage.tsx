@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useAudio } from "./MainAudioContext";
+//import { useAudio } from "./MainAudioContext";
 import axios from "axios";
 import axiosInstance from "../hooks/axiosInstance.ts";
 interface ScenarioResponse {
@@ -27,7 +27,7 @@ const historyService = {
 
 const MainPage: React.FC<{ userId?: number }> = ({ userId = 1 }) => {
   const navigate = useNavigate();
-  const { bgmRef } = useAudio();
+  //const { bgmRef } = useAudio();
   const [isBlurred, setIsBlurred] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [scenarios, setScenarios] = useState<Scenario[]>([]);

@@ -83,7 +83,7 @@ const App: React.FC = () => {
           }
         />
         <Route
-          path="/history"
+          path="/history/:scenario_id"
           element={
             <AudioProvider>
               <PlayHistoryPage />
