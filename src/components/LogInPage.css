@@ -345,3 +345,11 @@
 body, html {
   overflow: hidden; /* 스크롤 비활성화 */
 }
+
+.error-message {
+  position: absolute;
+    color: red;
+    font-size: 12px;
+    text-align: left;
+    margin-top: 71%;
+}

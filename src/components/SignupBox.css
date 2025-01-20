@@ -169,6 +169,14 @@
 
 }
 
+.success-message {
+    position: absolute;
+    color: red;
+    font-size: 12px;
+    text-align: left;
+    margin-top: 71%;
+}
+
 /* 스크롤 숨기기 */
 body, html {
     overflow: hidden; /* 스크롤 비활성화 */
