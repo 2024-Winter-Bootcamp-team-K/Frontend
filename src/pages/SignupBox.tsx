@@ -73,6 +73,7 @@ const SignupBox: React.FC = () => {
         if(axios.isAxiosError(error)) {
           if(error.response?.status === 400) {
             setError("이미 가입된 이메일입니다.");
+            
           } else {
             setError("네트워크 오류가 발생했습니다.");
           }
