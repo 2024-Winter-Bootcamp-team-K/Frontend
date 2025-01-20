@@ -54,12 +54,13 @@ const SignupBox: React.FC = () => {
   const handleSubmit = async () => {
     if(validateForm()) {
       try {
-        const {name, email, password} = formData;
+        const {name, email, password, confirmPassword} = formData;
 
         const response = await axios.post("https://ailibi.click/api/v1/auth", {
           name,
           email,
           password,
+          password_check: confirmPassword,
         });
 
         if (response.status === 201) {

@@ -1,34 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
+type ScenarioData = {
+  suspects: {name: string; init_chat: string; image: string}[];
+};
 
 const InitChatPage: React.FC = () => {
-  const [visibleSuspect, setVisibleSuspect] = useState(0);
   const navigate = useNavigate();
+
+  const {scenario_id} = useParams<{scenario_id: string}>();
+  const [visibleSuspect, setVisibleSuspect] = useState(0);
+  const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
+    const fetchScenario = async () => {
+      try {
+        if (!scenario_id) {
+          throw new Error("Senario ID is missing");
+        }
+
+        const response = await fetch(`https://ailibi.click/api/v1/scenarios/${scenario_id}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch scenario: ${response.statusText}`);
+        } 
+
+        const data: ScenarioData = await response.json();
+        setScenarioData(data);
+        setError(null);
+      } catch (error) {
+        console.error("Failed to load scenario data:", error);
+        setError("시나리오 데이터를 로드하는 데 실패했습니다.");
+      }
+    };
+    
+    
+
+    if (scenario_id) {
+      fetchScenario();
+    }
     const interval = setInterval(() => {
       setVisibleSuspect((prev) => (prev < 3 ? prev + 1 : prev));
     }, 2000);
-
     return () => clearInterval(interval);
-  }, []);
+  }, [scenario_id]);
 
-  const suspects = [
-    {
-      name: '화가 김민수',
-      imgSrc: '/images/Suspect1.png',
-      text: '그날 밤 사무실에서 다음 전시 준비 중이었습니다.',
-    },
-    {
-      name: '경비원 이지원',
-      imgSrc: '/images/Suspect2.png',
-      text: '순찰 일지에 따르면 사건 발생 시각에 1층에서 순찰 중이었습니다.',
-    },
-    {
-      name: '큐레이터 장현우',
-      imgSrc: '/images/Suspect3.png',
-      text: 'CCTV에 그날 밤 9시에 퇴근하는 모습이 찍혔습니다만...',
-    },
-  ];
+  const suspects = scenarioData
+    ? scenarioData.suspects.map(({name, init_chat, image}) => ({
+      name,
+      init_chat,
+      image,
+    }))
+    : [];
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#181818] text-white font-intelmono">
@@ -39,100 +62,119 @@ const InitChatPage: React.FC = () => {
         }}
         className="font-intelmono font-bold text-center"
       >
-        기밀 사건 파일 #2024-12-30
+      기밀 사건 파일 #{scenario_id}      
       </h1>
-
-      <div
-        style={{
-          backgroundColor: '#1E305A',
-          boxShadow: 'inset 0px 10px 30px rgba(24, 23, 32, 0.7), inset 0px -10px 30px rgba(0, 0, 0, 0.7)',
-          width: '70vw',
-          height: '52vh',
-          padding: '6vh 3vw 6vh 3vw',
-          display: 'flex',
-          alignItems: 'center', 
-          justifyContent: 'center', 
-        }}
-        className="font-intelmono relative rounded-lg"
-      >
-        <div style={{ 
-          display: 'flex',
-          justifyContent: 'space-around',
-          width: '100%', 
-          maxWidth: '1200px', 
-          gap: '4vw',
-        }}>
-          {suspects.map((suspect, index) => (
-            <div
-              key={index}
-              style={{
-                flex: '0 1 auto',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '26%', 
-              }}
-              className={`transition-opacity duration-1000 ${
-                visibleSuspect > index ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
+      
+        {/* 에러 메시지 */}
+      {error ? (
+        <div className="bg-red-600 p-4 rounded-lg text-center">
+          <p>{error}</p> {/* 에러 메시지 */}
+        </div>
+      ) : (
+        <div
+          style={{
+            backgroundColor: "#1E305A",
+            boxShadow:
+              "inset 0px 10px 30px rgba(24, 23, 32, 0.7), inset 0px -10px 30px rgba(0, 0, 0, 0.7)",
+            width: "70vw",
+            height: "52vh",
+            padding: "6vh 3vw 6vh 3vw",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          className="font-intelmono relative rounded-lg"
+        >
+          {/* 용의자 정보를 표시하는 컨테이너 */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              width: "100%",
+              maxWidth: "1200px",
+              gap: "4vw",
+            }}
+          >
+            {suspects.map((suspect, index) => (
               <div
+                key={index}
                 style={{
-                  flex: '1',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  minHeight: '15vh',
+                  flex: "0 1 auto",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "26%",
                 }}
+                className={`transition-opacity duration-1000 ${
+                  visibleSuspect >= index ? "opacity-100" : "opacity-0"
+                }`}
               >
-                <div className="bubble medium bottom">
-                  <p style={{ 
-                    fontSize: '1.2vw',
-                    wordBreak: 'keep-all',
-                    whiteSpace: 'pre-line',
-                  }}>
-                    {visibleSuspect > index ? suspect.text : ''}
+                {/* 용의자의 초기 대화 */}
+                <div
+                  style={{
+                    flex: "1",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minHeight: "15vh",
+                  }}
+                >
+                  <div className="bubble medium bottom">
+                    <p
+                      style={{
+                        fontSize: "1.2vw",
+                        wordBreak: "keep-all",
+                        whiteSpace: "pre-line",
+                      }}
+                    >
+                      {visibleSuspect >= index ? suspect.init_chat : ''}
+                    </p>
+                  </div>
+                </div>
+                {/* 용의자 이미지 및 이름 */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={suspect.image}
+                    alt={suspect.name}
+                    style={{
+                      width: "10vw",
+                      height: "10vw",
+                      marginBottom: "3vh",
+                    }}
+                  />
+                  <p style={{ fontSize: "1.5vw" }} className="text-center font-intelmono">
+                    {suspect.name}
                   </p>
                 </div>
               </div>
-              <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                <img
-                  src={suspect.imgSrc}
-                  alt={suspect.name}
-                  style={{
-                    width: '10vw',
-                    height: '10vw',
-                    marginBottom: '3vh',
-                  }}
-                />
-                <p style={{ fontSize: '1.5vw' }} className="text-center font-intelmono">
-                  {suspect.name}
-                </p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
+      {/* 수사 시작 버튼 */}
       <button
         className="text-white font-intelmono font-semibold animated-button"
         style={{
-          marginTop: '4vh',
-          padding: '0.5vh 1vw',
-          fontSize: '1.7vw',
+          marginTop: "4vh",
+          padding: "0.5vh 1vw",
+          fontSize: "1.7vw",
         }}
         onClick={() => navigate("/play")}
       >
         수사 시작하기
       </button>
 
+      {/* 스타일 */}
       <style>{`
         .bubble {
           position: relative;
