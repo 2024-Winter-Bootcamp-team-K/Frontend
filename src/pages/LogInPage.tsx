@@ -78,9 +78,9 @@ const LogInPage: React.FC = () => {
         const status = error.response?.status;
         setError(
           status === 400
-          ? "잘못된 형식입니다."
-          :status === 401
           ? "존재하지 않는 아이디이거나, 잘못된 비밀번호입니다."
+          :status === 401
+          ? "잘못된 형식입니다."
           : "알 수 없는 에러가 발생했습니다."
         );
       } else {
@@ -220,6 +220,16 @@ const LogInPage: React.FC = () => {
           )}
         </div>
       )}
+      <style>{`
+        .error-message {
+          color: #f44336; /* 빨간색 텍스트 */
+          font-size: 13px; /* 글자 크기 */
+          margin-top: 31%; /* 위쪽 여백 */
+          margin-left: 43%;
+        }
+
+        
+      `}</style>
     </div>
   );
 };
