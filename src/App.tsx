@@ -33,6 +33,7 @@ const App: React.FC = () => {
         <Route path="/play" element={<PlayPage />} />
         <Route path="/initchat" element={<InitChatPage />} />
         <Route path="/choose" element={<ChoosePage />} />
+        <Route path="/choose/:suspectId" element={<ChoosePage />} />
         <Route path="/result" element={<ResultPage />} />
         <Route path="/resultLoading/:suspectId" element={<ResultLoadingPage />} />
         <Route path="/Ending" element={<EndingPage />} />
