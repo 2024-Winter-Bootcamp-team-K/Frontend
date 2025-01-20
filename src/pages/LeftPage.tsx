@@ -130,7 +130,7 @@ const LeftPage: React.FC<LeftPageProps> = ({ scenarios })   => {
                     transform: scale(0.9);
                 }
         `}</style>
-              {activePopup && <HistoryNote onClose={closePopup} />}
+              {activePopup && <HistoryNote onClose={closePopup} note={scenario.note}/>}
     </div>
   );
 };
