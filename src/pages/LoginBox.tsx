@@ -10,6 +10,7 @@ const LoginBox: React.FC = () => {
   const [error, setError] = useState('');
 
   const handleLogin = async () => {
+    
     try {
       const response = await axios.post("https://ailibi.click/api/v1/auth/login", {
         email,
@@ -69,10 +70,11 @@ const LoginBox: React.FC = () => {
                             type="text"
                             className="login-input"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                              setEmail(e.target.value);
+                            }}
                             name="email"
                             autoComplete="off"
-                            placeholder="Enter your email"
                         />
                         <label className="user-label">Detective E-mail</label>
                     </div>
@@ -82,10 +84,11 @@ const LoginBox: React.FC = () => {
                             type="password"
                             className="login-input"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => {
+                              setPassword(e.target.value);
+                            }}
                             name="password"
                             autoComplete="off"
-                            placeholder="Enter your password"
                         />
                         <label className="user-label">Password</label>
                     </div>
