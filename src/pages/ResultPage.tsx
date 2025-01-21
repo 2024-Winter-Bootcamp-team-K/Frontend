@@ -1,8 +1,95 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import axiosInstance from  "../hooks/axiosInstance.ts";
+
+interface HistoryResponse {
+  scenarios: {
+    id: number;
+    name: string;
+    location: string;
+    type: string;
+    datetime: string;
+    description: string;
+    image: string;
+    level: number;
+    note: string;
+    is_success: boolean;
+  };
+  suspects: Array<{
+    id: number;
+    name: string;
+    gender: boolean;
+    age: number;
+    job: string;
+    description: string;
+    is_theif: boolean;
+    image: string;
+    init_chat: string;
+  }>;
+  evidences: Array<{
+    name: string;
+    description: string;
+    image: string;
+  }>;
+}
+type Suspect = HistoryResponse['suspects'][0];
+
+// API 서비스 함수
+const historyService = {
+  getHistory: (scenarioId: number) => 
+      axiosInstance.get<HistoryResponse>('/histories', {
+          params: { scenario_id: scenarioId }
+      })
+};
 
 const ResultPage: React.FC = () => {
   const navigate = useNavigate();
+  const [thief, setThief] = useState<Suspect | null>(null);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const { scenarioId } = useParams<{ scenarioId: string }>();
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        setLoading(true); 
+        if (!scenarioId || isNaN(Number(scenarioId))) {
+          setError("유효하지 않은 시나리오 ID입니다.");
+          return;
+        }
+        
+        const response = await historyService.getHistory(Number(scenarioId));
+        const realThief = response.data.suspects.find(suspect => suspect.is_theif === true);
+        
+        if (!realThief) {
+          setError("범인 데이터를 찾을 수 없습니다.");
+          return;
+        }
+
+        setThief(realThief);
+
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          const status = err.response?.status;
+          setError(
+            status === 500
+              ? "서버에 에러가 발생하였습니다."
+              : status === 502
+              ? "서버로부터 잘못된 요청이 전송되었습니다."
+              : "범인 데이터를 불러오는 데 실패했습니다."
+          );
+        } else {
+            setError("예기치 못한 에러가 발생했습니다.");
+        }
+      } finally {
+          setLoading(false); // 로딩 종료
+      }
+    };
+
+    fetchHistory();
+  }, [scenarioId]);
+
   useEffect(() => {
     const stampAudio = new Audio("/sounds/Stamp.mp3");
     stampAudio.volume = 0.5;
@@ -13,6 +100,27 @@ const ResultPage: React.FC = () => {
     };
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <p>범인 정보를 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
+
+  if (!history) {
+    return <div className="error-message">데이터를 찾을 수 없습니다.</div>;
+  }
+
+  if (!thief) {
+    return <div className="error-message">데이터를 찾을 수 없습니다.</div>;
+  }
+
+
   return (
     <div
       className="fixed inset-0 bg-cover bg-center bg-no-repeat flex items-center justify-center"
@@ -21,7 +129,7 @@ const ResultPage: React.FC = () => {
         backgroundColor: "rgba(0, 0, 0, 0.5)",
         backgroundBlendMode: "multiply",
       }}
-      onClick={() => navigate("/ending")}
+      onClick={() => navigate(`/ending/${scenarioId}`)}
     >
       <div className="w-full h-full flex items-center justify-center">
         {/* Left Side - Wanted Poster Container */}
@@ -36,7 +144,7 @@ const ResultPage: React.FC = () => {
             width: "10.4vw",
           }}>
             <img
-              src="/images/Suspect1.png"
+              src={thief.image}
               alt="Suspect"
               style={{
                 width: "100%",
@@ -89,7 +197,7 @@ const ResultPage: React.FC = () => {
                 fontSize: "2.5vw",
               }}
             >
-              범인 김민수
+              범인 {thief.name}
             </p>
           </div>
         </div>
@@ -115,11 +223,10 @@ const ResultPage: React.FC = () => {
               overflowWrap: "break-word",
             }}
           >
-            <p>범행 동기 : 지나친 소유욕</p>
-            
-            <p>너무 갖고 싶은 작품이었는데 가질 수 있는 방법이 없어 훔치기로 결정.</p>
-            
-            <p>00년 00월 00일 박물관에 잡입 후 지문이 남지 않도록 장갑을 착용한 채 미술품을 훔쳐 달아났지만 CCTV에 모습이 찍힘.</p>
+            <p>
+              {/* 일단 임의로 넣어둠*/}
+              {thief.description}
+            </p>
           </div>
         </div>
       </div>
