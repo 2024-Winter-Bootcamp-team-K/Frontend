@@ -17,6 +17,8 @@ const ChattingPage: React.FC = () => {
     const [suspectData, setSuspectData] = useState<any>(null); // 용의자 정보 상태
     const [chatHistory, setChatHistory] = useState<{ message: string; response: any }[]>([]); // 채팅 기록 상태
     const [suspectChat, setSuspectChat] = useState<string | null>(null); // suspect_chat 상태 추가
+    const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+    const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
 
     useEffect(() => {
         const loadSuspect = async () => {
@@ -92,7 +94,93 @@ const ChattingPage: React.FC = () => {
             console.error("심문 생성 중 오류 발생:", error);
         }
     };
+
+    const toggleRecording = async () => {
+        if (isRecording) {
+            stopRecording();
+        } else {
+            startRecording();
+        }
+    };
+
+    const startRecording = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorderRef.current = mediaRecorder;
+            setIsRecording(true);
+
+            const audioChunks: BlobPart[] = [];
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+                setAudioBlob(audioBlob);
+                sendAudioToAPI(audioBlob); // 녹음이 종료되면 API 호출
+            };
+
+            mediaRecorder.start();
+        } catch (error) {
+            console.error("녹음 시작 실패:", error);
+        }
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+        }
+    };
+
+    const sendAudioToAPI = async (audioBlob: Blob) => {
+        // Blob 데이터를 base64로 변환하는 함수
+        const blobToBase64 = (blob: Blob): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    resolve(reader.result as string); // base64 문자열 반환
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(blob); // Blob을 base64로 변환
+            });
+        };
     
+        try {
+            // Blob 데이터를 base64로 변환
+            const base64Audio = await blobToBase64(audioBlob);
+    
+            // base64 데이터에서 헤더(`data:audio/wav;base64,`) 제거
+            const cleanBase64Audio = base64Audio.split(",")[1];
+    
+            // API 요청 본문 생성
+            const requestBody = {
+                audio: cleanBase64Audio,
+            };
+    
+            // API 요청
+            const response = await fetch("https://ailibi.click/api/v1/stt", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestBody),
+            });
+    
+            if (response.ok) {
+                const result = await response.json();
+                if (result.text) {
+                    setUserInput(result.text); // API에서 변환된 텍스트를 userInput에 설정
+                }
+            } else {
+                console.error("STT API 호출 실패:", response.statusText);
+            }
+        } catch (error) {
+            console.error("STT API 호출 중 오류 발생:", error);
+        }
+    };
 
     const getDelay = (char: string) => {
         if (['.', '!', '?'].includes(char)) {
@@ -101,10 +189,6 @@ const ChattingPage: React.FC = () => {
             return 200;
         }
         return Math.random() * 50 + 50;  
-    };
-
-    const toggleRecording = () => {
-        setIsRecording(!isRecording);
     };
 
     return (
