@@ -29,9 +29,7 @@ const App: React.FC = () => {
         {/* 기본 페이지 라우팅 */}
         <Route path="/login" element={<LogInPage />} />
         <Route path="/register" element={<SignupBox />} />
-        <Route path="/video" element={<VideoPage />} />
-        <Route path="/play" element={<PlayPage />} />
-        
+        <Route path="/video" element={<VideoPage />} />        
         <Route path="/choose" element={<ChoosePage />} />
         <Route path="/result" element={<ResultPage />} />
         <Route path="/resultLoading" element={<ResultLoadingPage />} />
@@ -69,6 +67,9 @@ const App: React.FC = () => {
         element={<InitChatPage />} 
         />
 
+        <Route path="/play/:scenario_id"
+         element={<PlayPage />} 
+         />
 
 
         {/* 추가 라우팅 */}

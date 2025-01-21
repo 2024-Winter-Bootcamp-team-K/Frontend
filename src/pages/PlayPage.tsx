@@ -1,13 +1,45 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import NotePage from "./NotePage.tsx";
+
+type Scenario = {
+  name: string;
+  location: string;
+  datetime: string;
+  type: string;
+  description: string;
+};
 
 const PlayPage: React.FC = () => {
   const navigate = useNavigate();
+  const { scenario_id } = useParams<{ scenario_id: string }>();
+  const [scenario, setScenario] = useState<Scenario | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
   const handleSuspectCheck = () => {navigate("/suspect")};
   const handleEvidenceCheck = () => {navigate("/evidence")};
   const handleFolderCheck = () => openPopup();
+
+  useEffect(() => {
+    const fetchScenario = async () => {
+      try {
+        const response = await fetch(`https://ailibi.click/api/v1/scenarios/${scenario_id}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch scenario: ${response.statusText}`);
+        }
+        const data = await response.json();
+        setScenario(data.scenarios[0]);
+        setError(null);
+      } catch (error) {
+        console.error("Failed to load scenario data:", error);
+        setError("시나리오 데이터를 로드하는 데 실패했습니다.");
+      }
+    };
+
+    if (scenario_id) {
+      fetchScenario();
+    }
+  }, [scenario_id]);
 
   const openPopup = () => {
     setActivePopup(true); // 팝업 열기
@@ -20,73 +52,92 @@ const PlayPage: React.FC = () => {
   return (
     <div className="playpage-container">
       <div className="content-wrapper">
-        {/* 파피루스 */}
-        <div className="paper bg-gradient-to-br from-amber-50 to-amber-100 border-0 transform transition-all rounded-lg animate-box">
-          <img src="/images/papyrus.png" alt="Papyrus scroll" className="paper-image" />
-          <div className="paper-content">
-            <div className="case-details">
-              {/* 사건 이미지 */}
-              <div className="case-image">
-                <img
-                  src="/images/Case_place.png"
-                  alt="Crime Scene"
-                  className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105"
-                />
-              </div>
-              {/* 사건 세부사항 */}
-              <div className="case-text">
-                <h2 className="case-title">미술관 도난 사건</h2>
-                <div className="case-info">
-                  <p className="case-info-text">
-                    Date: 2024.12.30 23:30
-                    <br />
-                    Location: 미술관
-                    <br />
-                    <span className="case-type">Type: 도난 사건</span>
-                  </p>
+        {/* 사건 정보를 로드 중 또는 에러 발생 시 */}
+        {error ? (
+          <div className="error-message">
+            <p>{error}</p>
+          </div>
+        ) : !scenario ? (
+          <div className="loading-message">
+            <p>사건 정보를 불러오는 중...</p>
+          </div>
+        ) : (
+          <>
+            {/* 사건 정보 표시 */}
+            <div className="paper bg-gradient-to-br from-amber-50 to-amber-100 border-0 transform transition-all rounded-lg animate-box">
+              <img
+                src="/images/papyrus.png"
+                alt="Papyrus scroll"
+                className="paper-image"
+              />
+              <div className="paper-content">
+                <div className="case-details">
+                  {/* 사건 이미지 */}
+                  <div className="case-image">
+                    <img
+                      src="/images/Case_place.png"
+                      alt="Crime Scene"
+                      className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105"
+                    />
+                  </div>
+                  {/* 사건 세부사항 */}
+                  <div className="case-text">
+                    <h2 className="case-title">{scenario.name}</h2>
+                    <div className="case-info">
+                      <p className="case-info-text">
+                        Date: {scenario.datetime}
+                        <br />
+                        Location: {scenario.location}
+                        <br />
+                        <span className="case-type">Type: {scenario.type}</span>
+                      </p>
+                    </div>
+                    <p className="case-description">{scenario.description}</p>
+                  </div>
                 </div>
-                <p className="case-description">
-                  2024년 12월 30일 밤 11시 30분경,
-                  <br />
-                  서울 현대미술관 3층 특별 전시실에서
-                  <br />
-                  반 고흐의 '해바라기' 복제 작품이 도난 되는데...
-                </p>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="button-container">
-          <div className="button-wrapper">
-            <img
-              src="/images/playpage_img1.png"
-              alt="Suspect"
-              className="button-image hover-effect"
-            />
-            <button className="action-button" onClick={handleSuspectCheck}>
-              용의자 확인
-            </button>
-          </div>
+            {/* 버튼 */}
+            <div className="button-container">
+              <div className="button-wrapper">
+                <img
+                  src="/images/playpage_img1.png"
+                  alt="Suspect"
+                  className="button-image hover-effect"
+                />
+                <button className="action-button" onClick={handleSuspectCheck}>
+                  용의자 확인
+                </button>
+              </div>
 
-          <div className="button-wrapper">
-            <img
-              src="/images/playpage_img2.png"
-              alt="Evidence"
-              className="button-image"
-            />
-            <button className="action-button" onClick={handleEvidenceCheck}>
-              증거 확인
-            </button>
-          </div>
-        </div>
+              <div className="button-wrapper">
+                <img
+                  src="/images/playpage_img2.png"
+                  alt="Evidence"
+                  className="button-image"
+                />
+                <button className="action-button" onClick={handleEvidenceCheck}>
+                  증거 확인
+                </button>
+              </div>
+            </div>
 
-        <div className="folder-button-container">
-          <button className="folder-button" onClick={handleFolderCheck}>
-            <img src="/images/Folder.svg" alt="Folder Icon" className="folder-icon" />
-          </button>
-        </div>
+            {/* 폴더 버튼 */}
+            <div className="folder-button-container">
+              <button className="folder-button" onClick={handleFolderCheck}>
+                <img
+                  src="/images/Folder.svg"
+                  alt="Folder Icon"
+                  className="folder-icon"
+                />
+              </button>
+            </div>
+          </>
+        )}
       </div>
+
+      {/* NotePage 팝업 */}
       {activePopup && <NotePage onClose={closePopup} />}
       <style>{`
         .playpage-container {
