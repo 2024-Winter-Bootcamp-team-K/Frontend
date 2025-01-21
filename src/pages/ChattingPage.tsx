@@ -6,8 +6,6 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchSuspect, createChat } from "../services/apiService";
 
-
-
 const ChattingPage: React.FC = () => {
     const navigate = useNavigate();
     const [userInput, setUserInput] = useState("");
@@ -15,44 +13,25 @@ const ChattingPage: React.FC = () => {
     const [isTyping, setIsTyping] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
-
     const { suspect_id } = useParams<{ suspect_id: string | undefined }>();
     const [suspectData, setSuspectData] = useState<any>(null); // 용의자 정보 상태
-    const [chatInput, setChatInput] = useState(""); // 사용자 입력값 상태
     const [chatHistory, setChatHistory] = useState<{ message: string; response: any }[]>([]); // 채팅 기록 상태
+    const [suspectChat, setSuspectChat] = useState<string | null>(null); // suspect_chat 상태 추가
+    const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
 
-
-            // 1. 용의자 정보 가져오기 (GET /suspects/{suspect_id})
-        useEffect(() => {
-            const loadSuspect = async () => {
-            if (!suspect_id) return;
-            try {
-                const data = await fetchSuspect(suspect_id);
-                setSuspectData(data);
-            } catch (error) {
-                console.error("용의자 정보를 가져오는 중 오류 발생:", error);
-            }
-            };
-            loadSuspect();
-        }, [suspect_id]);
-
-        // 2. 심문(채팅) 생성 (POST /chats?suspect_id={suspectId})
-        const handleChatSubmit = async () => {
-            if (!suspect_id || !chatInput.trim()) {
-                console.error("유효하지 않은 suspect_id 또는 빈 입력값입니다.");
-                return;
-            }
-        
-            try {
-                const chatResponse = await createChat(suspect_id, chatInput.trim());
-                setChatHistory([...chatHistory, { message: chatInput.trim(), response: chatResponse }]);
-                setChatInput(""); // 입력 초기화
-            } catch (error) {
-                console.error("심문 생성 중 오류 발생:", error);
-            }
+    useEffect(() => {
+        const loadSuspect = async () => {
+        if (!suspect_id) return;
+        try {
+            const data = await fetchSuspect(suspect_id);
+            setSuspectChat(data?.suspect_chat); // suspect_chat 값을 설정
+            setSuspectData(data);
+        } catch (error) {
+            console.error("용의자 정보를 가져오는 중 오류 발생:", error);
+        }
         };
-        
-    
+        loadSuspect();
+    }, [suspect_id]);
 
     const handleBackCheck = () => {navigate("/suspect")};
     const handleFolderCheck = () => openPopup();
@@ -65,28 +44,139 @@ const ChattingPage: React.FC = () => {
       setActivePopup(false); // 팝업 닫기
     };    
     
-    const handleSubmit = () => {
-        if (userInput.trim()) {
-            setIsTyping(true);
-            setDisplayText("");  
-            const cleanedText = userInput.trim();  
-            let currentText = "";  
-            let index = 0;
-            
-            const typeNextCharacter = () => {
-                if (index < cleanedText.length) {
-                    currentText += cleanedText[index];
-                    setDisplayText(currentText);
-                    index++;
+    const handleSubmit = async () => {
+        if (!suspect_id || userInput.trim() === "") {
+            console.error("유효하지 않은 suspect_id 또는 빈 입력값입니다.");
+            return;
+        }
+    
+        setIsTyping(true); // 애니메이션 시작 상태 설정
+        setDisplayText(""); // 애니메이션을 위해 텍스트 초기화
+        const cleanedText = userInput.trim();
+    
+        // API 연동
+        try {
+            const chatResponse = await createChat(suspect_id, cleanedText);
+    
+            if (chatResponse?.suspect_chat) {
+                const updatedSuspectChat = chatResponse.suspect_chat;
+                setSuspectChat(updatedSuspectChat); // suspect_chat 업데이트
+                setChatHistory([
+                    ...chatHistory,
+                    { message: cleanedText, response: updatedSuspectChat }
+                ]);
+    
+                // suspectChat 애니메이션
+                let currentText = "";
+                let index = 0;
+    
+                const typeNextCharacter = () => {
+                    if (index < updatedSuspectChat.length) {
+                        currentText += updatedSuspectChat[index];
+                        setDisplayText(currentText);
+                        index++;
+    
+                        const delay = getDelay(updatedSuspectChat[index - 1]);
+                        setTimeout(typeNextCharacter, delay);
+                    } else {
+                        setIsTyping(false); // 애니메이션 종료 상태 설정
+                    }
+                };
+    
+                typeNextCharacter();
+            } else {
+                console.error("API에서 suspect_chat 응답이 없습니다.");
+            }
+    
+            setUserInput(""); // 입력값 초기화
+        } catch (error) {
+            console.error("심문 생성 중 오류 발생:", error);
+        }
+    };
 
-                    const delay = getDelay(cleanedText[index - 1]);
-                    setTimeout(typeNextCharacter, delay);
-                } else {
-                    setIsTyping(false);
-                }
+    const toggleRecording = async () => {
+        if (isRecording) {
+            stopRecording();
+        } else {
+            startRecording();
+        }
+    };
+
+    const startRecording = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorderRef.current = mediaRecorder;
+            setIsRecording(true);
+
+            const audioChunks: BlobPart[] = [];
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
             };
 
-            typeNextCharacter();  
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+                sendAudioToAPI(audioBlob); // 녹음이 종료되면 API 호출
+            };
+
+            mediaRecorder.start();
+        } catch (error) {
+            console.error("녹음 시작 실패:", error);
+        }
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+        }
+    };
+
+    const sendAudioToAPI = async (audioBlob: Blob) => {
+        // Blob 데이터를 base64로 변환하는 함수
+        const blobToBase64 = (blob: Blob): Promise<string> => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    resolve(reader.result as string); // base64 문자열 반환
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(blob); // Blob을 base64로 변환
+            });
+        };
+    
+        try {
+            // Blob 데이터를 base64로 변환
+            const base64Audio = await blobToBase64(audioBlob);
+    
+            // base64 데이터에서 헤더(`data:audio/wav;base64,`) 제거
+            const cleanBase64Audio = base64Audio.split(",")[1];
+    
+            // API 요청 본문 생성
+            const requestBody = {
+                audio: cleanBase64Audio,
+            };
+    
+            // API 요청
+            const response = await fetch("https://ailibi.click/api/v1/stt", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestBody),
+            });
+    
+            if (response.ok) {
+                const result = await response.json();
+                if (result.text) {
+                    setUserInput(result.text); // API에서 변환된 텍스트를 userInput에 설정
+                }
+            } else {
+                console.error("STT API 호출 실패:", response.statusText);
+            }
+        } catch (error) {
+            console.error("STT API 호출 중 오류 발생:", error);
         }
     };
 
@@ -99,31 +189,27 @@ const ChattingPage: React.FC = () => {
         return Math.random() * 50 + 50;  
     };
 
-    const toggleRecording = () => {
-        setIsRecording(!isRecording);
-    };
-
     return (
         <div className="chatting-page-container">
             <button className="back-button" onClick={handleBackCheck}>
                 <img src="/images/back.svg" alt="Back Icon" className="back-icon" />
             </button>
 
-            {displayText && (
-                <div className="speech-bubble">
-                    <div className="bubble-content">
-                        <FontAwesomeIcon icon={faVolumeHigh}
-                        className="volume-icon" />
-                    {displayText}</div>
-                </div>
-            )}
+            {suspectChat && (
+            <div className="speech-bubble">
+                <div className="bubble-content">
+                    <FontAwesomeIcon icon={faVolumeHigh}
+                    className="volume-icon" />
+                {displayText || suspectChat}</div>
+            </div>
+        )}
 
             <div className="paper">
                 <div className="suspect-profile">
                     <div className="suspect-image-wrapper">
                         <div className="tape-section"></div>
                         <img 
-                            src="/images/Suspect1.png" 
+                            src={`${suspectData?.image || "default.jpg"}`} 
                             alt="Suspect" 
                             className="suspect-image"
                         />
@@ -132,25 +218,26 @@ const ChattingPage: React.FC = () => {
                     <div className="suspect-info">
                         <div className="info-grid">
                             <p className="info-label">이름:</p>
-                            <p className="info-value">김민수</p>
+                            <p className="info-value">{suspectData?.name || "알 수 없음"}</p>
                             
                             <p className="info-label">나이:</p>
-                            <p className="info-value">42세</p>
+                            <p className="info-value">{suspectData?.age || "알 수 없음"}세</p>
                             
                             <p className="info-label">성별:</p>
-                            <p className="info-value">남성</p>
+                            <p className="info-value">{suspectData?.gender ? "여성" : "남성"}</p>
                             
                             <p className="info-label">직업:</p>
-                            <p className="info-value">미술관 큐레이터</p>
+                            <p className="info-value">{suspectData?.job || "알 수 없음"}</p>
                             
                             <p className="info-label">초기 진술:</p>
                             <p className="info-value statement-content">
-                                "그날 밤 내내 사무실에서 다음 전시 준비를 하고 있었습니다."
+                                "{suspectData?.init_chat || "초기 진술 없음"}"
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
+
 
             <div className="chat-section">
                 <div className="chat-tip">TIP: 심문 내용을 추리 노트에 기록하세요.</div>
@@ -176,6 +263,11 @@ const ChattingPage: React.FC = () => {
                             onChange={(e) => setUserInput(e.target.value)}
                             placeholder="너의 알리바이를 말해라"
                             className="chat-input"
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    handleSubmit(); // 엔터 키를 누르면 handleSubmit 호출
+                                }
+                            }}
                         />
                     </div>
                     <button 

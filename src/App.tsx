@@ -15,8 +15,8 @@ import SignupBox from "./pages/SignupBox";
 import ChattingPage from "./pages/ChattingPage";
 import MainPage from "./pages/MainPage";
 import MakeScenarioPage from "./pages/MakeScenarioPage";
-import NextPage from "./pages/NextPage";
-import NextPage2 from "./pages/NextPage2";
+//import NextPage from "./pages/NextPage";
+//import NextPage2 from "./pages/NextPage2";
 import LoginBox from "./pages/LoginBox";
 import { AudioProvider } from "./pages/MainAudioContext";
 import PlayHistoryPage from "./pages/PlayHistoryPage";
@@ -42,8 +42,8 @@ const App: React.FC = () => {
           <Route path="/evidence/:scenarioId" element={<EvidencePage />} />
           <Route path="/suspect/:scenarioId" element={<SuspectPage />} />
           <Route path="/chat" element={<ChattingPage />} />
-          <Route path="/NextPage" element={<NextPage />} />
-          <Route path="/NextPage2" element={<NextPage2 />} />
+          {/* <Route path="/NextPage" element={<NextPage />} />
+          <Route path="/NextPage2" element={<NextPage2 />} />*/}
           <Route path="/loginbox" element={<LoginBox />} />
           <Route
             path="/MakeScenarioPage"
@@ -80,8 +80,8 @@ const App: React.FC = () => {
          />
 
           {/* 추가 라우팅 */}
-          <Route path="/NextPage" element={<NextPage />} />
-          <Route path="/NextPage2" element={<NextPage2 />} />
+          {/*<Route path="/NextPage" element={<NextPage />} />
+          <Route path="/NextPage2" element={<NextPage2 />} />*/}
           <Route path="/loginbox" element={<LoginBox />} />
           
           {/* 오디오가 필요한 페이지 */}

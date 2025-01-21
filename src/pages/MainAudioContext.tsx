@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useRef, useEffect } from "react";
+import React, { createContext, useContext, useRef, useEffect } from "react";
 
 interface AudioContextValue {
   bgmRef: React.MutableRefObject<HTMLAudioElement | null>;
