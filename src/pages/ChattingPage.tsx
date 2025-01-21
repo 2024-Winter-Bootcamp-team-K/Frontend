@@ -265,6 +265,11 @@ const ChattingPage: React.FC = () => {
                             onChange={(e) => setUserInput(e.target.value)}
                             placeholder="너의 알리바이를 말해라"
                             className="chat-input"
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                    handleSubmit(); // 엔터 키를 누르면 handleSubmit 호출
+                                }
+                            }}
                         />
                     </div>
                     <button 
