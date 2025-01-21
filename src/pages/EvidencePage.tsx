@@ -143,7 +143,7 @@ const EvidencePage: React.FC <{ scenarioId?: number }> = ({ scenarioId = 1 }) =>
 
     if (isLoading) return (
         <div className="loading-container">
-            <p>증거 정보를 불러오는 중...</p>
+            <p>{/*정보를 불러오는 중...*/}</p>
         </div>
     );
 

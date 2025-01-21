@@ -38,6 +38,7 @@ const PlayPage: React.FC = () => {
 
     if (scenario_id) {
       fetchScenario();
+      localStorage.setItem('currentScenarioId', scenario_id);
     }
   }, [scenario_id]);
 
