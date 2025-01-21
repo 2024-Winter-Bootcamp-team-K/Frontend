@@ -87,7 +87,7 @@ const ResultLoadingPage: React.FC = () => {
       
       return () => clearTimeout(timeout);
     }
-  }, [isLoading, error, navigate]);
+  }, [isLoading, error, navigate, scenarioId]);
 
   return (
     <div
