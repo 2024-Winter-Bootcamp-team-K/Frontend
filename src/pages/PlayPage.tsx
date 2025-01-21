@@ -16,8 +16,8 @@ const PlayPage: React.FC = () => {
   const [scenario, setScenario] = useState<Scenario | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
-  const handleSuspectCheck = () => {navigate("/suspect")};
-  const handleEvidenceCheck = () => {navigate("/evidence")};
+  const handleSuspectCheck = () => {navigate(`/suspect/${scenario_id}`)};
+  const handleEvidenceCheck = () => {navigate(`/evidence/${scenario_id}`)};
   const handleFolderCheck = () => openPopup();
 
   useEffect(() => {
