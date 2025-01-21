@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NotePage from "./NotePage.tsx";
 import axios from "axios";
 import axiosInstance from  "../hooks/axiosInstance.ts";
@@ -28,7 +28,8 @@ const suspectService = {
         })
 };
 
-const SuspectPage: React.FC<{ scenarioId?: number }> = ({ scenarioId = 1 })  => {
+const SuspectPage: React.FC = ()  => {
+     const { scenarioId } = useParams<{ scenarioId: string }>();
     const navigate = useNavigate();
     const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
     const [showItems, setShowItems] = useState<number[]>([]);
@@ -37,7 +38,11 @@ const SuspectPage: React.FC<{ scenarioId?: number }> = ({ scenarioId = 1 })  => 
     const [error, setError] = useState<string | null>(null);
     
 
-    const handleBackCheck = () => {navigate("/play")};
+    const handleBackCheck = () => {
+        if (scenarioId) {
+            navigate(`/play/${scenarioId}`);
+        }
+    };
     const handleFolderCheck = () => openPopup();
     
     const handleInterrogate = (id: number) => {navigate(`/chat/${id}`); };
@@ -50,7 +55,7 @@ const SuspectPage: React.FC<{ scenarioId?: number }> = ({ scenarioId = 1 })  => 
         const fetchSuspects = async () => {
             try {
                 setLoading(true); // 로딩 시작
-                const response = await suspectService.getSuspects(scenarioId);
+                const response = await suspectService.getSuspects(Number(scenarioId));
                 setSuspects(response.data.suspects); 
             } catch (err: unknown) {
                 if (axios.isAxiosError(err)) {
@@ -69,7 +74,9 @@ const SuspectPage: React.FC<{ scenarioId?: number }> = ({ scenarioId = 1 })  => 
                 setLoading(false); // 로딩 종료
             }
         };
-
+        if (scenarioId) {
+            localStorage.setItem('currentScenarioId', scenarioId);
+        }
         fetchSuspects();
     }, [scenarioId]);
 
