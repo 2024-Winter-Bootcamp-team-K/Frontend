@@ -105,7 +105,7 @@ const SuspectPage: React.FC = ()  => {
 
     if (isLoading) return (
         <div className="loading-container">
-            <p>용의자 정보를 불러오는 중...</p>
+            <p>{/*정보를 불러오는 중...*/}</p>
         </div>
     );
 

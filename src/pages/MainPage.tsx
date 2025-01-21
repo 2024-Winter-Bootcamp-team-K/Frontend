@@ -81,7 +81,7 @@ const MainPage: React.FC = () => {
 
   if (isLoading) return (
       <div className="loading-container">
-          <p>시나리오 정보를 불러오는 중...</p>
+          <p>{/*정보를 불러오는 중...*/}</p>
       </div>
   );
 

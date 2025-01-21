@@ -74,7 +74,7 @@ const CheckEv: React.FC<CheckEvProps> = ({
 
   const renderChatHistory = () => {
     if (isLoading) {
-      return <p className="text-center font-cursive text-xl">대화 내역을 불러오는 중...</p>;
+      return <p className="text-center font-cursive text-xl">{/*정보를 불러오는 중...*/}</p>;
     }
 
     if (error) {

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { createScenario } from "../services/apiService"; // API 서비스 가져오기
+import { useUser } from '../hooks/UserContext';
 
 const MakeScenarioPage: React.FC = () => {
   const [animate, setAnimate] = useState(false);
@@ -13,6 +14,7 @@ const MakeScenarioPage: React.FC = () => {
   const [location, setLocation] = useState(""); 
   const [selectedDate, setSelectedDate] = useState("");
   const navigate = useNavigate();
+  const { userId } = useUser();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -29,7 +31,7 @@ const MakeScenarioPage: React.FC = () => {
       const audio = new Audio("/sounds/book.mp3");
       audio.play();
       setTimeout(() => {
-        navigate("/MainPage");
+        navigate(`/MainPage/${userId}`);
       }, 1500);
     }
   };
