@@ -2,9 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import NotePage from "./NotePage.tsx";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { fetchSuspect, createChat } from "../services/apiService";
+import { fetchSuspect } from "../services/apiService";
+import WebSocketService from "../mocks/webSocketService";
 
 const ChattingPage: React.FC = () => {
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ const ChattingPage: React.FC = () => {
     const [chatHistory, setChatHistory] = useState<{ message: string; response: any }[]>([]); // 채팅 기록 상태
     const [suspectChat, setSuspectChat] = useState<string | null>(null); // suspect_chat 상태 추가
     const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
+    const webSocketServiceRef = useRef<WebSocketService | null>(null);
     const { suspect_id } = useParams<{ suspect_id: string | undefined }>();
 
     const scenarioId = localStorage.getItem("currentScenarioId");
@@ -27,13 +29,27 @@ const ChattingPage: React.FC = () => {
         if (!suspect_id) return;
         try {
             const data = await fetchSuspect(suspect_id);
-            setSuspectChat(data?.suspect_chat); // suspect_chat 값을 설정
             setSuspectData(data);
         } catch (error) {
             console.error("용의자 정보를 가져오는 중 오류 발생:", error);
         }
         };
         loadSuspect();
+
+        // WebSocket 연결 설정
+        const webSocketService = WebSocketService.getInstance();
+        webSocketService.connect(`ws://ailibi.click/ws/chat/${suspect_id}`, (data) => {
+            if (data?.suspect_chat) {
+                setSuspectChat(data.suspect_chat); // suspectChat 업데이트
+                animateSuspectChat(data.suspect_chat);
+                setChatHistory((prev) => [...prev, { message: userInput, response: data.suspect_chat }]);
+            }
+        });
+        webSocketServiceRef.current = webSocketService;
+
+        return () => {
+            webSocketService.disconnect(); // 컴포넌트 언마운트 시 연결 해제
+        };
     }, [suspect_id]);
 
     const handleBackCheck = () => {
@@ -54,68 +70,37 @@ const ChattingPage: React.FC = () => {
       setActivePopup(false); // 팝업 닫기
     };    
     
-    useEffect(() => {
-        const loadSuspect = async () => {
-            if(!suspect_id) return;
-            try {
-                const data = await fetchSuspect(suspect_id);
-                setSuspectChat(data?.suspect_chat);
-                setSuspectData(data);
-            } catch (error) {
-                console.error("용의자 정보를 가져오는 중 오류 발생:", error);
+    const animateSuspectChat = (chat: string) => {
+        let currentText = "";
+        let index = 0;
+        setIsTyping(true);
+        setDisplayText(""); // 애니메이션 초기화
+
+        const typeNextCharacter = () => {
+            if (index < chat.length) {
+                currentText += chat[index];
+                setDisplayText(currentText);
+                index++;
+
+                const delay = getDelay(chat[index - 1]);
+                setTimeout(typeNextCharacter, delay);
+            } else {
+                setIsTyping(false); // 애니메이션 종료
             }
         };
-        loadSuspect();
-    }, [suspect_id]);
-    
-    const handleSubmit = async () => {
-        if (!suspect_id || userInput.trim() === "") {
-            console.error("유효하지 않은 suspect_id 또는 빈 입력값입니다.");
+
+        typeNextCharacter();
+    };
+
+    const handleSendMessage = () => {
+        if (!userInput.trim() || !webSocketServiceRef.current) {
+            console.error("유효하지 않은 입력값 또는 WebSocket 연결 없음.");
             return;
         }
-    
-        setIsTyping(true); // 애니메이션 시작 상태 설정
-        setDisplayText(""); // 애니메이션을 위해 텍스트 초기화
-        const cleanedText = userInput.trim();
-    
-        // API 연동
-        try {
-            const chatResponse = await createChat(suspect_id, cleanedText);
-    
-            if (chatResponse?.suspect_chat) {
-                const updatedSuspectChat = chatResponse.suspect_chat;
-                setSuspectChat(updatedSuspectChat); // suspect_chat 업데이트
-                setChatHistory([
-                    ...chatHistory,
-                    { message: cleanedText, response: updatedSuspectChat }
-                ]);
-    
-                // suspectChat 애니메이션
-                let currentText = "";
-                let index = 0;
-    
-                const typeNextCharacter = () => {
-                    if (index < updatedSuspectChat.length) {
-                        currentText += updatedSuspectChat[index];
-                        setDisplayText(currentText);
-                        index++;
-    
-                        const delay = getDelay(updatedSuspectChat[index - 1]);
-                        setTimeout(typeNextCharacter, delay);
-                    } else {
-                        setIsTyping(false); // 애니메이션 종료 상태 설정
-                    }
-                };
-    
-                typeNextCharacter();
-            } else {
-                console.error("API에서 suspect_chat 응답이 없습니다.");
-            }
-    
-            setUserInput(""); // 입력값 초기화
-        } catch (error) {
-            console.error("심문 생성 중 오류 발생:", error);
-        }
+
+        webSocketServiceRef.current.sendMessage({ message: userInput.trim() });
+        setChatHistory((prev) => [...prev, { message: userInput.trim(), response: "" }]); // 사용자의 메시지 추가
+        setUserInput(""); // 입력값 초기화
     };
 
     const toggleRecording = async () => {
@@ -289,13 +274,13 @@ const ChattingPage: React.FC = () => {
                             className="chat-input"
                             onKeyDown={(e) => {
                                 if (e.key === "Enter") {
-                                    handleSubmit(); // 엔터 키를 누르면 handleSubmit 호출
+                                    handleSendMessage(); // 엔터 키를 누르면 handleSubmit 호출
                                 }
                             }}
                         />
                     </div>
                     <button 
-                        onClick={handleSubmit}
+                        onClick={handleSendMessage}
                         className="submit-button"
                         disabled={isTyping}
                     >
