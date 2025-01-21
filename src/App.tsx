@@ -39,8 +39,8 @@ const App: React.FC = () => {
           <Route path="/result/:scenarioId" element={<ResultPage />} />
           <Route path="/resultLoading/:suspectId" element={<ResultLoadingPage />} />
           <Route path="/Ending/:scenarioId" element={<EndingPage />} />
-          <Route path="/evidence/:id" element={<EvidencePage />} />
-          <Route path="/suspect/:id" element={<SuspectPage />} />
+          <Route path="/evidence/:scenarioId" element={<EvidencePage />} />
+          <Route path="/suspect/:scenarioId" element={<SuspectPage />} />
           <Route path="/chat" element={<ChattingPage />} />
           <Route path="/NextPage" element={<NextPage />} />
           <Route path="/NextPage2" element={<NextPage2 />} />
