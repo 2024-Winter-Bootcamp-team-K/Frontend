@@ -59,7 +59,7 @@ const PlayPage: React.FC = () => {
           </div>
         ) : !scenario ? (
           <div className="loading-message">
-            <p>사건 정보를 불러오는 중...</p>
+            <p>{/*정보를 불러오는 중...*/}</p>
           </div>
         ) : (
           <>
