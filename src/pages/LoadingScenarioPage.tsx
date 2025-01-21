@@ -1,12 +1,20 @@
-//로딩
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAudio } from "./MainAudioContext"; // AudioContext 사용
-import { fetchScenario } from "../services/apiService"; // API 서비스 가져오기
-import { useParams } from "react-router-dom"; // URL에서 scenario_id 가져오기
 
+interface ScenarioData {
+  year: string;
+  month: string;
+  day: string;
+  hour: string;
+  minute: string;
+  location: string;
+  description: string;
+  event_type: string;
+}
 
 const LoadingScenarioPage: React.FC = () => {
+  const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null); // 시나리오 데이터 상태
   const [text, setText] = useState('');
   const [progress, setProgress] = useState(0);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false); // 오디오 활성화 상태
@@ -14,43 +22,44 @@ const LoadingScenarioPage: React.FC = () => {
   const navigate = useNavigate();
   const typingSoundRef = useRef<HTMLAudioElement | null>(null);
   const { bgmRef } = useAudio(); // AudioContext에서 bgmRef 가져오기
+  const { scenario_id } = useParams<{ scenario_id: string }>();
+  const [fullText, setFullText] = useState<string>('');
 
-  const { scenario_id } = useParams<{ scenario_id: string }>(); // URL에서 scenario_id 가져오기
-  const [scenarioData, setScenarioData] = useState<any>(null); // API에서 가져올 데이터 상태
-  const [loadingError, setLoadingError] = useState(false); // 로딩 에러 상태
-  
-
-
-
-      // API 호출로 시나리오 데이터 가져오기
-      useEffect(() => {
-        const fetchData = async () => {
-          try {
-            if (!scenario_id) {
-              console.error("scenario_id가 없습니다.");
-              return;
-            }
-            const data = await fetchScenario(scenario_id); // API 호출
-            setScenarioData(data); // 데이터 저장
-            console.log("시나리오 데이터:", data);
-          } catch (error) {
-            console.error("시나리오 데이터를 가져오는 중 오류 발생:", error);
-            setLoadingError(true); // 에러 상태 업데이트
-          }
-        };
-
-        fetchData();
-      }, [scenario_id]);
-
-      // 로딩 에러 발생 시 처리
-      useEffect(() => {
-        if (loadingError) {
-          alert("시나리오 데이터를 불러오는 데 실패했습니다.");
-          navigate("/error"); // 에러 페이지로 이동
+  useEffect(() => {
+    const fetchScenario = async () => {
+      try {
+        const response = await fetch(`/api/v1/scenarios/${scenario_id}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch scenario: ${response.statusText}`);
         }
-      }, [loadingError, navigate]);
+        const data = await response.json();
   
-
+        console.log("받아온 시나리오 데이터:", data);
+  
+        // `scenarios` 배열에서 첫 번째 항목 가져오기
+        const scenario = data.scenarios[0];
+        setScenarioData(scenario); // 첫 번째 시나리오를 상태로 설정
+      } catch (error) {
+        console.error("Failed to load scenario data:", error);
+      }
+    };
+  
+    if (scenario_id) {
+      fetchScenario();
+    }
+  }, [scenario_id]);
+  
+  
+  useEffect(() => {
+    if (scenarioData) {
+      console.log("Setting full text with scenarioData:", scenarioData);
+      setFullText(`${scenarioData.year}년 ${scenarioData.month}월 ${scenarioData.day}일 ${scenarioData.hour}시 ${scenarioData.minute}분 경,
+        ${scenarioData.location}에서
+        ${scenarioData.event_type} 사건이 발생했습니다......`);
+    }
+  }, [scenarioData]);
+  
+  
 
   useEffect(() => {
     // BGM 일시정지 또는 정지
@@ -68,13 +77,6 @@ const LoadingScenarioPage: React.FC = () => {
       }
     };
   }, [bgmRef]);
-  
-
-  const fullText = `2024년 12월 30일 밤 11시 30분 경,
-서울 현대미술관 3층 특별 전시실에서
-반 고흐의 "해바라기" 복제화 작품이 도난 되는데,,,
-
-현장을 조사하는 중입니다......`;
 
   useEffect(() => {
     typingSoundRef.current = new Audio('/sounds/typing.mp3');
@@ -93,8 +95,12 @@ const LoadingScenarioPage: React.FC = () => {
     }
   };
 
+  
+
+
+
   useEffect(() => {
-    if (!isAudioEnabled) return;
+    if (!isAudioEnabled || !scenarioData) return;
 
     const typeInterval = setInterval(() => {
       setText((prev) => {
@@ -143,14 +149,6 @@ const LoadingScenarioPage: React.FC = () => {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#181818] text-white">
       {/* 제목 */}
-                        {scenarioData ? (
-                    <div className="absolute top-20 text-center text-lg">
-                      <p>시나리오 제목: {scenarioData.title || "제목 없음"}</p>
-                      <p>설명: {scenarioData.description || "설명 없음"}</p>
-                    </div>
-                  ) : (
-                    <p>데이터를 불러오는 중입니다...</p>
-                  )}
       <h1
         style={{ 
           fontSize: '3vw',
@@ -158,7 +156,7 @@ const LoadingScenarioPage: React.FC = () => {
          }}
         className="font-intelmono text-xl font-bold text-center mb-8"
       >
-        기밀 사건 파일 #2024-12-30
+        기밀 사건 파일 #{scenario_id}
       </h1>
 
       {/* 파란색 창 */}

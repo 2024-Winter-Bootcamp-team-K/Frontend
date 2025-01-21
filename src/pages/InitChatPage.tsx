@@ -169,7 +169,7 @@ const InitChatPage: React.FC = () => {
           padding: "0.5vh 1vw",
           fontSize: "1.7vw",
         }}
-        onClick={() => navigate("/play")}
+        onClick={() => navigate(`/play/${scenario_id}`)}
       >
         수사 시작하기
       </button>

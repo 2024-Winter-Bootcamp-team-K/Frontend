@@ -14,12 +14,15 @@ const ChattingPage: React.FC = () => {
     const [isTyping, setIsTyping] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
-    const { suspect_id } = useParams<{ suspect_id: string | undefined }>();
     const [suspectData, setSuspectData] = useState<any>(null); // 용의자 정보 상태
     const [chatHistory, setChatHistory] = useState<{ message: string; response: any }[]>([]); // 채팅 기록 상태
     const [suspectChat, setSuspectChat] = useState<string | null>(null); // suspect_chat 상태 추가
     const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
     const webSocketServiceRef = useRef<WebSocketService | null>(null);
+    const { suspect_id } = useParams<{ suspect_id: string | undefined }>();
+
+    const scenarioId = localStorage.getItem("currentScenarioId");
+
 
     useEffect(() => {
         const loadSuspect = async () => {
@@ -49,7 +52,14 @@ const ChattingPage: React.FC = () => {
         };
     }, [suspect_id]);
 
-    const handleBackCheck = () => {navigate("/suspect")};
+    const handleBackCheck = () => {
+        if (scenarioId) {
+            navigate(`/suspect/${scenarioId}`);
+        } else {
+            navigate("/");
+        }
+    };
+
     const handleFolderCheck = () => openPopup();
 
     const openPopup = () => {

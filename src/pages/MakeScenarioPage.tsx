@@ -3,16 +3,18 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { createScenario } from "../services/apiService"; // API 서비스 가져오기
+import { useUser } from '../hooks/UserContext';
 
 const MakeScenarioPage: React.FC = () => {
   const [animate, setAnimate] = useState(false);
   const [exitAnimate, setExitAnimate] = useState(false);
   const [showContent, setShowContent] = useState(false);
   const [difficulty, setDifficulty] = useState("");
-  const [crimeType, setCrimeType] = useState("");
+  const [event_type, setEvent_type] = useState("");
   const [location, setLocation] = useState(""); 
   const [selectedDate, setSelectedDate] = useState("");
   const navigate = useNavigate();
+  const { userId } = useUser();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -29,7 +31,7 @@ const MakeScenarioPage: React.FC = () => {
       const audio = new Audio("/sounds/book.mp3");
       audio.play();
       setTimeout(() => {
-        navigate("/MainPage");
+        navigate(`/MainPage/${userId}`);
       }, 1500);
     }
   };
@@ -53,14 +55,11 @@ const MakeScenarioPage: React.FC = () => {
 // API 호출 추가
 const handleScenarioButtonClick = async (e: React.MouseEvent) => {
   e.stopPropagation();
-  const audio = new Audio("/sounds/fear.wav");
-  audio.play();
 
   if (
     !location ||
     !selectedDate ||
-    !crimeType ||
-    !difficulty ||
+    !event_type ||
     hour === null ||
     minute === null ||
     hour < 0 ||
@@ -72,42 +71,30 @@ const handleScenarioButtonClick = async (e: React.MouseEvent) => {
     return;
   }
 
+  // 날짜 분리 및 숫자 변환
+  const [year, month, day] = selectedDate.split(" ").map(Number);
+
+  // 전송 데이터 준비
+  const scenarioData = {
+    user_id:1,
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    location: location.trim(),
+    event_type: event_type.trim(),
+  };
+
   try {
-    // 공백을 기준으로 split
-    const [year, month, day] = selectedDate.split(" ").map(Number);
-
-    // 날짜 유효성 검증
-    if (
-      year < 2000 ||
-      year > 2024 ||
-      month < 1 ||
-      month > 12 ||
-      day < 1 ||
-      day > 30
-    ) {
-      alert("날짜를 2000년부터 2024년까지, 월은 1~12, 일은 1~30 사이로 입력해주세요.");
-      return;
-    }
-
-    const scenarioData = {
-      user_id: 1, // 사용자 ID
-      year,
-      month,
-      day,
-      hour,
-      minute,
-      location,
-      event_type: crimeType,
-      evidence_count: 2,
-      suspect_count: 3,
-    };
-
     console.log("전송 데이터:", scenarioData);
 
+    // API 호출
     const response = await createScenario(scenarioData);
     console.log("시나리오 생성 성공:", response);
 
-    navigate(`/loading/${response.id}`);
+    // 성공 시 이동
+    navigate(`/loading/${response.scenario_id}`);
   } catch (error) {
     console.error("시나리오 생성 실패:", error);
     alert("시나리오 생성에 실패했습니다. 다시 시도해주세요.");
@@ -153,7 +140,7 @@ const handleScenarioButtonClick = async (e: React.MouseEvent) => {
                   <InputLine />
                 </SelectWrapper>
               </Row>
-                                  <Row>
+                      <Row>
                         <Label>범행 날짜</Label>
                         <InputWrapper>
                           <DateInputContainer>
@@ -192,16 +179,16 @@ const handleScenarioButtonClick = async (e: React.MouseEvent) => {
                           <Label>범행 종류</Label>
                           <SelectWrapper>
                             <Dropdown
-                              value={crimeType}
-                              onChange={(e) => setCrimeType(e.target.value)}
+                              value={event_type}
+                              onChange={(e) => setEvent_type(e.target.value)}
                               onClick={(e) => e.stopPropagation()}
-                              isSelected={!!crimeType}
+                              isSelected={!!event_type}
                             >
                               <option value="" disabled>
                                 범행 종류 선택
                               </option>
-                              <option value="살인사건">살인사건</option>
-                              <option value="도난사건">도난사건</option>
+                              <option value="살인사건">살인</option>
+                              <option value="도난사건">도난</option>
                             </Dropdown>
                             <InputLine />
                           </SelectWrapper>
