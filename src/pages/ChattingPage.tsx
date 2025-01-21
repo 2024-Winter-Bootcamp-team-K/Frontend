@@ -6,8 +6,6 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchSuspect, createChat } from "../services/apiService";
 
-
-
 const ChattingPage: React.FC = () => {
     const navigate = useNavigate();
     const [userInput, setUserInput] = useState("");
@@ -15,44 +13,24 @@ const ChattingPage: React.FC = () => {
     const [isTyping, setIsTyping] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
-
     const { suspect_id } = useParams<{ suspect_id: string | undefined }>();
     const [suspectData, setSuspectData] = useState<any>(null); // 용의자 정보 상태
-    const [chatInput, setChatInput] = useState(""); // 사용자 입력값 상태
     const [chatHistory, setChatHistory] = useState<{ message: string; response: any }[]>([]); // 채팅 기록 상태
+    const [suspectChat, setSuspectChat] = useState<string | null>(null); // suspect_chat 상태 추가
 
-
-            // 1. 용의자 정보 가져오기 (GET /suspects/{suspect_id})
-        useEffect(() => {
-            const loadSuspect = async () => {
-            if (!suspect_id) return;
-            try {
-                const data = await fetchSuspect(suspect_id);
-                setSuspectData(data);
-            } catch (error) {
-                console.error("용의자 정보를 가져오는 중 오류 발생:", error);
-            }
-            };
-            loadSuspect();
-        }, [suspect_id]);
-
-        // 2. 심문(채팅) 생성 (POST /chats?suspect_id={suspectId})
-        const handleChatSubmit = async () => {
-            if (!suspect_id || !chatInput.trim()) {
-                console.error("유효하지 않은 suspect_id 또는 빈 입력값입니다.");
-                return;
-            }
-        
-            try {
-                const chatResponse = await createChat(suspect_id, chatInput.trim());
-                setChatHistory([...chatHistory, { message: chatInput.trim(), response: chatResponse }]);
-                setChatInput(""); // 입력 초기화
-            } catch (error) {
-                console.error("심문 생성 중 오류 발생:", error);
-            }
+    useEffect(() => {
+        const loadSuspect = async () => {
+        if (!suspect_id) return;
+        try {
+            const data = await fetchSuspect(suspect_id);
+            setSuspectChat(data?.suspect_chat); // suspect_chat 값을 설정
+            setSuspectData(data);
+        } catch (error) {
+            console.error("용의자 정보를 가져오는 중 오류 발생:", error);
+        }
         };
-        
-    
+        loadSuspect();
+    }, [suspect_id]);
 
     const handleBackCheck = () => {navigate("/suspect")};
     const handleFolderCheck = () => openPopup();
@@ -65,30 +43,56 @@ const ChattingPage: React.FC = () => {
       setActivePopup(false); // 팝업 닫기
     };    
     
-    const handleSubmit = () => {
-        if (userInput.trim()) {
-            setIsTyping(true);
-            setDisplayText("");  
-            const cleanedText = userInput.trim();  
-            let currentText = "";  
-            let index = 0;
-            
-            const typeNextCharacter = () => {
-                if (index < cleanedText.length) {
-                    currentText += cleanedText[index];
-                    setDisplayText(currentText);
-                    index++;
-
-                    const delay = getDelay(cleanedText[index - 1]);
-                    setTimeout(typeNextCharacter, delay);
-                } else {
-                    setIsTyping(false);
-                }
-            };
-
-            typeNextCharacter();  
+    const handleSubmit = async () => {
+        if (!suspect_id || userInput.trim() === "") {
+            console.error("유효하지 않은 suspect_id 또는 빈 입력값입니다.");
+            return;
+        }
+    
+        setIsTyping(true); // 애니메이션 시작 상태 설정
+        setDisplayText(""); // 애니메이션을 위해 텍스트 초기화
+        const cleanedText = userInput.trim();
+    
+        // API 연동
+        try {
+            const chatResponse = await createChat(suspect_id, cleanedText);
+    
+            if (chatResponse?.suspect_chat) {
+                const updatedSuspectChat = chatResponse.suspect_chat;
+                setSuspectChat(updatedSuspectChat); // suspect_chat 업데이트
+                setChatHistory([
+                    ...chatHistory,
+                    { message: cleanedText, response: updatedSuspectChat }
+                ]);
+    
+                // suspectChat 애니메이션
+                let currentText = "";
+                let index = 0;
+    
+                const typeNextCharacter = () => {
+                    if (index < updatedSuspectChat.length) {
+                        currentText += updatedSuspectChat[index];
+                        setDisplayText(currentText);
+                        index++;
+    
+                        const delay = getDelay(updatedSuspectChat[index - 1]);
+                        setTimeout(typeNextCharacter, delay);
+                    } else {
+                        setIsTyping(false); // 애니메이션 종료 상태 설정
+                    }
+                };
+    
+                typeNextCharacter();
+            } else {
+                console.error("API에서 suspect_chat 응답이 없습니다.");
+            }
+    
+            setUserInput(""); // 입력값 초기화
+        } catch (error) {
+            console.error("심문 생성 중 오류 발생:", error);
         }
     };
+    
 
     const getDelay = (char: string) => {
         if (['.', '!', '?'].includes(char)) {
@@ -109,21 +113,21 @@ const ChattingPage: React.FC = () => {
                 <img src="/images/back.svg" alt="Back Icon" className="back-icon" />
             </button>
 
-            {displayText && (
-                <div className="speech-bubble">
-                    <div className="bubble-content">
-                        <FontAwesomeIcon icon={faVolumeHigh}
-                        className="volume-icon" />
-                    {displayText}</div>
-                </div>
-            )}
+            {suspectChat && (
+            <div className="speech-bubble">
+                <div className="bubble-content">
+                    <FontAwesomeIcon icon={faVolumeHigh}
+                    className="volume-icon" />
+                {displayText || suspectChat}</div>
+            </div>
+        )}
 
             <div className="paper">
                 <div className="suspect-profile">
                     <div className="suspect-image-wrapper">
                         <div className="tape-section"></div>
                         <img 
-                            src="/images/Suspect1.png" 
+                            src={`${suspectData?.image || "default.jpg"}`} 
                             alt="Suspect" 
                             className="suspect-image"
                         />
@@ -132,25 +136,26 @@ const ChattingPage: React.FC = () => {
                     <div className="suspect-info">
                         <div className="info-grid">
                             <p className="info-label">이름:</p>
-                            <p className="info-value">김민수</p>
+                            <p className="info-value">{suspectData?.name || "알 수 없음"}</p>
                             
                             <p className="info-label">나이:</p>
-                            <p className="info-value">42세</p>
+                            <p className="info-value">{suspectData?.age || "알 수 없음"}세</p>
                             
                             <p className="info-label">성별:</p>
-                            <p className="info-value">남성</p>
+                            <p className="info-value">{suspectData?.gender ? "여성" : "남성"}</p>
                             
                             <p className="info-label">직업:</p>
-                            <p className="info-value">미술관 큐레이터</p>
+                            <p className="info-value">{suspectData?.job || "알 수 없음"}</p>
                             
                             <p className="info-label">초기 진술:</p>
                             <p className="info-value statement-content">
-                                "그날 밤 내내 사무실에서 다음 전시 준비를 하고 있었습니다."
+                                "{suspectData?.init_chat || "초기 진술 없음"}"
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
+
 
             <div className="chat-section">
                 <div className="chat-tip">TIP: 심문 내용을 추리 노트에 기록하세요.</div>

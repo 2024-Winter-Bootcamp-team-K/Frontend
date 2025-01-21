@@ -49,7 +49,7 @@ export const fetchSuspect = async (suspectId: string) => {
 // 용의자 심문 생성
 export const createChat = async (suspectId: string, message: string) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/chats?suspect_id=${suspectId}`, { message });
+    const response = await axios.post(`${API_BASE_URL}/chat/${suspectId}`, { message });
     return response.data;
   } catch (error) {
     console.error("심문 생성 중 오류 발생:", error);
