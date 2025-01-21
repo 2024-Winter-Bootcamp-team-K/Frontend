@@ -20,7 +20,7 @@ import MakeScenarioPage from "./pages/MakeScenarioPage";
 import LoginBox from "./pages/LoginBox";
 import { AudioProvider } from "./pages/MainAudioContext";
 import PlayHistoryPage from "./pages/PlayHistoryPage";
-import NotePage from "./pages/NotePage";
+//import NotePage from "./pages/NotePage";
 import { UserProvider } from './hooks/UserContext';
 
 const App: React.FC = () => {
@@ -60,10 +60,6 @@ const App: React.FC = () => {
                 <LoadingScenarioPage />
               </AudioProvider>
             }
-          />
-          <Route
-            path="/note/:scenario_id"
-            element={<NotePage />}
           />
           <Route
             path="/chat/:suspect_id"

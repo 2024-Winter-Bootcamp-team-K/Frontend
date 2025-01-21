@@ -31,6 +31,7 @@ const PlayPage: React.FC = () => {
         }
         const data = await response.json();
         setScenario(data.scenarios[0]);
+        localStorage.setItem(`note_${scenario_id}`, data.scenarios[0].note);
         setError(null);
       } catch (error) {
         console.error("Failed to load scenario data:", error);
