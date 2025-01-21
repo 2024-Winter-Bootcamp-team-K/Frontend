@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../components/EndingPage.css";
 import { useNavigate } from "react-router-dom";
+import { useUser } from '../hooks/UserContext';
 
 const EndingPage: React.FC = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -9,6 +10,7 @@ const EndingPage: React.FC = () => {
   const animationFrameId = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
   const navigate = useNavigate();
+  const { userId } = useUser();
 
   useEffect(() => {
       // 페이지 로드 시 오디오 재생
@@ -77,7 +79,7 @@ const EndingPage: React.FC = () => {
   }, [progress]);
 
   const handleReturnToMain = () => {
-    navigate("/MainPage"); // 메인 페이지로 이동
+    navigate(`/MainPage/${userId}`); // 메인 페이지로 이동
   };
 
   return (

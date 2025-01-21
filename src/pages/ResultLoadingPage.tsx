@@ -22,6 +22,7 @@ const ResultLoadingPage: React.FC = () => {
   const [currentMessage, setCurrentMessage] = useState<string>("");
   const [isLoading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const scenarioId = localStorage.getItem('currentScenarioId');
 
   useEffect(() => {
     const checkSuspectResult = async () => {
@@ -81,12 +82,12 @@ const ResultLoadingPage: React.FC = () => {
     // Navigate to result page after 5 seconds
     if (!isLoading && !error) {
       const timeout = setTimeout(() => {
-          //navigate("/result");
+        navigate(`/result/${scenarioId}`);
       }, 3000);
       
       return () => clearTimeout(timeout);
     }
-  }, [isLoading, error, navigate]);
+  }, [isLoading, error, navigate, scenarioId]);
 
   return (
     <div
