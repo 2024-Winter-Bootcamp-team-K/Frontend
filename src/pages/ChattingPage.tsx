@@ -13,11 +13,14 @@ const ChattingPage: React.FC = () => {
     const [isTyping, setIsTyping] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
-    const { suspect_id } = useParams<{ suspect_id: string | undefined }>();
     const [suspectData, setSuspectData] = useState<any>(null); // 용의자 정보 상태
     const [chatHistory, setChatHistory] = useState<{ message: string; response: any }[]>([]); // 채팅 기록 상태
     const [suspectChat, setSuspectChat] = useState<string | null>(null); // suspect_chat 상태 추가
     const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
+    const { suspect_id } = useParams<{ suspect_id: string | undefined }>();
+
+    const scenarioId = localStorage.getItem("currentScenarioId");
+
 
     useEffect(() => {
         const loadSuspect = async () => {
@@ -33,7 +36,14 @@ const ChattingPage: React.FC = () => {
         loadSuspect();
     }, [suspect_id]);
 
-    const handleBackCheck = () => {navigate("/suspect")};
+    const handleBackCheck = () => {
+        if (scenarioId) {
+            navigate(`/suspect/${scenarioId}`);
+        } else {
+            navigate("/");
+        }
+    };
+
     const handleFolderCheck = () => openPopup();
 
     const openPopup = () => {
@@ -43,6 +53,20 @@ const ChattingPage: React.FC = () => {
     const closePopup = () => {
       setActivePopup(false); // 팝업 닫기
     };    
+    
+    useEffect(() => {
+        const loadSuspect = async () => {
+            if(!suspect_id) return;
+            try {
+                const data = await fetchSuspect(suspect_id);
+                setSuspectChat(data?.suspect_chat);
+                setSuspectData(data);
+            } catch (error) {
+                console.error("용의자 정보를 가져오는 중 오류 발생:", error);
+            }
+        };
+        loadSuspect();
+    }, [suspect_id]);
     
     const handleSubmit = async () => {
         if (!suspect_id || userInput.trim() === "") {
