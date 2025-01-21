@@ -1,12 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../components/VideoPage.css";
+import { useUser } from '../hooks/UserContext';
 
 const VideoPage: React.FC = () => {
     const navigate = useNavigate();
+    const { userId } = useUser();
 
     const handleVideoEnd = () => {
-        navigate("/MainPage");
+        navigate(`/MainPage/${userId}`);
     }
 
     return (

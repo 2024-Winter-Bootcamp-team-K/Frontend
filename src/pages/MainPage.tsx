@@ -1,13 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useAudio } from "./MainAudioContext";
+//import { useAudio } from "./MainAudioContext";
+import axios from "axios";
+import axiosInstance from "../hooks/axiosInstance.ts";
+import { useUser } from '../hooks/UserContext';
+interface ScenarioResponse {
+  scenarios: Scenario[];
+}
 
-const MainPage = () => {
+interface Scenario {
+  id: number;
+  name: string;
+  image: string;
+  level: number;
+  type: string;
+  is_success: boolean;
+}
+
+// API 서비스 함수
+const historyService = {
+  getHistories: (userId: number) =>
+      axiosInstance.get<ScenarioResponse>('/histories', {
+          params: { user_id: userId }
+      })
+};
+
+const MainPage: React.FC = () => {
   const navigate = useNavigate();
-  const { bgmRef } = useAudio();
+  //const { bgmRef } = useAudio();
   const [isBlurred, setIsBlurred] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [scenarios, setScenarios] = useState<Scenario[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const { userId } = useUser();
 
   const playSound = () => {
     const audio = new Audio("/sounds/book.mp3");
@@ -25,24 +52,64 @@ const MainPage = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
+  useEffect(() => {
+    const fetchHistories = async () => {
+        try {
+            setLoading(true);
+            const response = await historyService.getHistories(userId);
+            setScenarios(response.data.scenarios);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                const status = err.response?.status;
+                setError(
+                    status === 500
+                        ? "서버에 에러가 발생하였습니다."
+                        : status === 502
+                        ? "서버로부터 잘못된 요청이 전송되었습니다."
+                        : "시나리오 데이터를 불러오는 데 실패했습니다."
+                );
+              } else {
+                  setError("예기치 못한 에러가 발생했습니다.");
+              }
+          } finally {
+              setLoading(false);
+          }
+      };
+
+      fetchHistories();
+  }, [userId]);
+
+  if (isLoading) return (
+      <div className="loading-container">
+          <p>시나리오 정보를 불러오는 중...</p>
+      </div>
+  );
+
+  if (error) {
+      return <div className="error-message">{error}</div>;
+  }
+
   return (
     <Background className={isBlurred ? "blur" : ""}>
       <PlayButtonWrapper>
         <DropdownButton onClick={toggleDropdown}>플레이 기록</DropdownButton>
         {isDropdownOpen && (
           <DropdownMenu>
-            <DropdownItem
-              onClick={() => {
-                playSound();
-                handleNavigation("/history");
-              }}
-            >
-              사건 일지 #001
-            </DropdownItem>
+            {scenarios.map((scenario) => (
+              <DropdownItem
+                key={scenario.id}
+                onClick={() => {
+                  playSound();
+                  handleNavigation(`/history/${scenario.id}`);
+                }}
+              >
+                사건 일지 #{String(scenario.id).padStart(3, '0')}
+            </DropdownItem>  
+          ))}
           </DropdownMenu>
-        )}
+       )}
       </PlayButtonWrapper>
-
+     
       <ScenarioButtonWrapper>
         <ScenarioButton
           onClick={() => {
