@@ -8,7 +8,9 @@ type Scenario = {
   datetime: string;
   type: string;
   description: string;
+  note: string;
 };
+
 
 const PlayPage: React.FC = () => {
   const navigate = useNavigate();
