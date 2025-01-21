@@ -12,6 +12,7 @@ const InitChatPage: React.FC = () => {
   const [visibleSuspect, setVisibleSuspect] = useState(0);
   const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showStartButton, setShowStartButton] = useState(false);
 
   useEffect(() => {
     const fetchScenario = async () => {
@@ -44,6 +45,15 @@ const InitChatPage: React.FC = () => {
     }, 2000);
     return () => clearInterval(interval);
   }, [scenario_id]);
+  
+  useEffect(() => {
+    if(visibleSuspect >= (scenarioData?.suspects.length || 0) -1) {
+      const timer = setTimeout(() => {
+        setShowStartButton(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [visibleSuspect, scenarioData]);
 
   const suspects = scenarioData
     ? scenarioData.suspects.map(({name, init_chat, image}) => ({
@@ -52,6 +62,7 @@ const InitChatPage: React.FC = () => {
       image,
     }))
     : [];
+  
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-[#181818] text-white font-intelmono">
@@ -162,6 +173,7 @@ const InitChatPage: React.FC = () => {
       )}
 
       {/* 수사 시작 버튼 */}
+      {showStartButton && (
       <button
         className="text-white font-intelmono font-semibold animated-button"
         style={{
@@ -170,9 +182,10 @@ const InitChatPage: React.FC = () => {
           fontSize: "1.7vw",
         }}
         onClick={() => navigate(`/play/${scenario_id}`)}
-      >
+      > 
         수사 시작하기
       </button>
+      )}
 
       {/* 스타일 */}
       <style>{`
