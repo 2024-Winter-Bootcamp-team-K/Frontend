@@ -17,7 +17,6 @@ const ChattingPage: React.FC = () => {
     const [suspectData, setSuspectData] = useState<any>(null); // 용의자 정보 상태
     const [chatHistory, setChatHistory] = useState<{ message: string; response: any }[]>([]); // 채팅 기록 상태
     const [suspectChat, setSuspectChat] = useState<string | null>(null); // suspect_chat 상태 추가
-    const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
     const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
 
     useEffect(() => {
@@ -118,7 +117,6 @@ const ChattingPage: React.FC = () => {
 
             mediaRecorder.onstop = () => {
                 const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
-                setAudioBlob(audioBlob);
                 sendAudioToAPI(audioBlob); // 녹음이 종료되면 API 호출
             };
 
