@@ -1,24 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../hooks/UserContext";
 import "../components/LogInPage.css";
 import axios from "axios";
+
+interface LoginResponse {
+  id: number;
+  name: string;
+  email: string;
+}
 
 const delay= (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const LogInPage: React.FC = () => {
+  const { setUserId } = useUser();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const stampAudio = new Audio('/sounds/startbgm.mp3');
-        stampAudio.volume = 0.3;
-        stampAudio.play().catch((error) => {
-          console.error("오디오 재생 오류:", error);
-        });
+  useEffect(() => {
+    const stampAudio = new Audio('/sounds/startbgm.mp3');
+    stampAudio.volume = 0.3;
+    stampAudio.play().catch((error) => {
+      console.error("오디오 재생 오류:", error);
+      });
 
-        return () => {
-          stampAudio.pause(); 
-          stampAudio.currentTime = 0;
-        };
-      }, []);
+    return () => {
+      stampAudio.pause(); 
+      stampAudio.currentTime = 0;
+    };
+  }, []);
       
   const [isZooming, setIsZooming] = useState(false);
   const [showImage, setShowImage] = useState(false);
@@ -30,8 +39,6 @@ const LogInPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
-  const navigate = useNavigate();
 
   const playSound = (soundPath: string) => {
     const audio = new Audio(soundPath);
@@ -65,15 +72,23 @@ const LogInPage: React.FC = () => {
   const handleLogin = async () => {
 
     try{
-      const response = await axios.post("https://ailibi.click/api/v1/auth/login", {
+      const response = await axios.post<LoginResponse>("https://ailibi.click/api/v1/auth/login", {
         email,
         password,
       });
-      console.log("로그인 성공:", response.data);
-      localStorage.setItem('user', JSON.stringify(response.data));
-      setError('');
-      navigate('/video');
-    } catch (error: any) {
+
+      if (response.data && response.data.id) {
+        setUserId(response.data.id);
+        localStorage.setItem('userId', response.data.id.toString());
+
+        console.log("로그인 성공:", response.data);
+        localStorage.setItem('user', JSON.stringify(response.data));
+        setError('');
+        navigate('/video');
+      } else {
+        setError('로그인 응답에 user_id가 없습니다.');
+      }
+    } catch (error: unknown) {
       if(axios.isAxiosError(error)) {
         const status = error.response?.status;
         setError(
