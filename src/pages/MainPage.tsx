@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 //import { useAudio } from "./MainAudioContext";
 import axios from "axios";
 import axiosInstance from "../hooks/axiosInstance.ts";
+import { useUser } from '../hooks/UserContext';
 interface ScenarioResponse {
   scenarios: Scenario[];
 }
@@ -25,7 +26,7 @@ const historyService = {
       })
 };
 
-const MainPage: React.FC<{ userId?: number }> = ({ userId = 1 }) => {
+const MainPage: React.FC = () => {
   const navigate = useNavigate();
   //const { bgmRef } = useAudio();
   const [isBlurred, setIsBlurred] = useState(false);
@@ -33,6 +34,7 @@ const MainPage: React.FC<{ userId?: number }> = ({ userId = 1 }) => {
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { userId } = useUser();
 
   const playSound = () => {
     const audio = new Audio("/sounds/book.mp3");

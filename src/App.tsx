@@ -21,83 +21,86 @@ import LoginBox from "./pages/LoginBox";
 import { AudioProvider } from "./pages/MainAudioContext";
 import PlayHistoryPage from "./pages/PlayHistoryPage";
 import NotePage from "./pages/NotePage";
+import { UserProvider } from './hooks/UserContext';
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <Routes>
-        {/* 기본 페이지 라우팅 */}
-        <Route path="/login" element={<LogInPage />} />
-        <Route path="/register" element={<SignupBox />} />
-        <Route path="/video" element={<VideoPage />} />
-        <Route path="/play" element={<PlayPage />} />
-        <Route path="/initchat" element={<InitChatPage />} />
-        <Route path="/choose" element={<ChoosePage />} />
-        <Route path="/choose/:suspectId" element={<ChoosePage />} />
-        <Route path="/result" element={<ResultPage />} />
-        <Route path="/resultLoading/:suspectId" element={<ResultLoadingPage />} />
-        <Route path="/Ending" element={<EndingPage />} />
-        <Route path="/evidence/:id" element={<EvidencePage />} />
-        <Route path="/suspect/:id" element={<SuspectPage />} />
-        <Route path="/chat" element={<ChattingPage />} />
-        <Route path="/NextPage" element={<NextPage />} />
-        <Route path="/NextPage2" element={<NextPage2 />} />
-        <Route path="/loginbox" element={<LoginBox />} />
-        <Route
-          path="/MakeScenarioPage"
-          element={
-            <AudioProvider>
-              <MakeScenarioPage />
-            </AudioProvider>
-          }
-        />
-        <Route
-          path="/loading/:scenario_id"
-          element={
-            <AudioProvider>
-              <LoadingScenarioPage />
-            </AudioProvider>
-          }
-        />
-        <Route
-          path="/note/:scenario_id"
-          element={<NotePage />}
-        />
-        <Route
-          path="/chat/:suspect_id"
-          element={<ChattingPage />}
-        />
+    <UserProvider>
+      <Router>
+        <Routes>
+          {/* 기본 페이지 라우팅 */}
+          <Route path="/login" element={<LogInPage />} />
+          <Route path="/register" element={<SignupBox />} />
+          <Route path="/video" element={<VideoPage />} />
+          <Route path="/play" element={<PlayPage />} />
+          <Route path="/initchat" element={<InitChatPage />} />
+          <Route path="/choose" element={<ChoosePage />} />
+          <Route path="/choose/:suspectId" element={<ChoosePage />} />
+          <Route path="/result" element={<ResultPage />} />
+          <Route path="/resultLoading/:suspectId" element={<ResultLoadingPage />} />
+          <Route path="/Ending" element={<EndingPage />} />
+          <Route path="/evidence/:id" element={<EvidencePage />} />
+          <Route path="/suspect/:id" element={<SuspectPage />} />
+          <Route path="/chat" element={<ChattingPage />} />
+          <Route path="/NextPage" element={<NextPage />} />
+          <Route path="/NextPage2" element={<NextPage2 />} />
+          <Route path="/loginbox" element={<LoginBox />} />
+          <Route
+            path="/MakeScenarioPage"
+            element={
+              <AudioProvider>
+                <MakeScenarioPage />
+              </AudioProvider>
+            }
+          />
+          <Route
+            path="/loading/:scenario_id"
+            element={
+              <AudioProvider>
+                <LoadingScenarioPage />
+              </AudioProvider>
+            }
+          />
+          <Route
+            path="/note/:scenario_id"
+            element={<NotePage />}
+          />
+          <Route
+            path="/chat/:suspect_id"
+            element={<ChattingPage />}
+          />
 
-        <Route path="/initchat/:scenario_id" 
-        element={<InitChatPage />} 
-        />
+          <Route path="/initchat/:scenario_id" 
+          element={<InitChatPage />} 
+          />
 
 
 
-        {/* 추가 라우팅 */}
-        <Route path="/NextPage" element={<NextPage />} />
-        <Route path="/NextPage2" element={<NextPage2 />} />
-        <Route path="/loginbox" element={<LoginBox />} />
-        
-        {/* 오디오가 필요한 페이지 */}
-        <Route
-          path="/MainPage/:userId"
-          element={
-            <AudioProvider>
-              <MainPage />
-            </AudioProvider>
-          }
-        />
-        <Route
-          path="/history/:scenario_id"
-          element={
-            <AudioProvider>
-              <PlayHistoryPage />
-            </AudioProvider>
-          }
-        />
-      </Routes>
-    </Router>
+          {/* 추가 라우팅 */}
+          <Route path="/NextPage" element={<NextPage />} />
+          <Route path="/NextPage2" element={<NextPage2 />} />
+          <Route path="/loginbox" element={<LoginBox />} />
+          
+          {/* 오디오가 필요한 페이지 */}
+          <Route
+            path="/MainPage/:userId"
+            element={
+              <AudioProvider>
+                <MainPage />
+              </AudioProvider>
+            }
+          />
+          <Route
+            path="/history/:scenarioId"
+            element={
+              <AudioProvider>
+                <PlayHistoryPage />
+              </AudioProvider>
+            }
+          />
+        </Routes>
+      </Router>
+    </UserProvider>
   );
 };
 

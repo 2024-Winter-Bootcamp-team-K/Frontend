@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import LeftPage from "./LeftPage";
 import RightPage from "./RightPage";
-import { useNavigate} from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import axiosInstance from "../hooks/axiosInstance.ts";
+import { useUser } from '../hooks/UserContext';
+
 interface HistoryResponse {
   scenarios: {
     id: number;
@@ -44,18 +46,24 @@ const historyPageService = {
     })
 };
 
-const PlayHistoryPage: React.FC<{ scenarioId?: number }> = ({ scenarioId = 1 }) => {
+const PlayHistoryPage: React.FC = () => {
   const navigate = useNavigate();
+  const { userId } = useUser();
   const [history, setHistory] = useState<HistoryResponse[]>([]); 
   const [isLoading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  //const { scenarioId } = useParams<{ scenarioId: string }>();
+  const { scenarioId } = useParams<{ scenarioId: string }>();
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
         setLoading(true);
-        const response = await historyPageService.getHistory(scenarioId);
+        if (!scenarioId || isNaN(Number(scenarioId))) {
+          setError("유효하지 않은 시나리오 ID입니다.");
+          return;
+        }
+
+        const response = await historyPageService.getHistory(Number(scenarioId));
 
         setHistory([response.data]);
       } catch (err: unknown) {
@@ -82,7 +90,7 @@ const PlayHistoryPage: React.FC<{ scenarioId?: number }> = ({ scenarioId = 1 }) 
   const handleBackgroundClick = () => {
     const audio = new Audio("/sounds/book.mp3");
     audio.play().catch(console.error);
-    navigate("/MainPage");
+    navigate(`/MainPage/${userId}`);
   };
 
   if (isLoading) {

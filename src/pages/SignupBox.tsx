@@ -1,11 +1,19 @@
 import React from "react";
 import {useState} from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../hooks/UserContext";
 import '../components/SignupBox.css';
 import axios from "axios";
 
+interface SignupResponse {
+  id: number;
+  name: string;
+  email: string;
+}
+
 const SignupBox: React.FC = () => {
   const navigate = useNavigate();
+  const { setUserId } = useUser();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -56,7 +64,7 @@ const SignupBox: React.FC = () => {
       try {
         const {name, email, password, confirmPassword} = formData;
 
-        const response = await axios.post("https://ailibi.click/api/v1/auth", {
+        const response = await axios.post<SignupResponse>("https://ailibi.click/api/v1/auth", {
           name,
           email,
           password,
@@ -64,12 +72,18 @@ const SignupBox: React.FC = () => {
         });
 
         if (response.status === 201) {
+          if (response.data.id) {
+            setUserId(response.data.id)
+            localStorage.setItem('userId', response.data.id.toString());
+          }
+
           setSuccess("회원가입이 성공적으로 완료되었습니다!");
+          
           setError("");
 
           setTimeout(() => navigate("/loginbox"), 2000);
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         if(axios.isAxiosError(error)) {
           if(error.response?.status === 400) {
             setError("이미 가입된 이메일입니다.");
