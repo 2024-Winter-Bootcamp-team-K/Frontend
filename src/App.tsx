@@ -75,6 +75,9 @@ const App: React.FC = () => {
           />
 
 
+        <Route path="/play/:scenario_id"
+         element={<PlayPage />} 
+         />
 
           {/* 추가 라우팅 */}
           <Route path="/NextPage" element={<NextPage />} />
