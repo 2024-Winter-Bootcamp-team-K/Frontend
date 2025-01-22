@@ -80,21 +80,20 @@ const handleScenarioButtonClick = async (e: React.MouseEvent) => {
     year,
     month,
     day,
-    hour,
-    minute,
+    hour: hour.toString().padStart(2, "0"), // 문자열 변환 및 두 자리 숫자로 정렬
+    minute: minute.toString().padStart(2, "0"), // 문자열 변환 및 두 자리 숫자로 정렬
     location: location.trim(),
     event_type: event_type.trim(),
   };
 
   try {
-    console.log("전송 데이터:", scenarioData);
-
-    // API 호출
+    // 시나리오 ID 요청
     const response = await createScenario(scenarioData);
-    console.log("시나리오 생성 성공:", response);
+    const { scenario_id } = response;
+    console.log("시나리오 ID 생성 성공:", scenario_id);
 
-    // 성공 시 이동
-    navigate(`/loading/${response.scenario_id}`);
+    // 로딩 페이지로 이동
+    navigate(`/loading/${scenario_id}`);
   } catch (error) {
     console.error("시나리오 생성 실패:", error);
     alert("시나리오 생성에 실패했습니다. 다시 시도해주세요.");
