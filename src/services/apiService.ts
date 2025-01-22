@@ -8,14 +8,36 @@ interface ScenarioUpdateData {
 
 // 시나리오 생성 함수
 export const createScenario = async (data: unknown) => {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/scenarios`, data); // 변경된 엔드포인트
-      return response.data;
-    } catch (error) {
-      console.error("시나리오 생성 중 오류 발생:", error);
-      throw error;
-    }
-  };
+  try {
+    const response = await axios.post(`${API_BASE_URL}/scenarios/create`, data);
+    return response.data;
+  } catch (error) {
+    console.error("시나리오 생성 중 오류 발생:", error);
+    throw error;
+  }
+};
+
+// 증거 생성 함수
+export const createEvidence = async (scenarioId: string) => {
+try {
+  const response = await axios.post(`${API_BASE_URL}/scenarios/evidence/${scenarioId}`);
+  return response.data;
+} catch (error) {
+  console.error("시나리오 생성 중 오류 발생:", error);
+  throw error;
+}
+};
+
+// 용의자 생성 함수
+export const createSuspect = async (scenarioId: string) => {
+try {
+  const response = await axios.post(`${API_BASE_URL}/scenarios/suspect/${scenarioId}`);
+  return response.data;
+} catch (error) {
+  console.error("시나리오 생성 중 오류 발생:", error);
+  throw error;
+}
+};
 
 // 시나리오 조회 함수
 export const fetchScenario = async (scenarioId: string): Promise<{ id: string; title: string; description: string }> => {
@@ -54,29 +76,5 @@ export const fetchSuspect = async (suspectId: string) => {
   } catch (error) {
     console.error("용의자 정보를 가져오는 중 오류 발생:", error);
     throw error;
-  }
-};
-
-// 증거 목록 조회 함수
-export const getEvidences = async (scenarioId: number) => {
-  try {
-      const response = await axios.get(`${API_BASE_URL}/evidences`, {
-          params: { scenario_id: scenarioId },
-      });
-      return response.data;
-  } catch (error) {
-      console.error("증거 데이터를 가져오는 중 오류 발생:", error);
-      throw error;
-  }
-};
-
-// 증거 상세 정보 조회 함수
-export const getEvidenceDetail = async (evidenceId: number) => {
-  try {
-      const response = await axios.get(`${API_BASE_URL}/evidences/${evidenceId}`);
-      return response.data;
-  } catch (error) {
-      console.error("상세 증거 데이터를 가져오는 중 오류 발생:", error);
-      throw error;
   }
 };
