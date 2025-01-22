@@ -29,7 +29,7 @@ const suspectService = {
 };
 
 const SuspectPage: React.FC = ()  => {
-     const { scenarioId } = useParams<{ scenarioId: string }>();
+    const { scenarioId } = useParams<{ scenarioId: string }>();
     const navigate = useNavigate();
     const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
     const [showItems, setShowItems] = useState<number[]>([]);
