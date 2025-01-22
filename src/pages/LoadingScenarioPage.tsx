@@ -3,14 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAudio } from "./MainAudioContext"; // AudioContext 사용
 
 interface ScenarioData {
-  year: string;
-  month: string;
-  day: string;
-  hour: string;
-  minute: string;
+  name: string;
   location: string;
+  datetime: string;
+  type: string;
   description: string;
-  event_type: string;
+  note: string;
 }
 
 const LoadingScenarioPage: React.FC = () => {
@@ -52,10 +50,17 @@ const LoadingScenarioPage: React.FC = () => {
   
   useEffect(() => {
     if (scenarioData) {
-      console.log("Setting full text with scenarioData:", scenarioData);
-      setFullText(`${scenarioData.year}년 ${scenarioData.month}월 ${scenarioData.day}일 ${scenarioData.hour}시 ${scenarioData.minute}분 경, ${scenarioData.location}에서 ${scenarioData.event_type} 사건이 발생했습니다......`);
-    }
-  }, [scenarioData]);
+       
+        const formattedDate = scenarioData.datetime.replace(
+            /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/,
+            "$1년 $2월 $3일 / $4시 $5분 $6초"
+        );
+        
+        console.log("Setting full text with scenarioData:", scenarioData);
+        setFullText(`${formattedDate}, ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생했습니다......`);
+        //setFullText(`${scenarioData.description}`)
+      }
+}, [scenarioData]);
   
   
 

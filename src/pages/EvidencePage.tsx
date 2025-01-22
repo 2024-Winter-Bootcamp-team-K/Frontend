@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NotePage from "./NotePage.tsx";
 import axios from "axios";
 import axiosInstance from  "../hooks/axiosInstance.ts";
@@ -30,7 +30,8 @@ const evidenceService = {
         axiosInstance.get<DetailedEvidence>(`/evidences/${evidenceId}`)
 };
 
-const EvidencePage: React.FC <{ scenarioId?: number }> = ({ scenarioId = 1 }) => {
+const EvidencePage: React.FC = () => {
+    const { scenarioId } = useParams<{ scenarioId: string }>();
     const navigate = useNavigate();
     const [activePopup, setActivePopup] = useState<boolean>(false); // 상태를 boolean으로 관리
     const [selectedEvidence, setSelectedEvidence] = useState<Evidence | null>(null);
@@ -41,7 +42,7 @@ const EvidencePage: React.FC <{ scenarioId?: number }> = ({ scenarioId = 1 }) =>
     const [error, setError] = useState<string | null>(null);
     
 
-    const handleBackCheck = () => {navigate("/play")};
+    const handleBackCheck = () => {navigate(`/play/${scenarioId}`)};
     const handleFolderCheck = () => openPopup();
 
     const openPopup = () => {
@@ -74,7 +75,7 @@ const EvidencePage: React.FC <{ scenarioId?: number }> = ({ scenarioId = 1 }) =>
         const fetchSuspects = async () => {
             try {
                 setLoading(true); // 로딩 시작
-                const response = await evidenceService.getEvidences(scenarioId);
+                const response = await evidenceService.getEvidences(Number(scenarioId));
                 setEvidences(response.data.evidences); 
             } catch (err: unknown) {
                 if (axios.isAxiosError(err)) {
