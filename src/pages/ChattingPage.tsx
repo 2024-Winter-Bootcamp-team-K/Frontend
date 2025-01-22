@@ -24,9 +24,26 @@ const ChattingPage: React.FC = () => {
 
     const scenarioId = localStorage.getItem("currentScenarioId");
 
+    useEffect(() => {
+        const savedChatHistory = localStorage.getItem("chatHistory");
+        if(savedChatHistory) {
+            setChatHistory(JSON.parse(savedChatHistory));
+        }
+
+        return () => {
+            if(webSocketServiceRef.current) {
+                webSocketServiceRef.current.disconnect();
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
+    }, [chatHistory]);
 
     useEffect(() => {
         const loadSuspect = async () => {
+
         if (!suspect_id) return;
         try {
             const data = await fetchSuspect(suspect_id);
@@ -39,19 +56,32 @@ const ChattingPage: React.FC = () => {
 
         // WebSocket 연결 설정
         const webSocketService = WebSocketService.getInstance();
-        webSocketService.connect(`wss://ailibi.click/ws/chat/${suspect_id}`, (data) => {
-            if (data?.suspect_chat) {
-                setSuspectChat(data.suspect_chat); // suspectChat 업데이트
-                animateSuspectChat(data.suspect_chat);
-                setChatHistory((prev) => [...prev, { message: userInput, response: data.suspect_chat }]);
-            }
-        });
+            webSocketService.connect(
+                `wss://ailibi.click/ws/chat/${suspect_id}`,
+                (data) => {
+                    if (data?.suspect_chat) {
+                        setSuspectChat(data.suspect_chat);
+                        animateSuspectChat(data.suspect_chat);
+                        
+                    }
+                }
+            );
+        
         webSocketServiceRef.current = webSocketService;
 
         return () => {
             webSocketService.disconnect(); // 컴포넌트 언마운트 시 연결 해제
         };
     }, [suspect_id]);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const maxLength = 100;
+        if(e.target.value.length > maxLength) {
+            alert(`최대 100자까지만 입력 가능합니다.`);
+            return;
+        }
+        setUserInput(e.target.value);
+    };
 
     const handleBackCheck = () => {
         if (scenarioId) {
@@ -83,8 +113,7 @@ const ChattingPage: React.FC = () => {
                 setDisplayText(currentText);
                 index++;
 
-                const delay = getDelay(chat[index - 1]);
-                setTimeout(typeNextCharacter, delay);
+                setTimeout(typeNextCharacter, getDelay(chat[index - 1]));
             } else {
                 setIsTyping(false); // 애니메이션 종료
             }
@@ -148,9 +177,8 @@ const ChattingPage: React.FC = () => {
         const blobToBase64 = (blob: Blob): Promise<string> => {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.onloadend = () => {
+                reader.onloadend = () => 
                     resolve(reader.result as string); // base64 문자열 반환
-                };
                 reader.onerror = reject;
                 reader.readAsDataURL(blob); // Blob을 base64로 변환
             });
@@ -286,7 +314,7 @@ const ChattingPage: React.FC = () => {
                         <input
                             type="text"
                             value={userInput}
-                            onChange={(e) => setUserInput(e.target.value)}
+                            onChange={handleInputChange}
                             placeholder="너의 알리바이를 말해라"
                             className="chat-input"
                             onKeyDown={(e) => {
