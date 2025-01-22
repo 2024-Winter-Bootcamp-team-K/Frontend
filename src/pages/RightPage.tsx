@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
 import axiosInstance from "../hooks/axiosInstance";
 import RightPagePopup from "./HistoryPopUp";
 
@@ -33,7 +32,6 @@ interface RightPageProps {
 }
 
 const RightPage: React.FC<RightPageProps> = ({ suspects, evidences }) => {
-  const { scenarioId } = useParams<{ scenarioId: string }>();
   const [activePopup, setActivePopup] = useState<string | null>(null);
   const [chatHistory, setChatHistory] = useState<ChatHistory | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +43,6 @@ const RightPage: React.FC<RightPageProps> = ({ suspects, evidences }) => {
     try {
       const response = await axiosInstance.get<ChatHistory>('/histories', {
         params: {
-          scenario_id: scenarioId,
           suspect_id: suspectId
         }
       });
@@ -100,7 +97,9 @@ const RightPage: React.FC<RightPageProps> = ({ suspects, evidences }) => {
               />
             )}
             <p className="mt-2 text-center text-lg sm:text-xl md:text-2xl font-cursive font-semibold">
-              {`${suspect.job} ${suspect.name}`}
+              {suspect.job}
+              <br />
+              {suspect.name}
             </p>
           </div>
         ))}
