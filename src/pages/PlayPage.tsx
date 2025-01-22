@@ -8,9 +8,8 @@ type Scenario = {
   datetime: string;
   type: string;
   description: string;
-  note: string;
+  image: string;
 };
-
 
 const PlayPage: React.FC = () => {
   const navigate = useNavigate();
@@ -31,7 +30,6 @@ const PlayPage: React.FC = () => {
         }
         const data = await response.json();
         setScenario(data.scenarios[0]);
-        localStorage.setItem(`note_${scenario_id}`, data.scenarios[0].note);
         setError(null);
       } catch (error) {
         console.error("Failed to load scenario data:", error);
@@ -79,7 +77,7 @@ const PlayPage: React.FC = () => {
                   {/* 사건 이미지 */}
                   <div className="case-image">
                     <img
-                      src="/images/Case_place.png"
+                      src={scenario.image}
                       alt="Crime Scene"
                       className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105"
                     />

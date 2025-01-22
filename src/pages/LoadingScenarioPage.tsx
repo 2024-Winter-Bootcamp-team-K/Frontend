@@ -3,12 +3,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAudio } from "./MainAudioContext"; // AudioContext 사용
 
 interface ScenarioData {
-  name: string;
+  year: string,
+  month: string,
+  day: string,
+  hour: string,
+  minute: string,
+  datetime: string,
   location: string;
-  datetime: string;
-  type: string;
   description: string;
-  note: string;
+  type: string;
 }
 
 const LoadingScenarioPage: React.FC = () => {
@@ -33,10 +36,30 @@ const LoadingScenarioPage: React.FC = () => {
         const data = await response.json();
   
         console.log("받아온 시나리오 데이터:", data);
-  
-        // `scenarios` 배열에서 첫 번째 항목 가져오기
-        const scenario = data.scenarios[0];
-        setScenarioData(scenario); // 첫 번째 시나리오를 상태로 설정
+
+        if (data.scenarios && data.scenarios.length > 0) {
+          // `scenarios` 배열에서 첫 번째 항목 가져오기
+          const scenario = data.scenarios[0]; // 선언 후 사용
+    
+          // datetime을 분리하여 새로운 객체 생성
+          const [date, time] = scenario.datetime.split(' '); // "2222-22-22"와 "12:32"로 분리
+          const [year, month, day] = date.split('-'); // "2222", "22", "22"로 분리
+          const [hour, minute] = time.split(':'); // "12", "32"로 분리
+    
+          // 필요한 데이터로 재구성
+          const formattedScenario = {
+            ...scenario,
+            year,
+            month,
+            day,
+            hour,
+            minute,
+          };
+    
+          setScenarioData(formattedScenario); // 상태 업데이트
+        } else {
+          console.error("No scenarios available in the response.");
+        }
       } catch (error) {
         console.error("Failed to load scenario data:", error);
       }
@@ -50,19 +73,14 @@ const LoadingScenarioPage: React.FC = () => {
   
   useEffect(() => {
     if (scenarioData) {
-       
-        const formattedDate = scenarioData.datetime.replace(
-            /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/,
-            "$1년 $2월 $3일 / $4시 $5분 $6초"
-        );
-        
-        console.log("Setting full text with scenarioData:", scenarioData);
-        setFullText(`${formattedDate}, ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생했습니다......`);
-        //setFullText(`${scenarioData.description}`)
-      }
-}, [scenarioData]);
-  
-  
+      console.log("Setting full text with scenarioData:", scenarioData);
+      setFullText(`${scenarioData.year}년 ${scenarioData.month}월 ${scenarioData.day}일 ${scenarioData.hour}시 ${scenarioData.minute}분 경,
+${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데,,,
+
+사건을 불러오는 중 입니다...
+`);
+    }
+  }, [scenarioData]);
 
   useEffect(() => {
     // BGM 일시정지 또는 정지
@@ -97,10 +115,6 @@ const LoadingScenarioPage: React.FC = () => {
       }
     }
   };
-
-  
-
-
 
   useEffect(() => {
     if (!isAudioEnabled || !scenarioData) return;
@@ -143,7 +157,7 @@ const LoadingScenarioPage: React.FC = () => {
   useEffect(() => {
     if (progress === 100) {
       const timeout = setTimeout(() => {
-        navigate(`/initchat/${scenario_id}`); // 초기 진술 페이지로 이동
+        navigate(`/initchat/${scenario_id}`); // 백틱을 사용하여 변수 삽입
       }, 3000);
       return () => clearTimeout(timeout);
     }
