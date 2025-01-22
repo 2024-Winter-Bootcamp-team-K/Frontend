@@ -53,9 +53,7 @@ const LoadingScenarioPage: React.FC = () => {
   useEffect(() => {
     if (scenarioData) {
       console.log("Setting full text with scenarioData:", scenarioData);
-      setFullText(`${scenarioData.year}년 ${scenarioData.month}월 ${scenarioData.day}일 ${scenarioData.hour}시 ${scenarioData.minute}분 경,
-        ${scenarioData.location}에서
-        ${scenarioData.event_type} 사건이 발생했습니다......`);
+      setFullText(`${scenarioData.year}년 ${scenarioData.month}월 ${scenarioData.day}일 ${scenarioData.hour}시 ${scenarioData.minute}분 경, ${scenarioData.location}에서 ${scenarioData.event_type} 사건이 발생했습니다......`);
     }
   }, [scenarioData]);
   
@@ -140,7 +138,7 @@ const LoadingScenarioPage: React.FC = () => {
   useEffect(() => {
     if (progress === 100) {
       const timeout = setTimeout(() => {
-        navigate('/initchat'); // 초기 진술 페이지로 이동
+        navigate(`/initchat/${scenario_id}`); // 초기 진술 페이지로 이동
       }, 3000);
       return () => clearTimeout(timeout);
     }

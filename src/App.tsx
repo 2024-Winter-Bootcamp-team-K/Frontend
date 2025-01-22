@@ -33,7 +33,7 @@ const App: React.FC = () => {
           <Route path="/register" element={<SignupBox />} />
           <Route path="/video" element={<VideoPage />} />
           <Route path="/play" element={<PlayPage />} />
-          <Route path="/initchat" element={<InitChatPage />} />
+          <Route path="/initchat/:scenarioId" element={<InitChatPage />} />
           <Route path="/choose" element={<ChoosePage />} />
           <Route path="/choose/:suspectId" element={<ChoosePage />} />
           <Route path="/result/:scenarioId" element={<ResultPage />} />
