@@ -53,6 +53,11 @@ const EvidencePage: React.FC = () => {
         setActivePopup(false); // 팝업 닫기
       };    
 
+      const wrapText = (text: string, maxLength: number): string => {
+        const regex = new RegExp(`.{1,${maxLength}}`, 'g');
+        return text.match(regex)?.join('\n') ?? text;
+    };
+
     /*
     const evidenceData = [
         {
@@ -178,8 +183,9 @@ const EvidencePage: React.FC = () => {
                                     <div className="evidence-paper">
                                         <img src={evidence.image} alt={`Evidence ${evidence.id}`} className="evidence-image" />
                                     </div>
+                                    {/* Place the evidence name below the image */}
+                                    <p className="evidence-name">{evidence.name}</p>
                                     <div className="evidence-details">
-                                        <p className="evidence-description">{evidence.name}</p>
                                         <button className="investigate-button" onClick={() => setSelectedEvidence(evidence)}>
                                             조사하기
                                         </button>
@@ -189,6 +195,8 @@ const EvidencePage: React.FC = () => {
                         </div>
                     ))}
                 </div>
+
+
 
                 {/* 폴더 버튼 */}
                 <div className="folder-button-container">
@@ -200,13 +208,13 @@ const EvidencePage: React.FC = () => {
 
             {/* 팝업 */}
             {selectedEvidence && detailedEvidence && (
-                <div className="popup-overlay" onClick={() => setSelectedEvidence(null)}>
-                    <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-                        <img src={detailedEvidence.image} alt={`Evidence Detail`} className="popup-image" />
-                            <p className="popup-description-title">{detailedEvidence.name}</p>
-                            <p className="popup-description">{detailedEvidence.description}</p>
-                    </div>
-                </div>
+    <div className="popup-overlay" onClick={() => setSelectedEvidence(null)}>
+    <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+        <img src={detailedEvidence.image} alt={`Evidence Detail`} className="popup-image" />
+        <p className="popup-description-title">{detailedEvidence.name}</p>
+        <p className="popup-description">{wrapText(detailedEvidence.description, 20)}</p>
+    </div>
+</div>
             )}
               {activePopup && <NotePage onClose={closePopup} />}
 
@@ -280,6 +288,22 @@ const EvidencePage: React.FC = () => {
                     height: calc(100vh - 20vh);
                     align-items: center;
                 }
+
+                .evidence-paper {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .evidence-name {
+                    margin-top: 0.5rem;
+                    font-size: 1.2rem;
+                    color: #fff; /* Adjust color as needed */
+                    text-align: center;
+                    font-family: 'BinggraeII'; /* Replace with your font */
+                }
+
 
                 .evidence-item {
                     display: flex;
@@ -420,15 +444,17 @@ const EvidencePage: React.FC = () => {
                 .popup-description {
                     color: black;
                     text-align: center;
-
-                    word-break: keep-all; 
                     padding: 0 4vw;
                     font-size: clamp(20px, 1.8vw, 30px);
                     font-family: 'THEFACESHOP_INKLIPQUID';
                     line-height: 1.5;
-                    overflow: hidden; 
-                    text-overflow: ellipsis;
+                    word-wrap: break-word; /* 줄바꿈 */
+                    overflow-wrap: break-word; /* 긴 단어를 강제로 줄바꿈 */
+                    text-overflow: ellipsis; /* 필요시 생략 표시 (...) */
+                    max-width: 90%; /* 팝업 컨테이너 크기에 맞춤 */
+                    white-space: pre-wrap; /* 줄바꿈을 허용 */
                 }
+
 
                 .folder-button-container {
                     position: fixed;

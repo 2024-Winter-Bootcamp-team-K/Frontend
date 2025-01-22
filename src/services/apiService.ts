@@ -56,3 +56,27 @@ export const fetchSuspect = async (suspectId: string) => {
     throw error;
   }
 };
+
+// 증거 목록 조회 함수
+export const getEvidences = async (scenarioId: number) => {
+  try {
+      const response = await axios.get(`${API_BASE_URL}/evidences`, {
+          params: { scenario_id: scenarioId },
+      });
+      return response.data;
+  } catch (error) {
+      console.error("증거 데이터를 가져오는 중 오류 발생:", error);
+      throw error;
+  }
+};
+
+// 증거 상세 정보 조회 함수
+export const getEvidenceDetail = async (evidenceId: number) => {
+  try {
+      const response = await axios.get(`${API_BASE_URL}/evidences/${evidenceId}`);
+      return response.data;
+  } catch (error) {
+      console.error("상세 증거 데이터를 가져오는 중 오류 발생:", error);
+      throw error;
+  }
+};
