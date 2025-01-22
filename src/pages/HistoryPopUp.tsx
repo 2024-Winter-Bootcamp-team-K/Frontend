@@ -34,16 +34,6 @@ interface CheckEvProps {
   evidences: Evidence[];
 }
 
-interface CheckEvProps {
-  id: string;
-  type: "suspect" | "evidence";
-  onClose: () => void;
-  chatHistory: ChatHistory | null;
-  isLoading: boolean;
-  error: string | null;
-  suspects: Suspect[];
-  evidences: Evidence[];
-}
 
 const CheckEv: React.FC<CheckEvProps> = ({ 
   id, 
@@ -74,7 +64,7 @@ const CheckEv: React.FC<CheckEvProps> = ({
 
   const renderChatHistory = () => {
     if (isLoading) {
-      return <p className="text-center font-cursive text-xl">{/*정보를 불러오는 중...*/}</p>;
+      return <p className="text-center font-cursive text-xl">Loading...</p>;
     }
 
     if (error) {
@@ -82,23 +72,41 @@ const CheckEv: React.FC<CheckEvProps> = ({
     }
 
     if (!chatHistory?.user_chat || !chatHistory?.suspect_chat) {
-      return <p className="text-center font-cursive text-xl">대화 내역이 없습니다.</p>;
+      return <p className="text-center font-cursive text-xl">No chat history available.</p>;
     }
 
-    return chatHistory.user_chat.map((userChat, chatIndex) => (
-      <React.Fragment key={chatIndex}>
-        {userChat.message.map((userMsg, msgIndex) => (
-          <div key={`user-${chatIndex}-${msgIndex}`} className="mb-4 font-cursive font-semibold text-xl">
-            <strong>Q:</strong> {userMsg}
+    const userMessages = chatHistory.user_chat[0]?.message || [];
+    const suspectMessages = chatHistory.suspect_chat[0]?.message || [];
+
+    const allMessages = [];
+
+    const maxLength = Math.max(userMessages.length, suspectMessages.length);
+    for (let i = 0; i < maxLength; i++) {
+      if (userMessages[i]) {
+        allMessages.push({
+          type: 'Q',
+          message: userMessages[i],
+          key: `user-${i}`
+        });
+      }
+      if (suspectMessages[i]) {
+        allMessages.push({
+          type: 'A',
+          message: suspectMessages[i],
+          key: `suspect-${i}`
+        });
+      }
+    }
+
+    return (
+      <div className="space-y-4">
+        {allMessages.map((msg) => (
+          <div key={msg.key} className="mb-4 font-cursive font-semibold text-xl">
+            <strong>{msg.type}:</strong> {msg.message}
           </div>
         ))}
-        {chatHistory.suspect_chat[chatIndex]?.message.map((suspectMsg, msgIndex) => (
-          <div key={`suspect-${chatIndex}-${msgIndex}`} className="mb-4 font-cursive font-semibold text-xl">
-            <strong>A:</strong> {suspectMsg}
-          </div>
-        ))}
-      </React.Fragment>
-    ));
+      </div>
+    );
   };
   
   if (type === "suspect" && !suspect) {
@@ -135,7 +143,7 @@ const CheckEv: React.FC<CheckEvProps> = ({
             </div>
             <div className="flex flex-col text-xl">
               <p className="font-cursive font-semibold mb-2">age: {suspect.age}세</p>
-              <p className="font-cursive font-semibold mb-2">gender: {suspect ? '남성' : '여성'}</p>
+              <p className="font-cursive font-semibold mb-2">gender: {suspect.gender ? '여성' : '남자'}</p>
               <p className="font-cursive font-semibold mb-2">job: {suspect.job}</p>
               <p className="font-cursive font-semibold mb-2">description: {suspect.description}</p>
               <p
