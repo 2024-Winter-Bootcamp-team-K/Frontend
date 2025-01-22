@@ -46,59 +46,102 @@ const MakeScenarioPage: React.FC = () => {
     audio.play();
   };
 
+  const [hour, setHour] = useState<string>('');
+  const [minute, setMinute] = useState<string>('');
 
+  const validateDate = (year: number, month: number, day: number) => {
+    if (year < 2000 || year > 2025) return false;
+    if (month < 1 || month > 12) return false;
+    
+    let lastDay = 31;
+    if ([4, 6, 9, 11].includes(month)) {
+      lastDay = 30;
+    } else if (month === 2) {
 
-  const [hour, setHour] = useState<number | null>(null); // 시간
-  const [minute, setMinute] = useState<number | null>(null); // 분
+      const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+      lastDay = isLeapYear ? 29 : 28;
+    }
+    
+    return day >= 1 && day <= lastDay;
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9\s]/g, '');
+    const parts = value.split(' ');
+    
+    if (parts.length <= 3) {
+      setSelectedDate(value);
+    }
+  };
+
+  const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '' || (Number(value) >= 0 && Number(value) <= 23)) {
+      setHour(value);
+    }
+  };
+
+  const handleMinuteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '' || (Number(value) >= 0 && Number(value) <= 59)) {
+      setMinute(value);
+    }
+  };
 
 
 // API 호출 추가
-const handleScenarioButtonClick = async (e: React.MouseEvent) => {
-  e.stopPropagation();
+  const handleScenarioButtonClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
 
-  if (
-    !location ||
-    !selectedDate ||
-    !event_type ||
-    hour === null ||
-    minute === null ||
-    hour < 0 ||
-    hour > 23 ||
-    minute < 0 ||
-    minute > 59
-  ) {
-    alert("모든 필드를 올바르게 입력해주세요.");
-    return;
-  }
+    const [yearStr, monthStr, dayStr] = selectedDate.split(' ');
+    const year = parseInt(yearStr);
+    const month = parseInt(monthStr);
+    const day = parseInt(dayStr);
 
-  // 날짜 분리 및 숫자 변환
-  const [year, month, day] = selectedDate.split(" ").map(Number);
+    if (!validateDate(year, month, day)) {
+      alert('올바른 날짜를 입력해주세요.');
+      return;
+    }
 
-  // 전송 데이터 준비
-  const scenarioData = {
-    user_id:1,
-    year,
-    month,
-    day,
-    hour: hour.toString().padStart(2, "0"), // 문자열 변환 및 두 자리 숫자로 정렬
-    minute: minute.toString().padStart(2, "0"), // 문자열 변환 및 두 자리 숫자로 정렬
-    location: location.trim(),
-    event_type: event_type.trim(),
-  };
+    if (
+      !location ||
+      !selectedDate ||
+      !event_type ||
+      hour === '' ||
+      minute === '' ||
+      Number(hour) < 0 ||
+      Number(hour) > 23 ||
+      Number(minute) < 0 ||
+      Number(minute) > 59
+    ) {
+      alert("모든 필드를 올바르게 입력해주세요.");
+      return;
+    }
 
-  try {
+    const scenarioData = {
+      user_id: 1,
+      year,
+      month,
+      day,
+      hour: hour.padStart(2, "0"),
+      minute: minute.padStart(2, "0"),
+      location: location.trim(),
+      event_type: event_type.trim(),
+    };
+
+    try {
     // 시나리오 ID 요청
-    const response = await createScenario(scenarioData);
-    const { scenario_id } = response;
-    console.log("시나리오 ID 생성 성공:", scenario_id);
+      const response = await createScenario(scenarioData);
+      const { scenario_id } = response;
+      console.log("시나리오 ID 생성 성공:", scenario_id);
 
     // 로딩 페이지로 이동
-    navigate(`/loading/${scenario_id}`);
-  } catch (error) {
-    console.error("시나리오 생성 실패:", error);
-    alert("시나리오 생성에 실패했습니다. 다시 시도해주세요.");
-  }
-};
+      navigate(`/loading/${scenario_id}`);
+    } catch (error) {
+      console.error("시나리오 생성 실패:", error);
+      alert("시나리오 생성에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
 
   
   return (
@@ -144,10 +187,9 @@ const handleScenarioButtonClick = async (e: React.MouseEvent) => {
                         <InputWrapper>
                           <DateInputContainer>
                             <Input
-                              type="text"
-                              placeholder="YYYY MM DD"
                               value={selectedDate}
-                              onChange={(e) => setSelectedDate(e.target.value)}
+                              onChange={handleDateChange}
+                              maxLength={10}
                             />
                           </DateInputContainer>
                           <InputLine />
@@ -161,14 +203,18 @@ const handleScenarioButtonClick = async (e: React.MouseEvent) => {
                                       <Input
                                         type="number"
                                         placeholder="시 (0-23)"
-                                        value={hour !== null ? hour.toString() : ""}
-                                        onChange={(e) => setHour(Number(e.target.value))}
+                                        value={hour}
+                                        onChange={handleHourChange}
+                                        min="0"
+                                        max="23"
                                       />
                                       <Input
                                         type="number"
                                         placeholder="분 (0-59)"
-                                        value={minute !== null ? minute.toString() : ""}
-                                        onChange={(e) => setMinute(Number(e.target.value))}
+                                        value={minute}
+                                        onChange={handleMinuteChange}
+                                        min="0"
+                                        max="59"
                                       />
                                     </DateInputContainer>
                                     <InputLine />
