@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { createScenario } from "../services/apiService"; // API 서비스 가져오기
+import { createScenario, createEvidence, createSuspect } from "../services/apiService"; // API 서비스 가져오기
 import { useUser } from '../hooks/UserContext';
 
 const MakeScenarioPage: React.FC = () => {
