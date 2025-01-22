@@ -6,6 +6,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { fetchSuspect } from "../services/apiService";
 import WebSocketService from "../mocks/webSocketService";
+import fetchTTS from "./TTSService"; // default import
 
 const ChattingPage: React.FC = () => {
     const navigate = useNavigate();
@@ -38,7 +39,7 @@ const ChattingPage: React.FC = () => {
 
         // WebSocket 연결 설정
         const webSocketService = WebSocketService.getInstance();
-        webSocketService.connect(`ws://ailibi.click/ws/chat/${suspect_id}`, (data) => {
+        webSocketService.connect(`wss://ailibi.click/ws/chat/${suspect_id}`, (data) => {
             if (data?.suspect_chat) {
                 setSuspectChat(data.suspect_chat); // suspectChat 업데이트
                 animateSuspectChat(data.suspect_chat);
@@ -198,6 +199,21 @@ const ChattingPage: React.FC = () => {
         return Math.random() * 50 + 50;  
     };
 
+    const handlePlayTTS = async () => {
+        if (!suspectChat) {
+            console.error("No suspect chat available for TTS.");
+            return;
+        }
+    
+        try {
+            const audioBase64 = await fetchTTS(suspectChat, "3"); // task_id는 3 (여성)로 설정
+            const audio = new Audio(`data:audio/wav;base64,${audioBase64}`);
+            audio.play(); // 오디오 재생
+        } catch (error) {
+            console.error("Error playing TTS audio:", error);
+        }
+    };
+
     return (
         <div className="chatting-page-container">
             <button className="back-button" onClick={handleBackCheck}>
@@ -208,7 +224,8 @@ const ChattingPage: React.FC = () => {
             <div className="speech-bubble">
                 <div className="bubble-content">
                     <FontAwesomeIcon icon={faVolumeHigh}
-                    className="volume-icon" />
+                    className="volume-icon" 
+                    onClick={handlePlayTTS} />
                 {displayText || suspectChat}</div>
             </div>
         )}
