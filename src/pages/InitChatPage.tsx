@@ -21,7 +21,7 @@ const InitChatPage: React.FC = () => {
           throw new Error("Senario ID is missing");
         }
 
-        const response = await fetch(`https://ailibi.click/api/v1/scenarios/${scenario_id}`);
+        const response = await fetch(`https://ailibi.click/api/v1/suspects?scenario_id=${scenario_id}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch scenario: ${response.statusText}`);
         } 
