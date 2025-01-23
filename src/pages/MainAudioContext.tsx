@@ -1,29 +1,38 @@
-import React, { createContext, useContext, useRef, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-interface AudioContextValue {
-  bgmRef: React.MutableRefObject<HTMLAudioElement | null>;
+interface AudioContextType {
+  isMuted: boolean;
+  toggleMute: () => void;
 }
 
-const AudioContext = createContext<AudioContextValue | undefined>(undefined);
+const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
-export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const bgmRef = useRef<HTMLAudioElement | null>(null);
+export const AudioProvider: React.FC = ({ children }) => {
+  const [isMuted, setIsMuted] = useState(false);
+
+  // 배경음악 관리
+  const bgm = new Audio("/sounds/mainbgm.mp3");
 
   useEffect(() => {
-    if (!bgmRef.current) {
-      bgmRef.current = new Audio("/sounds/mainbgm.mp3");
-      bgmRef.current.volume = 0.3;
-      bgmRef.current.loop = true;
-      bgmRef.current.play();
+    bgm.loop = true; // 배경음악 반복 재생
+    bgm.volume = isMuted ? 0 : 1; // 음소거 상태에 따라 볼륨 설정
+    if (!isMuted) {
+      bgm.play().catch((err) => console.error("Error playing bgm:", err));
+    } else {
+      bgm.pause();
     }
 
     return () => {
-      // Cleanup은 하지 않음, 다른 페이지에서도 유지되도록.
+      bgm.pause(); // 컴포넌트 언마운트 시 음악 중지
     };
-  }, []);
+  }, [isMuted]);
+
+  const toggleMute = () => {
+    setIsMuted((prev) => !prev);
+  };
 
   return (
-    <AudioContext.Provider value={{ bgmRef }}>
+    <AudioContext.Provider value={{ isMuted, toggleMute }}>
       {children}
     </AudioContext.Provider>
   );
