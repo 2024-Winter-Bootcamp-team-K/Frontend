@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../hooks/axiosInstance.ts";
 import { useUser } from "../hooks/UserContext";
+import { useAudio } from "../pages/MainAudioContext"; // 오디오 컨텍스트 가져오기
 
 interface ScenarioResponse {
   scenarios: Scenario[];
@@ -26,6 +27,7 @@ const historyService = {
 };
 
 const MainPage: React.FC = () => {
+  const { isMuted, toggleMute } = useAudio(); // 볼륨 상태와 토글 함수 가져오기
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
@@ -108,6 +110,20 @@ const MainPage: React.FC = () => {
       onMouseMove={handleMouseMove}
       onClick={handleBackgroundClick}
     >
+      {/* 볼륨 토글 버튼 */}
+      <VolumeToggle>
+        <input
+          type="checkbox"
+          id="volumeToggle"
+          checked={isMuted}
+          onChange={toggleMute}
+        />
+        <label htmlFor="volumeToggle" className="toggleSwitch">
+          <div className="speaker">🔊</div>
+          <div className="mute-speaker">🔇</div>
+        </label>
+      </VolumeToggle>
+
       <PlayButtonWrapper className="button-wrapper">
         <PlayButton onClick={toggleModal}>플레이 기록</PlayButton>
       </PlayButtonWrapper>
@@ -135,7 +151,6 @@ const MainPage: React.FC = () => {
             >
               <CardImage src={scenario.image} alt={scenario.name} />
               <CardTitle>{`사건 일지 #${String(scenario.id).padStart(3, "0")}`}</CardTitle>
-             
               <CardDetail>{`타입: ${scenario.type}`}</CardDetail>
             </Card>
           ))}
@@ -154,6 +169,40 @@ const Background = styled.div`
   background-image: url(/images/background2.jpg);
   background-size: cover;
   background-position: center;
+`;
+
+const VolumeToggle = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 20px;
+
+  .toggleSwitch {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(39, 39, 39, 0.7);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  #volumeToggle {
+    display: none;
+  }
+
+  .speaker,
+  .mute-speaker {
+    display: none;
+  }
+
+  #volumeToggle:checked + .toggleSwitch .mute-speaker {
+    display: block;
+  }
+
+  #volumeToggle:not(:checked) + .toggleSwitch .speaker {
+    display: block;
+  }
 `;
 
 const PlayButtonWrapper = styled.div`
