@@ -10,11 +10,12 @@ const MakeScenarioPage: React.FC = () => {
   const [exitAnimate, setExitAnimate] = useState(false);
   const [showContent, setShowContent] = useState(false);
   const [difficulty, setDifficulty] = useState("");
-  const [event_type, setEvent_type] = useState("");
+  const [type, setType] = useState("");
   const [location, setLocation] = useState(""); 
   const [selectedDate, setSelectedDate] = useState("");
   const navigate = useNavigate();
   const { userId } = useUser();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,6 +26,7 @@ const MakeScenarioPage: React.FC = () => {
   }, []);
 
   const handleBackgroundClick = () => {
+    if (loading || exitAnimate) return;
     if (!exitAnimate) {
       setShowContent(false);
       setExitAnimate(true);
@@ -106,7 +108,7 @@ const MakeScenarioPage: React.FC = () => {
     if (
       !location ||
       !selectedDate ||
-      !event_type ||
+      !type ||
       hour === '' ||
       minute === '' ||
       Number(hour) < 0 ||
@@ -118,6 +120,8 @@ const MakeScenarioPage: React.FC = () => {
       return;
     }
 
+    setLoading(true);
+
     const scenarioData = {
       user_id: 1,
       year,
@@ -126,7 +130,7 @@ const MakeScenarioPage: React.FC = () => {
       hour: hour.padStart(2, "0"),
       minute: minute.padStart(2, "0"),
       location: location.trim(),
-      event_type: event_type.trim(),
+      type: type.trim(),
     };
 
     try {
@@ -140,6 +144,7 @@ const MakeScenarioPage: React.FC = () => {
     } catch (error) {
       console.error("시나리오 생성 실패:", error);
       alert("시나리오 생성에 실패했습니다. 다시 시도해주세요.");
+      setLoading(false);
     }
   };
 
@@ -149,8 +154,6 @@ const MakeScenarioPage: React.FC = () => {
       onClick={handleBackgroundClick}
       className={animate ? "fade-in" : "fade-out"}
     >
-
-      
       <PaperWrapper>
         <PaperImage
           src="/images/paper2.png"
@@ -189,8 +192,6 @@ const MakeScenarioPage: React.FC = () => {
                         <InputWrapper>
                           <DateInputContainer>
                             <Input
-                              type="text"
-                              placeholder="YYYY MM DD"
                               value={selectedDate}
                               onChange={handleDateChange}
                               maxLength={10}
@@ -228,10 +229,10 @@ const MakeScenarioPage: React.FC = () => {
                           <Label>범행 종류</Label>
                           <SelectWrapper>
                             <Dropdown
-                              value={event_type}
-                              onChange={(e) => setEvent_type(e.target.value)}
+                              value={type}
+                              onChange={(e) => setType(e.target.value)}
                               onClick={(e) => e.stopPropagation()}
-                              isSelected={!!event_type}
+                              isSelected={!!type}
                             >
                               <option value="" disabled>
                                 범행 종류 선택
@@ -259,9 +260,13 @@ const MakeScenarioPage: React.FC = () => {
             </FormContent>
           </Form>
           <ButtonWrapper>
-            <Button onClick={handleScenarioButtonClick}>
-              <ButtonText>사건 진입</ButtonText>
-            </Button>
+            {loading ? (
+              <ButtonText>사건 진입 중 ...</ButtonText>
+            ) : (
+              <Button onClick={handleScenarioButtonClick}>
+                <ButtonText>사건 진입</ButtonText>
+              </Button>
+            )}
           </ButtonWrapper>
         </ContentWrapper>
       </PaperWrapper>
