@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAudio } from "./MainAudioContext"; // AudioContext 사용
+import { createEvidence, createSuspect } from "../services/apiService"; // API 서비스 가져오기
 
 interface ScenarioData {
+  user_id: '1'
   year: string,
   month: string,
   day: string,
@@ -25,6 +27,7 @@ const LoadingScenarioPage: React.FC = () => {
   const { bgmRef } = useAudio(); // AudioContext에서 bgmRef 가져오기
   const { scenario_id } = useParams<{ scenario_id: string }>();
   const [fullText, setFullText] = useState<string>('');
+  const [isAPILoading, setIsAPILoading] = useState(false); // API 로딩 상태
 
   useEffect(() => {
     const fetchScenario = async () => {
@@ -116,6 +119,55 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
     }
   };
 
+  const handleAPICalls = async () => {
+    if (!scenario_id) {
+      console.error('Scenario ID가 없습니다.');
+      return;
+    }
+  
+    setIsAPILoading(true);
+    try {
+      const increaseProgress = (targetProgress: number, callback?: () => void) => {
+        const interval = setInterval(() => {
+          setProgress((prevProgress) => {
+            if (prevProgress < targetProgress) {
+              return prevProgress + 1; // 1씩 증가
+            } else {
+              clearInterval(interval); // 목표치 도달 시 종료
+              if (callback) callback(); // 콜백 호출
+              return prevProgress;
+            }
+          });
+        }, 500); // 진행 속도 조절 (ms 단위)
+      };
+  
+      // Evidence 생성
+      const evidenceResponse = await createEvidence(Number(scenario_id));
+      if (evidenceResponse) {
+        console.log("Evidence 생성 완료, Scenario ID:", scenario_id);
+        await new Promise<void>((resolve) => increaseProgress(50, resolve)); // Progress를 50까지 증가
+      } else {
+        console.error("Evidence 생성 실패");
+        return;
+      }
+  
+      // Suspect 생성
+      const suspectResponse = await createSuspect(Number(scenario_id));
+      if (suspectResponse) {
+        console.log("Suspect 생성 완료, Scenario ID:", scenario_id);
+        await new Promise<void>((resolve) => increaseProgress(100, resolve)); // Progress를 100까지 증가
+      } else {
+        console.error("Suspect 생성 실패");
+        return;
+      }
+    } catch (error) {
+      console.error('API 호출 중 오류 발생:', error);
+    } finally {
+      setIsAPILoading(false);
+    }
+  };
+  
+
   useEffect(() => {
     if (!isAudioEnabled || !scenarioData) return;
 
@@ -141,18 +193,6 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
 
     return () => clearInterval(typeInterval);
   }, [isAudioEnabled, fullText]);
-
-  useEffect(() => {
-    if (isTypingComplete) {
-      const progressInterval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev < 100) return prev + 1;
-          clearInterval(progressInterval);
-          return 100;
-        });
-      }, 50);
-    }
-  }, [isTypingComplete]);
 
   useEffect(() => {
     if (progress === 100) {
@@ -234,7 +274,11 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
             padding: '0.5vh 1vw',
             fontSize: '1.7vw',
           }}
-          onClick={handleAudioPermission}
+          onClick={() => {
+            handleAudioPermission();
+            handleAPICalls(); // API 호출 추가
+          }}
+          
         >
           사건 파일 작성 시작
         </button>
