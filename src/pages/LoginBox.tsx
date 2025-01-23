@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useUser } from "../hooks/UserContext";
+
+interface LoginResponse {
+  id: number;
+  name: string;
+  email: string;
+}
 
 const LoginBox: React.FC = () => {
   const navigate = useNavigate();
+  const { setUserId } = useUser();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,28 +19,35 @@ const LoginBox: React.FC = () => {
 
   const handleLogin = async () => {
     
-    try {
-      const response = await axios.post("https://ailibi.click/api/v1/auth/login", {
+    try{
+      const response = await axios.post<LoginResponse>("https://ailibi.click/api/v1/auth/login", {
         email,
         password,
       });
-      console.log("로그인 성공:", response.data);
-      localStorage.setItem('user', JSON.stringify(response.data));
-      setError('');
-      navigate('/video');
-    } catch (error: any) {
-      if (axios.isAxiosError(error)) {
+      if (response.data && response.data.id) {
+        setUserId(response.data.id);
+        localStorage.setItem('userId', response.data.id.toString());
+
+        console.log("로그인 성공:", response.data);
+        localStorage.setItem('user', JSON.stringify(response.data));
+        setError('');
+        navigate('/video');
+      } else {
+        setError('로그인 응답에 user_id가 없습니다.');
+      }
+    } catch (error: unknown) {
+      if(axios.isAxiosError(error)) {
         const status = error.response?.status;
         setError(
-            status === 400
-            ? "존재하지 않는 아이디이거나, 잘못된 비밀번호입니다."
-            : status === 401
-            ? "잘못된 형식입니다."
-            : "알 수 없는 에러가 발생했습니다."
-          );
-        } else {
-          setError("예기치 못한 에러가 발생했습니다.");
-        }
+          status === 400
+          ? "존재하지 않는 아이디이거나, 잘못된 비밀번호입니다."
+          :status === 401
+          ? "잘못된 형식입니다."
+          : "알 수 없는 에러가 발생했습니다."
+        );
+      } else {
+        setError("예기치 못한 에러가 발생했습니다.");
+      }
     }
   };
 
