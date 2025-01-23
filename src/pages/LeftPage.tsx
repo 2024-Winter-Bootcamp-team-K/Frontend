@@ -40,54 +40,57 @@ const LeftPage: React.FC<LeftPageProps> = ({ scenarios })   => {
 
   return (
     <div className="w-full h-full bg-cover bg-center relative">
-        {/* Case Image */}
-        <div className="case-image flex items-center justify-center relative mt-10 sm:mt-16 md:mt-12 lg:mt-8">
+        
+        <div className="case-image flex items-center justify-center relative translate-x-[1vw] translate-y-[3vh]">
+            {/* Case Image */}
             <img
                 src={scenario.image}
                 alt="Crime Scene"
-                className="w-[60%] h-auto object-cover shadow-lg"
-                />
-            </div>
+                className="w-[75%] h-auto object-cover shadow-lg"
+            />
+
             {/* Success Image */}
             {scenario.is_success ? (
-                <div className="Success absolute w-full h-full flex items-center justify-center sm:bottom-52 md:bottom-48 lg:bottom-44 2xl:bottom-48">
+                <div className="Success absolute w-full h-full flex items-center justify-center">
                 <img
                     src="/images/Success.png"
                     alt="Success"
-                    className="h-auto object-cover z-10 sm:w-[90%] md:w-[80%] lg:w-[65%]"
+                    className="h-auto object-cover z-10 w-[80%] opacity-80"
                 />
                 </div>
             ) : (
-                <div className="FAILURE absolute w-full h-full flex items-center justify-center sm:bottom-52 md:bottom-48 lg:bottom-44">
+                <div className="FAILURE absolute w-full h-full flex items-center justify-center ">
                 <img
                     src="/images/FAILURE.png"
                     alt="FAILURE"
-                    className="h-auto object-cover z-10 sm:w-[90%] md:w-[80%] lg:w-[65%]"
+                    className="h-auto object-cover z-10 w-[80%] opacity-80"
                 />
                 </div>
             )}
+        </div>
+            
         {/* 사건 정보 */}
-        <div className="case-details lg:mt-8 2xl:mt-16 px-4 text-center">
-            <h2 className="text-4xl font-cursive font-bold text-black">
+        <div className="case-details translate-x-[1vw] translate-y-[4vh] text-center">
+            <h2 className="text-[4vw] font-cursive font-bold text-black">
             {/* 사건 제목 */}
                 {scenario.name}
             </h2>
-            <p className="text-xl font-cursive text-black">
-                Level: {scenario.level === 1 ? 'Easy' : scenario.level === 2 ? 'Medium' : 'Hard'}
+            <p className="text-[2vw] font-cursive text-black">
+                Level: {scenario.level === 1 ? '하' : scenario.level === 2 ? '중' : '상상'}
             </p>
-            <p className="text-xl font-cursive text-black">
+            <p className="text-[2vw] font-cursive text-black">
                 Date: {scenario.datetime.replace(
                     /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/,
                     "$1년 $2월 $3일 / $4시 $5분 $6초"
                 )}
             </p>
-            <p className="text-xl font-cursive text-black">
+            <p className="text-[2vw] font-cursive text-black">
                 Location: {scenario.location}
             </p>
-            <p className="text-xl font-cursive text-black">
+            <p className="text-[2vw] font-cursive text-black">
                 Type: {scenario.type}
             </p>
-            <p className="text-xl font-cursive text-black max-w-sm mx-auto">
+            <p className="text-[2vw] font-cursive text-black max-w-sm mx-auto">
                 {scenario.description}
             </p>
         </div>
