@@ -149,6 +149,8 @@ const MakeScenarioPage: React.FC = () => {
       onClick={handleBackgroundClick}
       className={animate ? "fade-in" : "fade-out"}
     >
+
+      
       <PaperWrapper>
         <PaperImage
           src="/images/paper2.png"
