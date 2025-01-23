@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import "../components/EndingPage.css";
 import { useNavigate } from "react-router-dom";
 import { useUser } from '../hooks/UserContext';
+import {useParams} from "react-router-dom";
+import axiosInstance from "../hooks/axiosInstance";
 
 const EndingPage: React.FC = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -9,8 +11,49 @@ const EndingPage: React.FC = () => {
   const [animationSpeed, setAnimationSpeed] = useState(1);
   const animationFrameId = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
+  const {scenarioId} = useParams<{scenarioId: string}>();
   const navigate = useNavigate();
   const { userId } = useUser();
+  const [historyData, setHistoryData] = useState<{
+    playTime: String;
+    suspectsCount: number;
+    evidencesCount: number;
+    interrogationsCount: number;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchHistoryData = async () => {
+      try {
+        setLoading(true);
+        if (!scenarioId) {
+          setError("유효하지 않은 시나리오 ID입니다.");
+          return;
+        }
+
+        const response = await axiosInstance.get(`/histories`, {
+          params: { scenario_id: scenarioId},
+        });
+
+        const {scenarios, suspects, evidences} = response.data;
+
+        setHistoryData({
+          playTime: scenarios.play_time || "데이터 없음",
+          suspectsCount: suspects.length,
+          evidencesCount: evidences.length,
+          interrogationsCount: suspects.filter((suspect: any) => suspect.init_chat).length,
+        });
+      } catch (error) {
+        setError("데이터를 불러오는 데 실패했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHistoryData();
+  }, [scenarioId]);
+  
 
   useEffect(() => {
       // 페이지 로드 시 오디오 재생
@@ -89,10 +132,10 @@ const EndingPage: React.FC = () => {
           <p className="title">Ending Credits</p>
           <p><br /></p>
           <p className="title2">Play Result</p>
-          <p>플레이 시간: 1시간 40분</p>
-          <p>조사한 증거: 2개</p>
-          <p>조사한 용의자: 3명</p>
-          <p>진행한 심문: 24회</p>
+          <p>플레이 시간: {historyData?.playTime}</p>
+          <p>조사한 증거: {historyData?.evidencesCount}개</p>
+          <p>조사한 용의자: {historyData?.suspectsCount}명</p>
+          <p>진행한 심문: {historyData?.interrogationsCount}회</p>
           <p><br /></p>
           <p className="title2">Techeer-2024-Winter-BootCamp-Team-K</p>
           <p>박근채 - Team Leader, CTO</p>
