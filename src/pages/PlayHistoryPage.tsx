@@ -120,29 +120,30 @@ const PlayHistoryPage: React.FC = () => {
         onClick={(e) => e.stopPropagation()}
       />
 
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="relative w-[70%] h-auto">
+      <div className="absolute inset-0  flex items-center justify-center">
+        <div className="relative w-[70%] h-auto ">
           <img
             src="/images/PlayHistory.png"
-            className="w-full h-auto"
+            className="w-full h-auto translate-y-[-2vh]"
             alt="Play History"
           />
+          <div
+            className="absolute top-0 left-0 w-[50%] h-full flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <LeftPage scenarios={[history[0].scenarios]} />
+          </div>
+
+          <div
+            className="absolute top-0 right-0 w-[50%] h-full flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <RightPage suspects={history[0].suspects} evidences={history[0].evidences} />
+          </div>
         </div>
-      </div>
+      </div>-
 
-      <div
-        className="absolute top-[20%] left-[10%] w-[40%] h-[70%] sm:top-[10%] sm:left-[15%] sm:w-[38%] md:top-[12%] md:left-[18%] md:w-[35%] lg:top-[17%] lg:left-[15%] lg:w-[40%]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <LeftPage scenarios={[history[0].scenarios]} />
-      </div>
-
-      <div
-        className="absolute top-[20%] right-[10%] w-[40%] h-[70%] sm:top-[10%] sm:right-[15%] sm:w-[38%] md:top-[12%] md:right-[18%] md:w-[35%] lg:top-[17%] lg:right-[15%] lg:w-[40%]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <RightPage suspects={history[0].suspects} evidences={history[0].evidences} />
-      </div>
+      
     </div>
   );
 };
