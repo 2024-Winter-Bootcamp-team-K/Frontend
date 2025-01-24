@@ -37,6 +37,7 @@ const MainPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [offsetX, setOffsetX] = useState(0); // 마우스 위치에 따른 이동
   const { userId, updateUserIdFromPath } = useUser();
+  const { toggleAudioPlay } = useAudio();
 
   const playSound = () => {
     const audio = new Audio("/sounds/book.mp3");
