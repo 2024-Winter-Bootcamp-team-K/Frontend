@@ -1,14 +1,15 @@
-import React, { createContext, useContext, useRef, useEffect } from "react";
+import React, { createContext, useContext, useRef, useEffect, useState } from "react";
 
 interface PlayAudioContextValue {
   bgmRef: React.MutableRefObject<HTMLAudioElement | null>;
-  stopPlayAudio: () => void; // stopPlayAudio 추가
+  toggleAudioPlay: () => void;
 }
 
 const PlayAudioContext = createContext<PlayAudioContextValue | undefined>(undefined);
 
 export const PlayAudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const bgmRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
 
   useEffect(() => {
     if (!bgmRef.current) {
@@ -23,15 +24,19 @@ export const PlayAudioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     };
   }, []);
 
-  const stopPlayAudio = () => {
+  const toggleAudioPlay = () => {
     if (bgmRef.current) {
-      bgmRef.current.pause();
-      bgmRef.current.currentTime = 0; // 정지 후 초기화
+      if (isPlaying) {
+        bgmRef.current.pause();
+      } else {
+        bgmRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
     }
   };
 
   return (
-    <PlayAudioContext.Provider value={{ bgmRef, stopPlayAudio }}>
+    <PlayAudioContext.Provider value={{ bgmRef, toggleAudioPlay }}>
       {children}
     </PlayAudioContext.Provider>
   );

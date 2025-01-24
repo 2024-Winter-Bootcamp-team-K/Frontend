@@ -128,8 +128,8 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
   
     setIsAPILoading(true);
     try {
-      setProgressMessage('시나리오를 불러오는 중...');
-      await new Promise<void>((resolve) => setTimeout(resolve, 1000)); // 시나리오 불러오는 중 대기 (예제: 1초)
+      setProgressMessage('시나리오 불러오는 중...');
+      await new Promise<void>((resolve) => setTimeout(resolve, 10000)); // 시나리오 불러오는 중 대기 (예제: 1초)
 
       const increaseProgress = (targetProgress: number, callback?: () => void, message?: string) => {
         setProgressMessage(message || ''); // 진행 중 메시지 업데이트

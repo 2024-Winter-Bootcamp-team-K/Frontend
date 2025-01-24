@@ -1,13 +1,15 @@
-import React, { createContext, useContext, useRef, useEffect } from "react";
+import React, { createContext, useContext, useRef, useEffect, useState } from "react";
 
 interface AudioContextValue {
   bgmRef: React.MutableRefObject<HTMLAudioElement | null>;
+  toggleAudioPlay: () => void;
 }
 
 const AudioContext = createContext<AudioContextValue | undefined>(undefined);
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const bgmRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
 
   useEffect(() => {
     if (!bgmRef.current) {
@@ -22,8 +24,20 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
   }, []);
 
+  const toggleAudioPlay = () => {
+    if (bgmRef.current) {
+      if (isPlaying) {
+        bgmRef.current.pause();
+      } else {
+        bgmRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+
   return (
-    <AudioContext.Provider value={{ bgmRef }}>
+    <AudioContext.Provider value={{ bgmRef, toggleAudioPlay }}>
       {children}
     </AudioContext.Provider>
   );

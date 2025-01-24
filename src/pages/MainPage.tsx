@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../hooks/axiosInstance.ts";
 import { useUser } from "../hooks/UserContext";
+import { useAudio } from "./MainAudioContext";
+import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface ScenarioResponse {
   scenarios: Scenario[];
@@ -34,6 +37,7 @@ const MainPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [offsetX, setOffsetX] = useState(0); // 마우스 위치에 따른 이동
   const { userId } = useUser();
+  const { toggleAudioPlay } = useAudio();
 
   const playSound = () => {
     const audio = new Audio("/sounds/book.mp3");
@@ -124,6 +128,27 @@ const MainPage: React.FC = () => {
         </ScenarioButton>
       </ScenarioButtonWrapper>
 
+      {/* BGM 토글 버튼 */}
+      <button className="bgm-toggle" onClick={toggleAudioPlay}>
+        <FontAwesomeIcon icon={faVolumeHigh}/>
+        <style> {`
+        .bgm-toggle {
+          position: fixed;
+          top: 1.5rem;
+          right: 1.5rem;
+          background: none;
+          border: none;
+          font-size: 2rem;
+          cursor: pointer;
+          color: #FFFFFF;
+        }
+        .bgm-toggle:hover {
+          transform: scale(1.2) ;
+        }
+        `}
+        </style>
+      </button>
+
       {isModalOpen && (
         <CardContainer className="card-container" offsetX={offsetX}>
           {scenarios.map((scenario) => (
@@ -143,6 +168,7 @@ const MainPage: React.FC = () => {
         </CardContainer>
       )}
     </Background>
+    
   );
 };
 

@@ -3,6 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import NotePage from "./NotePage.tsx";
 import axios from "axios";
 import axiosInstance from  "../hooks/axiosInstance.ts";
+import { usePlayAudio } from "./PlayAudioContext";
+import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 interface SuspectsResponse {
     suspects: Suspect[];
 }
@@ -36,7 +40,7 @@ const SuspectPage: React.FC = ()  => {
     const [suspects, setSuspects] = useState<Suspect[]>([]);
     const [isLoading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    
+    const { toggleAudioPlay } = usePlayAudio();
 
     const handleBackCheck = () => {
         if (scenarioId) {
@@ -167,7 +171,25 @@ const SuspectPage: React.FC = ()  => {
             </div>
             {activePopup && <NotePage onClose={closePopup} />}
 
+            {/* BGM 토글 버튼 */}
+            <button className="bgm-toggle" onClick={toggleAudioPlay}>
+                <FontAwesomeIcon icon={faVolumeHigh}/>
+            </button>
+
             <style>{`
+                .bgm-toggle {
+                    position: fixed;
+                    top: 1.5rem;
+                    right: 1.5rem;
+                    background: none;
+                    border: none;
+                    font-size: 2rem;
+                    cursor: pointer;
+                    color: #FFFFFF;
+                }
+                .bgm-toggle:hover {
+                    transform: scale(1.2) ;
+                }
                 .suspect-page-container {
                     background-image: url("/images/Suspect_back.png");
                     background-size: cover;

@@ -5,6 +5,9 @@ import { useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import axiosInstance from "../hooks/axiosInstance.ts";
 import { useUser } from '../hooks/UserContext';
+import { useAudio } from "./MainAudioContext";
+import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface HistoryResponse {
   scenarios: {
@@ -53,6 +56,7 @@ const PlayHistoryPage: React.FC = () => {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { scenarioId } = useParams<{ scenarioId: string }>();
+  const { toggleAudioPlay } = useAudio();
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -141,9 +145,32 @@ const PlayHistoryPage: React.FC = () => {
             <RightPage suspects={history[0].suspects} evidences={history[0].evidences} />
           </div>
         </div>
-      </div>-
-
-      
+      </div>
+      {/* BGM 토글 버튼 */}
+      <button className="bgm-toggle"
+              onClick={(event) => {
+                event.stopPropagation(); // 이벤트 전파 차단
+                toggleAudioPlay(); // BGM ON/OFF 토글
+              }}
+              >
+              <FontAwesomeIcon icon={faVolumeHigh}/>
+              <style> {`
+              .bgm-toggle {
+                position: fixed;
+                top: 1.5rem;
+                right: 1.5rem;
+                background: none;
+                border: none;
+                font-size: 2rem;
+                cursor: pointer;
+                color: #FFFFFF;
+              }
+              .bgm-toggle:hover {
+                transform: scale(1.2) ;
+              }
+              `}
+              </style>
+            </button>
     </div>
   );
 };
