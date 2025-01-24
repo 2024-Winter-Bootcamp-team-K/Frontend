@@ -82,6 +82,7 @@ const MainPage: React.FC = () => {
   };
 
   useEffect(() => {
+    updateUserIdFromPath();
     const fetchHistories = async () => {
       try {
         setLoading(true);
