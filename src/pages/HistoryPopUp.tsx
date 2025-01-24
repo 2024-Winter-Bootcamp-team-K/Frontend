@@ -80,7 +80,7 @@ const CheckEv: React.FC<CheckEvProps> = ({
     }
 
     return (
-      <div className="space-y-2 text-xl font-cursive">
+      <div className="space-y-2 text-[1.2vw] font-cursive">
         {allMessages.map((msg) => (
           <div key={msg.key} className={`p-1 rounded-lg `}>
             <strong className="mr-2">{msg.type === 'Q' ? 'Q:' : 'A:'}</strong> 
@@ -101,7 +101,7 @@ const CheckEv: React.FC<CheckEvProps> = ({
       onClick={onClose}
     >
       <div
-        className="relative max-w-[20vw] w-full max-h-[60vh] overflow-y-auto scrollbar-hide"
+        className="relative max-w-[30vw] w-full max-h-[70vh] overflow-y-auto scrollbar-hide"
         style={{
           backgroundImage: 'url("/images/CheckEv.png")',
           backgroundSize: 'cover',  
@@ -117,35 +117,35 @@ const CheckEv: React.FC<CheckEvProps> = ({
   if (type === "suspect" && suspect) {
     return (
       <PopupWrapper>
-        <div className="p-6">
-          <div className="flex flex-col items-center mb-6">
+        <div className="p-[2.2vh]">
+          <div className="flex flex-col items-center mb-[1vh]">
             <img
               src={suspect.image}
               alt={suspect.name}
-              className="w-32 h-32 object-cover rounded-full mb-4 shadow-md"
+              className="w-[8vw] h-[8vw] object-cover rounded-full mb-[0.5vh] shadow-md"
             />
-            <h2 className="text-4xl font-bold font-cursive">{`${suspect.job} ${suspect.name}`}</h2>
+            <h2 className="text-[2.2vw] font-bold font-cursive">{`${suspect.job} ${suspect.name}`}</h2>
           </div>
           
-          <div className="grid grid-cols-2 gap-2 mb-6 text-2xl font-cursive">
+          <div className="grid grid-cols-2 gap-[1.2vh] mb-[2vh] text-[1.6vw] font-cursive">
             <div><strong>Age:</strong> {suspect.age}세</div>
             <div><strong>Gender:</strong> {suspect.gender ? '여성' : '남자'}</div>
             <div><strong>Job:</strong> {suspect.job}</div>
           </div>
 
-          <div className="mb-4 bg-transparent">
-            <h3 className="font-cursive font-bold text-2xl mb-2">Description</h3>
-            <p className="text-xl font-cursive" style={{ wordBreak: "keep-all" }}>{suspect.description}</p>
+          <div className="mb-[2vh] bg-transparent">
+            <h3 className="font-cursive font-bold text-[1.6vw] mb-[0.5vh]">Description</h3>
+            <p className="text-[1.2vw] font-cursive" style={{ wordBreak: "keep-all" }}>{suspect.description}</p>
           </div>
 
-          <div className="mb-4 bg-transparent">
-            <h3 className="font-cursive font-bold text-2xl mb-2">Initial Statement</h3>
-            <p className="text-xl font-cursive" style={{ wordBreak: "keep-all" }}>{suspect.init_chat}</p>
+          <div className="mb-[2vh] bg-transparent">
+            <h3 className="font-cursive font-bold text-[1.6vw] mb-[0.5vh]">Initial Statement</h3>
+            <p className="text-[1.2vw] font-cursive" style={{ wordBreak: "keep-all" }}>{suspect.init_chat}</p>
           </div>
 
-          <div className="mb-6 bg-transparent">
-            <h3 className="font-cursive text-2xl font-bold mb-2">Chat History</h3>
-            <div className="max-h-60 overflow-y-auto scrollbar-hide">
+          <div className="mb-[4vh] bg-transparent">
+            <h3 className="font-cursive text-[1.6vw] font-bold mb-[0.5vh]">Chat History</h3>
+            <div className="max-h-[46vh] overflow-y-auto scrollbar-hide">
               {renderChatHistory()}
             </div>
           </div>
@@ -161,10 +161,10 @@ const CheckEv: React.FC<CheckEvProps> = ({
           <img
             src={evidence.image}
             alt={evidence.name}
-            className="w-48 h-48 object-cover rounded-lg mx-auto mb-6 shadow-md"
+            className="w-[12vw] h-[12vw] object-cover rounded-lg mx-auto mb-6 shadow-md"
           />
-          <h2 className="text-3xl font-bold mb-4 font-cursive">{evidence.name}</h2>
-          <p className="text-lg font-cursive " style={{ wordBreak: "keep-all" }}>{evidence.description}</p>
+          <h2 className="text-[2.5vw] font-bold mb-4 font-cursive">{evidence.name}</h2>
+          <p className="text-[1.2vw] font-cursive " style={{ wordBreak: "keep-all" }}>{evidence.description}</p>
         </div>
       </PopupWrapper>
     );

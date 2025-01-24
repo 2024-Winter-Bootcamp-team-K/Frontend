@@ -36,8 +36,7 @@ const MainPage: React.FC = () => {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [offsetX, setOffsetX] = useState(0); // 마우스 위치에 따른 이동
-  const { userId } = useUser();
-  const { toggleAudioPlay } = useAudio();
+  const { userId, updateUserIdFromPath } = useUser();
 
   const playSound = () => {
     const audio = new Audio("/sounds/book.mp3");
@@ -82,6 +81,7 @@ const MainPage: React.FC = () => {
   };
 
   useEffect(() => {
+    updateUserIdFromPath();
     const fetchHistories = async () => {
       try {
         setLoading(true);
@@ -95,7 +95,7 @@ const MainPage: React.FC = () => {
     };
 
     fetchHistories();
-  }, [userId]);
+  }, [userId, updateUserIdFromPath]);
 
   if (isLoading)
     return (
