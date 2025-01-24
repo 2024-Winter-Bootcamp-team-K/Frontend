@@ -107,15 +107,15 @@ const NotePage: React.FC<NoteProps> = ({ onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="absolute top-[30%] left-[10%] w-[80%] text-center">
-          <h2 className="text-3xl font-bold text-black font-cursive">
+          <h2 className="text-5xl font-bold text-black font-cursive">
             추리 노트
           </h2>
         </div>
 
         <textarea
-          className="absolute bg-transparent text-black p-4 resize-none focus:outline-none font-bold font-cursive text-xl"
+          className="absolute bg-transparent text-black p-4 placeholder-blue-900 resize-none focus:outline-none font-bold font-cursive text-3xl"
           style={{
-            top: "35%",
+            top: "38%",
             left: "15%",
             width: "70%",
             height: "50%",
