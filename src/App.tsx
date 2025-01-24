@@ -52,6 +52,7 @@ const App: React.FC = () => {
           <Route path="/resultLoading/:suspectId" element={<ResultLoadingPage />} />
           <Route path="/result/:scenarioId" element={<ResultPage />} />
           <Route path="/Ending/:scenarioId" element={<EndingPage />} />
+          
         </Routes>
       </Router>
     </UserProvider>
