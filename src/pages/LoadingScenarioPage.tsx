@@ -21,13 +21,13 @@ const LoadingScenarioPage: React.FC = () => {
   const [text, setText] = useState('');
   const [progress, setProgress] = useState(0);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false); // 오디오 활성화 상태
-  const [isTypingComplete, setIsTypingComplete] = useState(false); // 타이핑 완료 상태
+  const [_isTypingComplete, setIsTypingComplete] = useState(false); // 타이핑 완료 상태
   const navigate = useNavigate();
   const typingSoundRef = useRef<HTMLAudioElement | null>(null);
   const { bgmRef } = useAudio(); // AudioContext에서 bgmRef 가져오기
   const { scenario_id } = useParams<{ scenario_id: string }>();
   const [fullText, setFullText] = useState<string>('');
-  const [isAPILoading, setIsAPILoading] = useState(false); // API 로딩 상태
+  const [_isAPILoading, setIsAPILoading] = useState(false); // API 로딩 상태
   const [progressMessage, setProgressMessage] = useState<string>(''); // 진행 중 메시지 상태
 
   useEffect(() => {
