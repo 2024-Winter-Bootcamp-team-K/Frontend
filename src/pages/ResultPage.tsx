@@ -141,7 +141,7 @@ const ResultPage: React.FC = () => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             zIndex: 1,
-            width: "10.4vw",
+            width: "11.2vw",
           }}>
             <img
               src={thief.image}
@@ -175,7 +175,7 @@ const ResultPage: React.FC = () => {
               position: "absolute",
               top: "0",
               left: "50%",
-              transform: "translate(-50%, 80%)",
+              transform: "translate(-50%, 100%)",
               width: "17vw",
               height: "auto",
               zIndex: 3,
