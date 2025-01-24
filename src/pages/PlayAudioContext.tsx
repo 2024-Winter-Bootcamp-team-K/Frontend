@@ -2,11 +2,12 @@ import React, { createContext, useContext, useRef, useEffect } from "react";
 
 interface PlayAudioContextValue {
   bgmRef: React.MutableRefObject<HTMLAudioElement | null>;
+  stopPlayAudio: () => void; // stopPlayAudio 추가
 }
 
 const PlayAudioContext = createContext<PlayAudioContextValue | undefined>(undefined);
 
-export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PlayAudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const bgmRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -22,14 +23,21 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
   }, []);
 
+  const stopPlayAudio = () => {
+    if (bgmRef.current) {
+      bgmRef.current.pause();
+      bgmRef.current.currentTime = 0; // 정지 후 초기화
+    }
+  };
+
   return (
-    <PlayAudioContext.Provider value={{ bgmRef }}>
+    <PlayAudioContext.Provider value={{ bgmRef, stopPlayAudio }}>
       {children}
     </PlayAudioContext.Provider>
   );
 };
 
-export const useAudio = () => {
+export const usePlayAudio = () => {
   const context = useContext(PlayAudioContext);
   if (!context) {
     throw new Error("useAudio must be used within an AudioProvider");

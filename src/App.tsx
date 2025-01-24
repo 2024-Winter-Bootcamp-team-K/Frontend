@@ -19,6 +19,7 @@ import LoginBox from "./pages/LoginBox";
 import { AudioProvider } from "./pages/MainAudioContext";
 import PlayHistoryPage from "./pages/PlayHistoryPage";
 import { UserProvider } from './hooks/UserContext';
+import { PlayAudioProvider } from "./pages/PlayAudioContext";
 
 const App: React.FC = () => {
   return (
@@ -41,20 +42,16 @@ const App: React.FC = () => {
           <Route path="/initchat/:scenario_id" element={<InitChatPage />} />
           
           {/* 플레이 페이지 */}
-          <Route path="/play/:scenario_id" element={<PlayPage />} />
-          <Route path="/evidence/:scenarioId" element={<EvidencePage />} />
-          <Route path="/suspect/:scenarioId" element={<SuspectPage />} />
-          <Route path="/chat/:suspect_id" element={<ChattingPage />} />
-          <Route path="/choose/:suspectId" element={<ChoosePage />} />
-          <Route path="/result/:scenarioId" element={<ResultPage />} />
+          <Route path="/play/:scenario_id" element={ <PlayAudioProvider> <PlayPage /> </PlayAudioProvider>} />
+          <Route path="/evidence/:scenarioId" element={<PlayAudioProvider> <EvidencePage /> </PlayAudioProvider>} />
+          <Route path="/suspect/:scenarioId" element={<PlayAudioProvider> <SuspectPage /> </PlayAudioProvider>} />
+          <Route path="/chat/:suspect_id" element={<PlayAudioProvider> <ChattingPage /> </PlayAudioProvider>} />
+          <Route path="/choose/:suspectId" element={<PlayAudioProvider> <ChoosePage /> </PlayAudioProvider>} />
+
+          {/* 결과 페이지 */}
           <Route path="/resultLoading/:suspectId" element={<ResultLoadingPage />} />
+          <Route path="/result/:scenarioId" element={<ResultPage />} />
           <Route path="/Ending/:scenarioId" element={<EndingPage />} />
-
-
-
-
-
-          
         </Routes>
       </Router>
     </UserProvider>
