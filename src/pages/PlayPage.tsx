@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import NotePage from "./NotePage.tsx";
+import { usePlayAudio } from "./PlayAudioContext";
+import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 type Scenario = {
   name: string;
@@ -20,6 +23,7 @@ const PlayPage: React.FC = () => {
   const handleSuspectCheck = () => {navigate(`/suspect/${scenario_id}`)};
   const handleEvidenceCheck = () => {navigate(`/evidence/${scenario_id}`)};
   const handleFolderCheck = () => openPopup();
+  const { toggleAudioPlay } = usePlayAudio();
 
   useEffect(() => {
     const fetchScenario = async () => {
@@ -139,9 +143,27 @@ const PlayPage: React.FC = () => {
         )}
       </div>
 
+      {/* BGM 토글 버튼 */}
+      <button className="bgm-toggle" onClick={toggleAudioPlay}>
+        <FontAwesomeIcon icon={faVolumeHigh}/>
+      </button>
+
       {/* NotePage 팝업 */}
       {activePopup && <NotePage onClose={closePopup} />}
       <style>{`
+        .bgm-toggle {
+          position: fixed;
+          top: 1.5rem;
+          right: 1.5rem;
+          background: none;
+          border: none;
+          font-size: 2rem;
+          cursor: pointer;
+          color: #FFFFFF;
+        }
+        .bgm-toggle:hover {
+          transform: scale(1.2) ;
+        }
         .playpage-container {
           background-image: url(/images/playpage_back.png);
           background-size: cover;

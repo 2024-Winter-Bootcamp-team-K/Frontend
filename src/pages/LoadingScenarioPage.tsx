@@ -21,13 +21,14 @@ const LoadingScenarioPage: React.FC = () => {
   const [text, setText] = useState('');
   const [progress, setProgress] = useState(0);
   const [isAudioEnabled, setIsAudioEnabled] = useState(false); // 오디오 활성화 상태
-  const [isTypingComplete, setIsTypingComplete] = useState(false); // 타이핑 완료 상태
+  const [_isTypingComplete, setIsTypingComplete] = useState(false); // 타이핑 완료 상태
   const navigate = useNavigate();
   const typingSoundRef = useRef<HTMLAudioElement | null>(null);
   const { bgmRef } = useAudio(); // AudioContext에서 bgmRef 가져오기
   const { scenario_id } = useParams<{ scenario_id: string }>();
   const [fullText, setFullText] = useState<string>('');
-  const [isAPILoading, setIsAPILoading] = useState(false); // API 로딩 상태
+  const [_isAPILoading, setIsAPILoading] = useState(false); // API 로딩 상태
+  const [progressMessage, setProgressMessage] = useState<string>(''); // 진행 중 메시지 상태
 
   useEffect(() => {
     const fetchScenario = async () => {
@@ -127,7 +128,11 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
   
     setIsAPILoading(true);
     try {
-      const increaseProgress = (targetProgress: number, callback?: () => void) => {
+      setProgressMessage('시나리오 불러오는 중...');
+      await new Promise<void>((resolve) => setTimeout(resolve, 10000)); // 시나리오 불러오는 중 대기 (예제: 1초)
+
+      const increaseProgress = (targetProgress: number, callback?: () => void, message?: string) => {
+        setProgressMessage(message || ''); // 진행 중 메시지 업데이트
         const interval = setInterval(() => {
           setProgress((prevProgress) => {
             if (prevProgress < targetProgress) {
@@ -145,7 +150,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
       const evidenceResponse = await createEvidence(Number(scenario_id));
       if (evidenceResponse) {
         console.log("Evidence 생성 완료, Scenario ID:", scenario_id);
-        await new Promise<void>((resolve) => increaseProgress(50, resolve)); // Progress를 50까지 증가
+        await new Promise<void>((resolve) => increaseProgress(50, resolve, '증거 불러오는 중...'));
       } else {
         console.error("Evidence 생성 실패");
         return;
@@ -155,7 +160,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
       const suspectResponse = await createSuspect(Number(scenario_id));
       if (suspectResponse) {
         console.log("Suspect 생성 완료, Scenario ID:", scenario_id);
-        await new Promise<void>((resolve) => increaseProgress(100, resolve)); // Progress를 100까지 증가
+        await new Promise<void>((resolve) => increaseProgress(100, resolve, '용의자 불러오는 중...'));
       } else {
         console.error("Suspect 생성 실패");
         return;
@@ -163,6 +168,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
     } catch (error) {
       console.error('API 호출 중 오류 발생:', error);
     } finally {
+      setProgressMessage('사건을 정리하는 중...');
       setIsAPILoading(false);
     }
   };
@@ -290,9 +296,12 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
       {isAudioEnabled && progress < 100 && (
         <p
           className="font-intelmono mt-8 text-center text-white text-lg font-semibold"
-          style={{ fontSize: '20px' }}
+          style={{ 
+            marginTop: '4vh',
+            fontSize: '1.7vw', 
+          }}
         >
-          <br></br>
+            {progressMessage}
         </p>
       )}
 
@@ -302,7 +311,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
           className="font-intelmono mt-8 text-center text-white text-lg font-semibold"
           style={{ 
             marginTop: '4vh',
-            fontSize: '2vw',
+            fontSize: '1.7vw',
            }}
         >
           현장 조사 데이터 분석이 완료되었습니다.

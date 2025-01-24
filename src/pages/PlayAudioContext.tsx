@@ -1,19 +1,19 @@
 import React, { createContext, useContext, useRef, useEffect, useState } from "react";
 
-interface AudioContextValue {
+interface PlayAudioContextValue {
   bgmRef: React.MutableRefObject<HTMLAudioElement | null>;
   toggleAudioPlay: () => void;
 }
 
-const AudioContext = createContext<AudioContextValue | undefined>(undefined);
+const PlayAudioContext = createContext<PlayAudioContextValue | undefined>(undefined);
 
-export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const PlayAudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const bgmRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
 
   useEffect(() => {
     if (!bgmRef.current) {
-      bgmRef.current = new Audio("/sounds/mainbgm.mp3");
+      bgmRef.current = new Audio("/sounds/PlayAudio.mp3");
       bgmRef.current.volume = 0.3;
       bgmRef.current.loop = true;
       bgmRef.current.play();
@@ -35,16 +35,15 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-
   return (
-    <AudioContext.Provider value={{ bgmRef, toggleAudioPlay }}>
+    <PlayAudioContext.Provider value={{ bgmRef, toggleAudioPlay }}>
       {children}
-    </AudioContext.Provider>
+    </PlayAudioContext.Provider>
   );
 };
 
-export const useAudio = () => {
-  const context = useContext(AudioContext);
+export const usePlayAudio = () => {
+  const context = useContext(PlayAudioContext);
   if (!context) {
     throw new Error("useAudio must be used within an AudioProvider");
   }

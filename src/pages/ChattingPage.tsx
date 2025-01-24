@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { fetchSuspect } from "../services/apiService";
 import WebSocketService from "../mocks/webSocketService";
 import fetchTTS from "./TTSService"; // default import
+import { usePlayAudio } from "./PlayAudioContext";
 
 const ChattingPage: React.FC = () => {
     const navigate = useNavigate();
@@ -21,6 +22,7 @@ const ChattingPage: React.FC = () => {
     const mediaRecorderRef = React.useRef<MediaRecorder | null>(null);
     const webSocketServiceRef = useRef<WebSocketService | null>(null);
     const { suspect_id } = useParams<{ suspect_id: string | undefined }>();
+    const { toggleAudioPlay } = usePlayAudio();
 
     const scenarioId = localStorage.getItem("currentScenarioId");
 
@@ -339,7 +341,25 @@ const ChattingPage: React.FC = () => {
             </button>
             {activePopup && <NotePage onClose={closePopup} />}
 
+            {/* BGM 토글 버튼 */}
+            <button className="bgm-toggle" onClick={toggleAudioPlay}>
+                <FontAwesomeIcon icon={faVolumeHigh}/>
+            </button>
+
             <style>{`
+                .bgm-toggle {
+                    position: fixed;
+                    top: 1.5rem;
+                    right: 1.5rem;
+                    background: none;
+                    border: none;
+                    font-size: 2rem;
+                    cursor: pointer;
+                    color: #FFFFFF;
+                }
+                .bgm-toggle:hover {
+                    transform: scale(1.2) ;
+                }
                 .chatting-page-container {
                     background-image: url('/images/ChatPage_back.png');
                     background-size: cover;

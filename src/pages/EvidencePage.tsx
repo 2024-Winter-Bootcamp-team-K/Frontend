@@ -3,6 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import NotePage from "./NotePage.tsx";
 import axios from "axios";
 import axiosInstance from  "../hooks/axiosInstance.ts";
+import { usePlayAudio } from "./PlayAudioContext";
+import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface EvidenceResponse {
     evidences: Evidence[];
@@ -40,7 +43,7 @@ const EvidencePage: React.FC = () => {
     const [evidences, setEvidences] = useState<Evidence[]>([]);
     const [isLoading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    
+    const { toggleAudioPlay } = usePlayAudio();
 
     const handleBackCheck = () => {navigate(`/play/${scenarioId}`)};
     const handleFolderCheck = () => openPopup();
@@ -208,17 +211,35 @@ const EvidencePage: React.FC = () => {
 
             {/* 팝업 */}
             {selectedEvidence && detailedEvidence && (
-    <div className="popup-overlay" onClick={() => setSelectedEvidence(null)}>
-    <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-        <img src={detailedEvidence.image} alt={`Evidence Detail`} className="popup-image" />
-        <p className="popup-description-title">{detailedEvidence.name}</p>
-        <p className="popup-description">{wrapText(detailedEvidence.description, 20)}</p>
-    </div>
-</div>
+            <div className="popup-overlay" onClick={() => setSelectedEvidence(null)}>
+                <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                    <img src={detailedEvidence.image} alt={`Evidence Detail`} className="popup-image" />
+                    <p className="popup-description-title">{detailedEvidence.name}</p>
+                    <p className="popup-description">{wrapText(detailedEvidence.description, 20)}</p>
+                </div>
+            </div>
             )}
               {activePopup && <NotePage onClose={closePopup} />}
 
+            {/* BGM 토글 버튼 */}
+            <button className="bgm-toggle" onClick={toggleAudioPlay}>
+                <FontAwesomeIcon icon={faVolumeHigh}/>
+            </button>
+
             <style>{`
+                .bgm-toggle {
+                    position: fixed;
+                    top: 1.5rem;
+                    right: 1.5rem;
+                    background: none;
+                    border: none;
+                    font-size: 2rem;
+                    cursor: pointer;
+                    color: #FFFFFF;
+                }
+                .bgm-toggle:hover {
+                    transform: scale(1.2) ;
+                }   
                 .evidence-page-container {
                     background-image: url("/images/Evidence_back.png");
                     background-size: cover;
