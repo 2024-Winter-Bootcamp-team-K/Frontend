@@ -197,6 +197,11 @@ const LogInPage: React.FC = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             name="password"
                             autoComplete="off"
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                  handleLogin(); // 엔터 키를 누르면 handleSubmit 호출
+                              }
+                          }}
                         />
                         <label className="user-label">Password</label>
                     </div>
