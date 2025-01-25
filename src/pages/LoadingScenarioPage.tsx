@@ -378,16 +378,29 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
       )}
 
         <style>{`
-        .shake-effect {
-          animation: shake 0.3s; /* 떨림 효과 */
-        }
+      .animated-button {
+        font-size: 20px;
+        padding: 4px 10px;
+        border-radius: 8px;
+        position: relative;
+        animation: pulse 2s infinite;
+      }
 
-        @keyframes shake {
-          0% { transform: translateX(0); }
-          25% { transform: translateX(-5px); }
-          50% { transform: translateX(5px); }
-          75% { transform: translateX(-5px); }
-          100% { transform: translateX(0); }
+      .animation-button:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.13);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
       `}</style>
     </div>
   );
