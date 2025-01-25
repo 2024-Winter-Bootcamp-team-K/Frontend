@@ -22,7 +22,7 @@ const EndingPage: React.FC = () => {
   }, []);
 
   const [historyData, setHistoryData] = useState<{
-    playTime: String;
+    playTime: string;
     suspectsCount: number;
     evidencesCount: number;
     interrogationsCount: number;
@@ -72,7 +72,7 @@ const EndingPage: React.FC = () => {
           evidencesCount: Array.isArray(evidences) ? evidences.length : 0,
           interrogationsCount: 0,
         });
-      } catch (error) {
+      } catch {
         setError("데이터를 불러오는 데 실패했습니다.");
       } finally {
         setLoading(false);
@@ -81,7 +81,6 @@ const EndingPage: React.FC = () => {
 
     fetchHistoryData();
   }, [scenarioId]);
-  
 
   useEffect(() => {
       // 페이지 로드 시 오디오 재생
@@ -152,6 +151,9 @@ const EndingPage: React.FC = () => {
   const handleReturnToMain = () => {
     navigate(`/MainPage/${userId}`); // 메인 페이지로 이동
   };
+
+  if (loading) return null;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="ending-page">
