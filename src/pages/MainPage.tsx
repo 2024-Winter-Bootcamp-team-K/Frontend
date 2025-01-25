@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../hooks/axiosInstance.ts";
 import { useUser } from "../hooks/UserContext";
 import { useAudio } from "./MainAudioContext";
-import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import { faVolumeHigh,faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface ScenarioResponse {
@@ -43,6 +43,10 @@ const MainPage: React.FC = () => {
     audio.play();
   };
 
+  const handleExit = () => {
+    navigate('/login'); 
+  };
+
   const handleNavigation = (path: string) => {
     navigate(path);
   };
@@ -58,12 +62,10 @@ const MainPage: React.FC = () => {
       const totalCards = scenarios.length;
       
       if (direction === 'left') {
-        // Move to previous card (adjust index to simulate left movement)
         setCurrentCardIndex((prevIndex) => 
           prevIndex === 0 ? totalCards - 1 : prevIndex - 1
         );
       } else {
-        // Move to next card
         setCurrentCardIndex((prevIndex) => 
           (prevIndex + 1) % totalCards
         );
@@ -124,6 +126,9 @@ const MainPage: React.FC = () => {
     <Background
       onClick={handleBackgroundClick}
     >
+      <ExitButton className="exit-button" onClick={handleExit}>
+        <FontAwesomeIcon icon={faSignOutAlt} />
+      </ExitButton>
       <PlayButtonWrapper className="button-wrapper">
         <PlayButton onClick={toggleModal}>플레이 기록</PlayButton>
       </PlayButtonWrapper>
@@ -162,32 +167,27 @@ const MainPage: React.FC = () => {
       {isModalOpen && (
         <CardContainer>
           {scenarios.map((scenario, index) => {
-            // Calculate the position relative to the current card
             const positionDiff = index - currentCardIndex;
             const absPositionDiff = Math.abs(positionDiff);
             
-            // Determine card position, scale, z-index, and overlay
             let translateX = 0;
             let scale = 1;
             let zIndex = 0;
             let overlay = 0;
             
             if (positionDiff === 0) {
-              // Central card
               translateX = 0;
-              scale = 1.2;
-              zIndex = 10; // Highest z-index
-              overlay = 0; // No overlay for selected card
+              scale = 1.4;
+              zIndex = 10; 
+              overlay = 0; 
             } else if (positionDiff < 0) {
-              // Cards to the left
               translateX = -100 * absPositionDiff;
               zIndex = 5 - absPositionDiff;
-              overlay = 0.5; // Darker overlay
+              overlay = 0.5; 
             } else {
-              // Cards to the right
               translateX = 100 * absPositionDiff;
               zIndex = 5 - absPositionDiff;
-              overlay = 0.5; // Darker overlay
+              overlay = 0.5; 
             }
 
             return (
@@ -241,32 +241,81 @@ const Background = styled.div`
   align-items: center;
 `;
 
+const ExitButton = styled.button`
+  position: fixed;
+  top: 1.1rem;
+  left: 1.6rem;
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  cursor: pointer;
+  color: #FFFFFF;
+
+  &hover {
+    transform: scale(1.2);
+  }
+`;
+
+const CommonButton = styled.button`
+  background: linear-gradient(135deg, #3a3b3b 0%, #5c5e5e 100%);
+  color: white;
+  font-size: calc(0.8vh + 1.8vw);
+  font-weight: bold;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  font-family: 'BinggraeII';
+  letter-spacing: 1px;
+
+  &:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, #4c4d4d 0%, #6e7070 100%);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const PlayButton = styled(CommonButton)`
+   background: linear-gradient(135deg, #304342 0%, #40605e 100%); 
+
+   &:hover {     
+    background: linear-gradient(135deg, #40605e 0%, #304342 100%); 
+  }
+`;
+
+const ScenarioButton = styled(CommonButton)`
+  background: linear-gradient(135deg, #9b7b5a 0%, #b89474 100%);   
+  
+  &:hover {     
+    background: linear-gradient(135deg, #b89474 0%, #9b7b5a 100%);   
+  }
+`;
+
 const PlayButtonWrapper = styled.div`
   position: absolute;
   top: 53%;
-  left: 8%;
+  left: 3%;
   transform: translateY(-50%);
-`;
-
-const PlayButton = styled.button`
-  background-color: rgba(58, 59, 59, 0.5);
-  color: white;
-  font-size: 1.25rem;
-  font-weight: bold;
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  border: none;
-  cursor: pointer;
+  width: auto;
+  height: auto;
 `;
 
 const ScenarioButtonWrapper = styled.div`
   position: absolute;
-  top: 55%;
+  top: 53%;
   left: 49%;
   transform: translate(-50%, -50%);
+  width: auto;
+  height: auto;
 `;
-
-const ScenarioButton = styled(PlayButton)``;
 
 const CardContainer = styled.div`
   display: flex;
@@ -279,8 +328,8 @@ const CardContainer = styled.div`
 
 const Card = styled.div<{ $translateX: number; $scale: number; $zIndex: number; $overlay: number }>`
   flex: 0 0 auto;
-  width: 41vh;
-  height: 50vh;
+  width: 36vh;
+  height: 45vh;
   background-image: url(/images/papyrus.png);
   background-size: cover;
   background-position: center;
@@ -316,7 +365,7 @@ const CardImage = styled.img`
 `;
 
 const CardTitle = styled.h3`
-  font-size: calc(2vh + 2.2vw);
+  font-size: calc(1.2vh + 2vw);
   margin: 0.5vh 0;
   text-align: center;
   font-family: 'THEFACESHOP_INKLIPQUID';
@@ -335,13 +384,13 @@ const CardDetail = styled.div`
 `;
 
 const ScenarioName = styled.p`
-  font-size: calc(1.4vh + 1.8vw); 
+  font-size: calc(1.1vh + 1.6vw); 
   color: #000000;
   margin: 0.3vh 0;
 `;
 
 const PlayDate = styled.p`
-  font-size: calc(1.0vh + 1.2vw); 
+  font-size: calc(0.8vh + 1vw); 
   color: #000000; 
   margin: 0.2vh 0;
 `;
