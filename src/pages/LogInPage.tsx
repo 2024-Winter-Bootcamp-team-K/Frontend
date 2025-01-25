@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/UserContext";
 import "../components/LogInPage.css";
 import axios from "axios";
+import { useAudio } from "./MainAudioContext"; // AudioContext 사용
 
 interface LoginResponse {
   id: number;
@@ -15,6 +16,14 @@ const delay= (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const LogInPage: React.FC = () => {
   const { setUserId } = useUser();
   const navigate = useNavigate();
+  const { bgmRef } = useAudio(); // AudioContext에서 bgmRef 가져오기
+
+  useEffect(() => {
+          // BGM 일시정지 또는 정지
+        if (bgmRef.current) {
+          bgmRef.current.pause(); // BGM을 일시정지
+        }
+        })
 
   useEffect(() => {
     const stampAudio = new Audio('/sounds/startbgm.mp3');
