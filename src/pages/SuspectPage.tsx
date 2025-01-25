@@ -185,15 +185,18 @@ const SuspectPage: React.FC = ()  => {
             {/* 팝업창 */}
             {popupVisible && selectedSuspect && (
                 <div className="popup-overlay">
-                    <div className="popup-container">
-                        <div className="popup-content">
-                            {`${selectedSuspect.job} ${selectedSuspect.name}님을 범인으로 지목하시겠습니까?`}
-                        </div>
-                        <div className="popup-buttons">
-                            <button onClick={() => navigate(`/choose/${selectedSuspect.id}`)}>
-                                확인
-                            </button>
-                            <button onClick={closePopup}>취소</button>
+                    <div className="popup-image">
+                        <img src="/images/playpage_img1.png" alt="Suspect" className="popup-image" />
+                        <div className="popup-container">
+                            <div className="popup-content">
+                                {`${selectedSuspect.job} ${selectedSuspect.name}님을 범인으로 지목하시겠습니까?`}
+                            </div>
+                            <div className="popup-buttons">
+                                <button onClick={() => navigate(`/choose/${selectedSuspect.id}`)}>
+                                    확인
+                                </button>
+                                <button onClick={closePopup}>취소</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -376,6 +379,15 @@ const SuspectPage: React.FC = ()  => {
                     z-index: 9999;
                 }
 
+                .popup-image {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;                    
+                    width: 30%;
+                    height: auto;
+                }
+
                 .popup-container {
                     background: #1f1f1f;
                     color: #ffffff;
@@ -395,6 +407,7 @@ const SuspectPage: React.FC = ()  => {
                     z-index: 1000;
                     border: 1px solid #333;
                     font-size: calc(0.8vw + 0.9vh);
+                    font-family: "intelmono";
                     word-break: keep-all;
                     gap: 2vh;
                 }
@@ -405,6 +418,7 @@ const SuspectPage: React.FC = ()  => {
                     justify-content: center;
                     align-items: center;
                     text-align: center;
+                    font-family: "intelmono";
                 }
 
                 .popup-buttons {
@@ -421,6 +435,7 @@ const SuspectPage: React.FC = ()  => {
                     font-weight: bold;
                     transition: all 0.3s ease;
                     font-size: calc(0.7vw + 0.8vh);
+                    font-family: "intelmono";                    
                 }
 
                 .popup-buttons button:first-child {
