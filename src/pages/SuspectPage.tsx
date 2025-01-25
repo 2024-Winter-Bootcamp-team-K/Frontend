@@ -186,7 +186,9 @@ const SuspectPage: React.FC = ()  => {
             {popupVisible && selectedSuspect && (
                 <div className="popup-overlay">
                     <div className="popup-container">
-                        <p>{`${selectedSuspect.job} ${selectedSuspect.name}님을 범인으로 지목하시겠습니까?`}</p>
+                        <div className="popup-content">
+                            {`${selectedSuspect.job} ${selectedSuspect.name}님을 범인으로 지목하시겠습니까?`}
+                        </div>
                         <div className="popup-buttons">
                             <button onClick={() => navigate(`/choose/${selectedSuspect.id}`)}>
                                 확인
@@ -361,6 +363,93 @@ const SuspectPage: React.FC = ()  => {
                     word-wrap: break-word;
                 }
 
+                .popup-overlay {
+                    display: flex;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 9999;
+                }
+
+                .popup-container {
+                    background: #1f1f1f;
+                    color: #ffffff;
+                    width: 24vw;
+                    height: 23vh;
+                    aspect-ratio: 4 / 3;
+                    max-width: 600px;
+                    max-height: 450px;
+                    padding: 2vw;
+                    border-radius: 12px;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+                    z-index: 1000;
+                    border: 1px solid #333;
+                    font-size: calc(0.8vw + 0.9vh);
+                    word-break: keep-all;
+                    gap: 2vh;
+                }
+
+                .popup-content {
+                    margin-bottom: 1vh;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+                }
+
+                .popup-buttons {
+                    display: flex;
+                    justify-content: center;
+                    gap: 1vw;
+                }
+
+                .popup-buttons button {
+                    padding: 10px 20px;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-weight: bold;
+                    transition: all 0.3s ease;
+                    font-size: calc(0.7vw + 0.8vh);
+                }
+
+                .popup-buttons button:first-child {
+                    background-color: #4a4a4a;
+                    color: white;
+                }
+
+                .popup-buttons button:last-child {
+                    background-color: #2c2c2c;
+                    color: #aaaaaa;
+                }
+
+                .popup-buttons button:hover:first-child {
+                    background-color: #5a5a5a;
+                }
+
+                .popup-buttons button:hover:last-child {
+                    background-color: #3c3c3c;
+                }
+
+                @media (max-width: 1000px) {
+                    .popup-container {
+                        width: 75vw;
+                        height: auto;
+                        aspect-ratio: 4 / 3;
+                        padding: 15px;
+                    }
+                }
+
                 .button-container {
                     display: flex;
                     gap: 2vw;
@@ -449,71 +538,6 @@ const SuspectPage: React.FC = ()  => {
                     }
                 }
 
-                @media (max-width: 480px) {
-                    .back-icon {
-                        width: 8vw;
-                        height: 8vw;
-                    }
-
-                    .suspect-item {
-                        width: 80vw;
-                        height: 50vh;
-                    }
-
-                    .popup-overlay {
-                        display: flex;
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100vw;
-                        height: 100vh;
-                        background: rgba(0, 0, 0, 0.5);
-                        justify-content: center;
-                        align-items: center;
-                        z-index: 9999;
-                        visibility: visible;
-                    }
-                    
-                    .popup-container {
-                        background: white;
-                        width: 90%;
-                        max-width: 400px;
-                        background: white;
-                        padding: 20px;
-                        border-radius: 10px;
-                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                        text-align: center;
-                        z-index: 1000;
-                    }
-
-                    .popup-buttons {
-                        margin-top: 15px;
-                    }
-                    
-                    .popup-buttons button {
-                        margin: 0 10px;
-                        padding: 10px 20px;
-                        border: none;
-                        border-radius: 5px;
-                        cursor: pointer;
-                    }
-                    
-                    .popup-buttons button:hover {
-                        background: #f0f0f0;
-                    }
-
-                    @media (max-width: 1000px) {
-                        .popup-container {
-                            width: 65%;
-                            padding: 10px;
-                            font-size: 0.9rem;
-                        }
-                    }
-
-                    .action-button {
-                        font-size: 4vw;
-                    }
-                }
             `}</style>
         </div>
     );
