@@ -41,6 +41,9 @@ const SuspectPage: React.FC = ()  => {
     const [isLoading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const { toggleAudioPlay } = usePlayAudio();
+    //팝업 상태 관리 추가
+    const [popupVisible, setPopupVisible] = useState<boolean>(false);
+    const [selectedSuspect, setSelectedSuspect] = useState<Suspect | null>(null);
 
     const handleBackCheck = () => {
         if (scenarioId) {
@@ -50,10 +53,18 @@ const SuspectPage: React.FC = ()  => {
     const handleFolderCheck = () => openPopup();
     
     const handleInterrogate = (id: number) => {navigate(`/chat/${id}`); };
-    const handleAccuse = (id: number) => {navigate(`/choose/${id}`); };
+    const handleAccuse = (suspect: Suspect) => {
+        setSelectedSuspect(suspect);
+        setPopupVisible(true);
+    };
 
-    const openPopup = () => {setActivePopup(true);};
-    const closePopup = () => {setActivePopup(false);}; 
+    const openPopup = () => {
+        setActivePopup(true);};
+    const closePopup = () => {
+        setActivePopup(false);
+        setPopupVisible(false);
+        setSelectedSuspect(null);
+    }; 
 
     useEffect(() => {
         const fetchSuspects = async () => {
@@ -152,7 +163,7 @@ const SuspectPage: React.FC = ()  => {
                                         <button className="action-button" onClick={() => handleInterrogate(suspect.id)}>
                                             심문하기
                                         </button>
-                                        <button className="action-button" onClick={() => handleAccuse(suspect.id)}>
+                                        <button className="action-button" onClick={() => handleAccuse(suspect)}>
                                             범인 지목
                                         </button>
                                     </div>
@@ -170,6 +181,21 @@ const SuspectPage: React.FC = ()  => {
                 </div>
             </div>
             {activePopup && <NotePage onClose={closePopup} />}
+
+            {/* 팝업창 */}
+            {popupVisible && selectedSuspect && (
+                <div className="popup-overlay">
+                    <div className="popup-container">
+                        <p>{`${selectedSuspect.job} ${selectedSuspect.name}님을 범인으로 지목하시겠습니까?`}</p>
+                        <div className="popup-buttons">
+                            <button onClick={() => navigate(`/choose/${selectedSuspect.id}`)}>
+                                확인
+                            </button>
+                            <button onClick={closePopup}>취소</button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* BGM 토글 버튼 */}
             <button className="bgm-toggle" onClick={toggleAudioPlay}>
@@ -433,7 +459,57 @@ const SuspectPage: React.FC = ()  => {
                         width: 80vw;
                         height: 50vh;
                     }
+
+                    .popup-overlay {
+                        display: flex;
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100vw;
+                        height: 100vh;
+                        background: rgba(0, 0, 0, 0.5);
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 9999;
+                        visibility: visible;
+                    }
                     
+                    .popup-container {
+                        background: white;
+                        width: 90%;
+                        max-width: 400px;
+                        background: white;
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        text-align: center;
+                        z-index: 1000;
+                    }
+
+                    .popup-buttons {
+                        margin-top: 15px;
+                    }
+                    
+                    .popup-buttons button {
+                        margin: 0 10px;
+                        padding: 10px 20px;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    }
+                    
+                    .popup-buttons button:hover {
+                        background: #f0f0f0;
+                    }
+
+                    @media (max-width: 1000px) {
+                        .popup-container {
+                            width: 65%;
+                            padding: 10px;
+                            font-size: 0.9rem;
+                        }
+                    }
+
                     .action-button {
                         font-size: 4vw;
                     }
