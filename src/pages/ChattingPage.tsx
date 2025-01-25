@@ -23,7 +23,6 @@ const ChattingPage: React.FC = () => {
     const webSocketServiceRef = useRef<WebSocketService | null>(null);
     const { suspect_id } = useParams<{ suspect_id: string | undefined }>();
     const { toggleAudioPlay } = usePlayAudio();
-
     const scenarioId = localStorage.getItem("currentScenarioId");
 
     useEffect(() => {
@@ -124,6 +123,12 @@ const ChattingPage: React.FC = () => {
         typeNextCharacter();
     };
 
+    useEffect(() => {
+        if(!localStorage.getItem("interrogationsCount")) {
+            localStorage.setItem("interrogationsCount", "0");
+        }
+    }, []);
+
     const handleSendMessage = () => {
         if (!userInput.trim() || !webSocketServiceRef.current) {
             console.error("유효하지 않은 입력값 또는 WebSocket 연결 없음.");
@@ -131,7 +136,10 @@ const ChattingPage: React.FC = () => {
         }
 
         webSocketServiceRef.current.sendMessage({ message: userInput.trim() });
-        setChatHistory((prev) => [...prev, { message: userInput.trim(), response: "" }]); // 사용자의 메시지 추가
+        setChatHistory((prev) => [...prev, { message: userInput.trim(), response: "" }]);
+
+        const currentCount = parseInt(localStorage.getItem("interrogationsCount") || "0", 10);
+        localStorage.setItem("interrogationsCount", (currentCount + 1).toString());
         setUserInput(""); // 입력값 초기화
     };
 
