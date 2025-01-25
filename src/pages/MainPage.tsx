@@ -256,66 +256,32 @@ const ExitButton = styled.button`
   }
 `;
 
-const CommonButton = styled.button`
-  background: linear-gradient(135deg, #3a3b3b 0%, #5c5e5e 100%);
-  color: white;
-  font-size: calc(0.8vh + 1.8vw);
-  font-weight: bold;
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-transform: uppercase;
-  font-family: 'BinggraeII';
-  letter-spacing: 1px;
-
-  &:hover {
-    transform: translateY(-3px);
-    background: linear-gradient(135deg, #4c4d4d 0%, #6e7070 100%);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  &:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-`;
-
-const PlayButton = styled(CommonButton)`
-   background: linear-gradient(135deg, #304342 0%, #40605e 100%); 
-
-   &:hover {     
-    background: linear-gradient(135deg, #40605e 0%, #304342 100%); 
-  }
-`;
-
-const ScenarioButton = styled(CommonButton)`
-  background: linear-gradient(135deg, #9b7b5a 0%, #b89474 100%);   
-  
-  &:hover {     
-    background: linear-gradient(135deg, #b89474 0%, #9b7b5a 100%);   
-  }
-`;
-
 const PlayButtonWrapper = styled.div`
   position: absolute;
   top: 53%;
-  left: 3%;
+  left: 8%;
   transform: translateY(-50%);
-  width: auto;
-  height: auto;
+`;
+
+const PlayButton = styled.button`
+  background-color: rgba(58, 59, 59, 0.5);
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
 `;
 
 const ScenarioButtonWrapper = styled.div`
   position: absolute;
-  top: 53%;
+  top: 55%;
   left: 49%;
   transform: translate(-50%, -50%);
-  width: auto;
-  height: auto;
 `;
+
+const ScenarioButton = styled(PlayButton)``;
 
 const CardContainer = styled.div`
   display: flex;
