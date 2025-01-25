@@ -404,7 +404,7 @@ const ChattingPage: React.FC = () => {
                 }
 
                 .suspect-profile {
-                    width: 75%;
+                    width: 90%;
                     height: 100%;
                     display: flex;
                     flex-direction: column;
@@ -414,13 +414,13 @@ const ChattingPage: React.FC = () => {
                 }
 
                 .suspect-image-wrapper {
-                    width: 100%;
+                    width: 70%;
                     height: 47%;
                     display: flex;
                     justify-content: center;
                     align-items: center;
                     position: relative;
-                    top: 0%;
+                    top: -5%;
                 }
 
                 .tape-section {
@@ -448,7 +448,7 @@ const ChattingPage: React.FC = () => {
 
                 .suspect-image-wrapper {
                     position: relative; /* 테이프와 이미지를 하나의 컨테이너로 묶음 */
-                    width: 70%;
+                    width: 50%;
                     height: auto;
                     display: flex;
                     justify-content: center;
@@ -466,7 +466,8 @@ const ChattingPage: React.FC = () => {
                     display: grid;
                     grid-template-columns: auto 1fr;
                     gap: 0.2rem 0.5rem;
-                    font-size: calc(0.9vw + 1.1vh);
+                    font-size: calc(0.8vw + 1vh);
+                    margin-top: -2vh;
                 }
 
                 .info-label {
