@@ -50,16 +50,11 @@ const EvidencePage: React.FC = () => {
 
     const openPopup = () => {
         setActivePopup(true); // 팝업 열기
-      };
-    
-      const closePopup = () => {
-        setActivePopup(false); // 팝업 닫기
-      };    
-
-      const wrapText = (text: string, maxLength: number): string => {
-        const regex = new RegExp(`.{1,${maxLength}}`, 'g');
-        return text.match(regex)?.join('\n') ?? text;
     };
+    
+    const closePopup = () => {
+        setActivePopup(false); // 팝업 닫기
+    };    
 
     /*
     const evidenceData = [
@@ -215,7 +210,7 @@ const EvidencePage: React.FC = () => {
                 <div className="popup-content" onClick={(e) => e.stopPropagation()}>
                     <img src={detailedEvidence.image} alt={`Evidence Detail`} className="popup-image" />
                     <p className="popup-description-title">{detailedEvidence.name}</p>
-                    <p className="popup-description">{wrapText(detailedEvidence.description, 20)}</p>
+                    <p className="popup-description">{detailedEvidence.description}</p>
                 </div>
             </div>
             )}
@@ -302,7 +297,7 @@ const EvidencePage: React.FC = () => {
                 .evidence-container {
                     display: flex;
                     justify-content: center;
-                    gap: 8vw; 
+                    gap: 2vw; 
                     padding: 0 4vw;
                     flex-wrap: wrap;
                     width: 100%;
@@ -318,8 +313,11 @@ const EvidencePage: React.FC = () => {
                 }
 
                 .evidence-name {
-                    margin-top: 0.5rem;
-                    font-size: 1.2rem;
+                    margin-top: 0.5vh;
+                    text-align: center;
+                    margin-bottom: 0.5vh;
+                    margin: 2vh 0;
+                    font-size: 2.2vw;
                     color: #fff; /* Adjust color as needed */
                     text-align: center;
                     font-family: 'BinggraeII'; /* Replace with your font */
@@ -384,7 +382,7 @@ const EvidencePage: React.FC = () => {
                     flex-direction: column;
                     align-items: center;
                     width: 100%;
-                    height: 30%;
+                    height: auto;
                     justify-content: center;
                 }
 
@@ -399,6 +397,7 @@ const EvidencePage: React.FC = () => {
                 }
 
                 .investigate-button {
+                    margin-top: 0.1vh;
                     background-color: transparent;
                     color: #ff0000;
                     border: none;
@@ -406,7 +405,7 @@ const EvidencePage: React.FC = () => {
                     border-radius: 10px;
                     cursor: pointer;
                     transition: all 0.3s ease;
-                    font-size: 1.5vw;
+                    font-size: 2.5vw;
                     font-family: 'BinggraeII';
                 }
 
@@ -456,7 +455,8 @@ const EvidencePage: React.FC = () => {
                 .popup-description-title {
                     color: black;
                     text-align: center;
-                    font-size: clamp(30px, 2vw, 50px);
+                    font-weight: bold;
+                    font-size: calc(2.3vw + 1.7vh);
                     text-shadow: 0.6px 0.6px 0.6px rgba(0, 0, 0, 0.5);
                     font-family: 'THEFACESHOP_INKLIPQUID';
                     margin-bottom: 2vh;
@@ -465,15 +465,13 @@ const EvidencePage: React.FC = () => {
                 .popup-description {
                     color: black;
                     text-align: center;
+                    width: 80%;
                     padding: 0 4vw;
-                    font-size: clamp(20px, 1.8vw, 30px);
+                    font-size: calc(1.5vw + 0.9vh);
                     font-family: 'THEFACESHOP_INKLIPQUID';
                     line-height: 1.5;
-                    word-wrap: break-word; /* 줄바꿈 */
-                    overflow-wrap: break-word; /* 긴 단어를 강제로 줄바꿈 */
-                    text-overflow: ellipsis; /* 필요시 생략 표시 (...) */
-                    max-width: 90%; /* 팝업 컨테이너 크기에 맞춤 */
-                    white-space: pre-wrap; /* 줄바꿈을 허용 */
+                    word-break: keep-all; 
+                    white-space: pre-wrap; 
                 }
 
 
