@@ -4,7 +4,7 @@ import { useAudio } from "./MainAudioContext"; // AudioContext 사용
 import { createEvidence, createSuspect } from "../services/apiService"; // API 서비스 가져오기
 
 interface ScenarioData {
-  user_id: '1'
+  user_id: number,
   year: string,
   month: string,
   day: string,
