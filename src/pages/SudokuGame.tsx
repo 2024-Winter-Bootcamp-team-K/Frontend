@@ -100,7 +100,6 @@ const SudokuGame: React.FC = () => {
       const newBoardState = boardState.map(row => [...row]);
       const cellKey = `${selectedCell.row}-${selectedCell.col}`;
       
-      // Store previous move before making changes
       setPreviousMoves(prev => [...prev, { 
         boardState: boardState.map(row => [...row]), 
         selectedCell: selectedCell 
@@ -243,7 +242,7 @@ const SudokuGame: React.FC = () => {
 
       {isGameComplete() && (
         <div className="text-center text-green-600 mt-4 text-2xl font-bold">
-          축하합니다! 스도쿠를 완성했습니다!
+          Game Complete!
         </div>
       )}
     </div>
