@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAudio } from "./MainAudioContext"; // AudioContext 사용
 import { createEvidence, createSuspect } from "../services/apiService"; // API 서비스 가져오기
+import styled from "styled-components";
+import GamePage1 from "../pages/GamePage1";
+import GamePage2 from "../pages/GamePage2";
+import GamePage3 from "../pages/GamePage3";
+
 
 interface ScenarioData {
   user_id: number,
@@ -29,6 +34,22 @@ const LoadingScenarioPage: React.FC = () => {
   const [fullText, setFullText] = useState<string>('');
   const [_isAPILoading, setIsAPILoading] = useState(false); // API 로딩 상태
   const [progressMessage, setProgressMessage] = useState<string>(''); // 진행 중 메시지 상태
+  const [isMiniGameOpen, setIsMiniGameOpen] = useState(false);
+  const [activeGame, setActiveGame] = useState<string | null>(null); // 활성화된 게임
+
+  // 모달 열기/닫기
+  const toggleMiniGameModal = () => {
+    setIsMiniGameOpen((prev) => !prev);
+  };
+
+  // 특정 게임 열기
+  const openGame = (game: string) => {
+    setActiveGame(game); // 특정 게임 열기
+  };
+  
+  const closeGame = () => {
+    setActiveGame(null); // 게임 닫기
+  };
 
   useEffect(() => {
     const fetchScenario = async () => {
@@ -292,6 +313,44 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
 
       )}
 
+       {/* Game Icon */}
+       <GameIcon onClick={toggleMiniGameModal}>
+        <img src="/images/gameIcon.png" alt="Game Icon" />
+      </GameIcon>
+
+      {/* Mini Game List Modal */}
+      {isMiniGameOpen && (
+        <MiniGameContainer onClick={toggleMiniGameModal}>
+          <CardContainer onClick={(e) => e.stopPropagation()}>
+          <Card onClick={() => openGame("game1")}>
+            <CardImage src="/images/minigame1.png" alt="Find Game" />
+            <CardTitle>틀린 그림</CardTitle>
+          </Card>
+          <Card onClick={() => openGame("game2")}>
+            <CardImage src="/images/minigame2.png" alt="Quiz Game" />
+            <CardTitle>슈팅 게임</CardTitle>
+          </Card>
+          <Card onClick={() => openGame("game3")}>
+            <CardImage src="/images/minigame3.png" alt="Typing Practice" />
+            <CardTitle>스도쿠 게임</CardTitle>
+          </Card>
+          </CardContainer>
+
+        </MiniGameContainer>
+      )}
+
+        {/* MiniGame 팝업 */}
+        {activeGame && (
+          <GamePopup onClick={closeGame}>
+            <GamePopupContent onClick={(e) => e.stopPropagation()}>
+            {activeGame === "game1" && <GamePage1 />}
+            {activeGame === "game2" && <GamePage2 />}
+            {activeGame === "game3" && <GamePage3 />}
+
+            </GamePopupContent>
+          </GamePopup>
+        )}
+
       {/* 진행 중 메시지 */}
       {isAudioEnabled && progress < 100 && (
         <p
@@ -318,7 +377,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
         </p>
       )}
 
-      <style>{`
+        <style>{`
       .animated-button {
         font-size: 20px;
         padding: 4px 10px;
@@ -348,3 +407,104 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
 };
 
 export default LoadingScenarioPage;
+
+// Styled Components
+const GameIcon = styled.div`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  cursor: pointer;
+
+  img {
+    width: 50px;
+    height: 50px;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  &:hover {
+    transform: scale(1.1); /* 호버 시 확대 */
+  }
+`;
+
+const MiniGameContainer = styled.div`
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const CardContainer = styled.div<{ offsetX: number }>`
+  display: flex;
+  gap: 30px; /* 카드 간 간격을 30px로 설정 */
+  transform: translateX(calc(${(props) => props.offsetX}% - 50%));
+  transition: transform 0.1s ease-out; /* 부드러운 이동 */
+  position: fixed;
+  bottom: 20%;
+  left: 18%;
+  transform: translateX(calc(-50% + ${(props) => props.offsetX}%));
+  width: 80%;
+  background: rgba(255, 255, 255, 0); /* 투명 배경 */
+  border-radius: 15px;
+  
+`;
+
+const Card = styled.div`
+  flex: 0 0 auto;
+  width: 300px; /* 너비를 300px로 설정 */
+  height: 400px; /* 높이를 400px로 설정 */
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  color: white;
+  transition: transform 0.2s ease, background 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1); /* Hover 시 확대 */
+    background: rgba(255, 255, 255, 0.2);
+  }
+`;
+
+const CardImage = styled.img`
+  width: 100%; /* 카드의 너비에 맞게 조정 */
+  height: 60%; /* 높이를 60%로 설정 */
+  object-fit: cover;
+  border-radius: 10px;
+`;
+
+const CardTitle = styled.h3`
+  font-size: 3rem; /* 제목 크기 증가 */
+  margin: 10px 0;
+  text-align: center;
+  font-weight: bold; /* 제목의 굵기를 굵게 설정 */
+  color: black;
+  white-space: nowrap; /* 줄바꿈 방지 */
+  overflow: visible; /* 제목이 카드 밖으로 나가도 표시 */
+  text-overflow: unset; /* 텍스트 생략 없이 전체 표시 */
+`;
+
+
+const GamePopup = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* 검정 반투명 배경 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  border: none; /* 배경 테두리가 있을 경우 제거 */
+`;
+
+const GamePopupContent = styled.div`
+  background-color: transparent;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+`;
+
