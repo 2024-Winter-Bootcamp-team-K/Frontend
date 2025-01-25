@@ -3,9 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAudio } from "./MainAudioContext"; // AudioContext 사용
 import { createEvidence, createSuspect } from "../services/apiService"; // API 서비스 가져오기
 import styled from "styled-components";
-import GamePage1 from "../pages/GamePage1";
-import GamePage2 from "../pages/GamePage2";
-import GamePage3 from "../pages/GamePage3";
+import GamePage1 from "./GamePage1";
+import GamePage2 from "./GamePage2";
 
 
 interface ScenarioData {
@@ -315,22 +314,25 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
 
        {/* Game Icon */}
        <GameIcon onClick={toggleMiniGameModal}>
-        <img src="/images/gameIcon.png" alt="Game Icon" />
+        <img 
+        src="/images/gameIcon.png"
+        style={{
+          color: 'white',
+          width: '6vw',
+          height: 'auto'
+          }} 
+        alt="Game Icon" />
       </GameIcon>
 
       {/* Mini Game List Modal */}
       {isMiniGameOpen && (
         <MiniGameContainer onClick={toggleMiniGameModal}>
-          <CardContainer onClick={(e) => e.stopPropagation()}>
+          <CardContainer offsetX={50} onClick={(e) => e.stopPropagation()}>
           <Card onClick={() => openGame("game1")}>
-            <CardImage src="/images/minigame1.png" alt="Find Game" />
-            <CardTitle>틀린 그림</CardTitle>
-          </Card>
-          <Card onClick={() => openGame("game2")}>
             <CardImage src="/images/minigame2.png" alt="Quiz Game" />
             <CardTitle>슈팅 게임</CardTitle>
           </Card>
-          <Card onClick={() => openGame("game3")}>
+          <Card onClick={() => openGame("game2")}>
             <CardImage src="/images/minigame3.png" alt="Typing Practice" />
             <CardTitle>스도쿠 게임</CardTitle>
           </Card>
@@ -345,7 +347,6 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
             <GamePopupContent onClick={(e) => e.stopPropagation()}>
             {activeGame === "game1" && <GamePage1 />}
             {activeGame === "game2" && <GamePage2 />}
-            {activeGame === "game3" && <GamePage3 />}
 
             </GamePopupContent>
           </GamePopup>
@@ -438,17 +439,15 @@ const MiniGameContainer = styled.div`
 
 const CardContainer = styled.div<{ offsetX: number }>`
   display: flex;
-  gap: 30px; /* 카드 간 간격을 30px로 설정 */
-  transform: translateX(calc(${(props) => props.offsetX}% - 50%));
+  gap: 1.5vw; /* 카드 간 간격을 30px로 설정 */
+  transform: translateX(calc(${(props) => props.offsetX}%));
   transition: transform 0.1s ease-out; /* 부드러운 이동 */
   position: fixed;
   bottom: 20%;
-  left: 18%;
-  transform: translateX(calc(-50% + ${(props) => props.offsetX}%));
+  transform: translateX(calc(-27% + ${(props) => props.offsetX}%));
   width: 80%;
   background: rgba(255, 255, 255, 0); /* 투명 배경 */
   border-radius: 15px;
-  
 `;
 
 const Card = styled.div`
@@ -479,7 +478,7 @@ const CardTitle = styled.h3`
   margin: 10px 0;
   text-align: center;
   font-weight: bold; /* 제목의 굵기를 굵게 설정 */
-  color: black;
+  color:rgb(187, 187, 186);
   white-space: nowrap; /* 줄바꿈 방지 */
   overflow: visible; /* 제목이 카드 밖으로 나가도 표시 */
   text-overflow: unset; /* 텍스트 생략 없이 전체 표시 */
