@@ -9,7 +9,7 @@ import GamePage3 from "../pages/GamePage3";
 
 
 interface ScenarioData {
-  user_id: '1'
+  user_id: number,
   year: string,
   month: string,
   day: string,

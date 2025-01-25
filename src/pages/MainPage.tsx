@@ -1,11 +1,10 @@
-//메인 카드형
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../hooks/axiosInstance.ts";
 import { useUser } from "../hooks/UserContext";
 import { useAudio } from "./MainAudioContext";
-import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import { faVolumeHigh,faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface ScenarioResponse {
@@ -19,9 +18,9 @@ interface Scenario {
   level: number;
   type: string;
   is_success: boolean;
+  created_at: string;
 }
 
-// API 서비스 함수
 const historyService = {
   getHistories: (userId: number) =>
     axiosInstance.get<ScenarioResponse>("/histories", {
@@ -35,13 +34,17 @@ const MainPage: React.FC = () => {
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [offsetX, setOffsetX] = useState(0); // 마우스 위치에 따른 이동
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const { userId, updateUserIdFromPath } = useUser();
   const { toggleAudioPlay } = useAudio();
 
   const playSound = () => {
     const audio = new Audio("/sounds/book.mp3");
     audio.play();
+  };
+
+  const handleExit = () => {
+    navigate('/login'); 
   };
 
   const handleNavigation = (path: string) => {
@@ -52,34 +55,52 @@ const MainPage: React.FC = () => {
     setIsModalOpen((prev) => !prev);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isModalOpen) return; // 모달이 열리지 않은 경우 무시
+  const handleKeyboardNavigation = useCallback((e: KeyboardEvent) => {
+    if (!isModalOpen || scenarios.length === 0) return;
 
-    const screenWidth = window.innerWidth;
-    const mouseX = e.clientX;
+    const moveCards = (direction: 'right' | 'left') => {
+      const totalCards = scenarios.length;
+      
+      if (direction === 'left') {
+        setCurrentCardIndex((prevIndex) => 
+          prevIndex === 0 ? totalCards - 1 : prevIndex - 1
+        );
+      } else {
+        setCurrentCardIndex((prevIndex) => 
+          (prevIndex + 1) % totalCards
+        );
+      }
+    };
 
-    // 화면 중앙에서 움직임 제한
-    const centerThreshold = screenWidth * 0.4; // 중앙 40% 영역
-    const moveFactor = 0.9; // 이동 속도 감소
-    const maxOffset = scenarios.length * 20 - 80; // 카드 개수에 따라 이동 제한
-
-    if (mouseX < centerThreshold) {
-      // 화면 왼쪽
-      setOffsetX((prev) => Math.min(prev + moveFactor, maxOffset));
-    } else if (mouseX > screenWidth - centerThreshold) {
-      // 화면 오른쪽
-      setOffsetX((prev) => Math.max(prev - moveFactor, -maxOffset));
+    switch (e.key) {
+      case 'ArrowLeft':
+        moveCards('left');
+        break;
+      case 'ArrowRight':
+        moveCards('right');
+        break;
     }
-  };
+  }, [isModalOpen, scenarios.length]);
 
   const handleBackgroundClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
 
     // 카드 외부 클릭 시 모달 닫기
-    if (!target.closest(".card-container") && !target.closest(".button-wrapper")) {
+    if (
+      !target.closest(".bgm-toggle") && 
+      !target.closest(".card-container") && 
+      !target.closest(".button-wrapper")
+    ) {
       setIsModalOpen(false);
     }
   };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyboardNavigation);
+    return () => {
+      window.removeEventListener('keydown', handleKeyboardNavigation);
+    };
+  }, [handleKeyboardNavigation]);
 
   useEffect(() => {
     updateUserIdFromPath();
@@ -98,22 +119,16 @@ const MainPage: React.FC = () => {
     fetchHistories();
   }, [userId, updateUserIdFromPath]);
 
-  if (isLoading)
-    return (
-      <div className="loading-container">
-        <p>정보를 불러오는 중...</p>
-      </div>
-    );
-
-  if (error) {
-    return <div className="error-message">{error}</div>;
-  }
+  if (isLoading) return null;
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
     <Background
-      onMouseMove={handleMouseMove}
       onClick={handleBackgroundClick}
     >
+      <ExitButton className="exit-button" onClick={handleExit}>
+        <FontAwesomeIcon icon={faSignOutAlt} />
+      </ExitButton>
       <PlayButtonWrapper className="button-wrapper">
         <PlayButton onClick={toggleModal}>플레이 기록</PlayButton>
       </PlayButtonWrapper>
@@ -129,7 +144,6 @@ const MainPage: React.FC = () => {
         </ScenarioButton>
       </ScenarioButtonWrapper>
 
-      {/* BGM 토글 버튼 */}
       <button className="bgm-toggle" onClick={toggleAudioPlay}>
         <FontAwesomeIcon icon={faVolumeHigh}/>
         <style> {`
@@ -151,115 +165,232 @@ const MainPage: React.FC = () => {
       </button>
 
       {isModalOpen && (
-        <CardContainer className="card-container" offsetX={offsetX}>
-          {scenarios.map((scenario) => (
-            <Card
-              key={scenario.id}
-              onClick={() => {
-                playSound();
-                handleNavigation(`/history/${scenario.id}`);
-              }}
-            >
-              <CardImage src={scenario.image} alt={scenario.name} />
-              <CardTitle>{`사건 일지 #${String(scenario.id).padStart(3, "0")}`}</CardTitle>
-             
-              <CardDetail>{`타입: ${scenario.type}`}</CardDetail>
-            </Card>
-          ))}
+        <CardContainer>
+          {scenarios.map((scenario, index) => {
+            const positionDiff = index - currentCardIndex;
+            const absPositionDiff = Math.abs(positionDiff);
+            
+            let translateX = 0;
+            let scale = 1;
+            let zIndex = 0;
+            let overlay = 0;
+            
+            if (positionDiff === 0) {
+              translateX = 0;
+              scale = 1.4;
+              zIndex = 10; 
+              overlay = 0; 
+            } else if (positionDiff < 0) {
+              translateX = -100 * absPositionDiff;
+              zIndex = 5 - absPositionDiff;
+              overlay = 0.5; 
+            } else {
+              translateX = 100 * absPositionDiff;
+              zIndex = 5 - absPositionDiff;
+              overlay = 0.5; 
+            }
+
+            return (
+              <Card
+                key={scenario.id}
+                $translateX={translateX}
+                $scale={scale}
+                $zIndex={zIndex}
+                $overlay={overlay}
+                onClick={() => {
+                  playSound();
+                  handleNavigation(`/history/${scenario.id}`);
+                }}
+              >
+                <CardOverlay $opacity={overlay} />
+                <CardImage src={scenario.image} alt={scenario.name} />
+                <CardTitle>{`사건 일지 #${String(scenario.id).padStart(3, "0")}`}</CardTitle>
+                <CardDetail>
+                  <ScenarioName>{scenario.name}</ScenarioName>
+                  <br />
+                  <PlayDate>
+                    {'플레이 날짜 '}
+                    {new Date(scenario.created_at).toLocaleString('ko-KR', {
+                      month: '2-digit',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </PlayDate>
+                </CardDetail>
+              </Card>
+            );
+          })}
         </CardContainer>
       )}
     </Background>
-    
   );
 };
 
 export default MainPage;
 
-// Styled Components
+// Styled Components (modified)
 const Background = styled.div`
   position: fixed;
   inset: 0;
   background-image: url(/images/background2.jpg);
   background-size: cover;
   background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ExitButton = styled.button`
+  position: fixed;
+  top: 1.1rem;
+  left: 1.6rem;
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  cursor: pointer;
+  color: #FFFFFF;
+
+  &hover {
+    transform: scale(1.2);
+  }
+`;
+
+const CommonButton = styled.button`
+  background: linear-gradient(135deg, #3a3b3b 0%, #5c5e5e 100%);
+  color: white;
+  font-size: calc(0.8vh + 1.8vw);
+  font-weight: bold;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  font-family: 'BinggraeII';
+  letter-spacing: 1px;
+
+  &:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, #4c4d4d 0%, #6e7070 100%);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const PlayButton = styled(CommonButton)`
+   background: linear-gradient(135deg, #304342 0%, #40605e 100%); 
+
+   &:hover {     
+    background: linear-gradient(135deg, #40605e 0%, #304342 100%); 
+  }
+`;
+
+const ScenarioButton = styled(CommonButton)`
+  background: linear-gradient(135deg, #9b7b5a 0%, #b89474 100%);   
+  
+  &:hover {     
+    background: linear-gradient(135deg, #b89474 0%, #9b7b5a 100%);   
+  }
 `;
 
 const PlayButtonWrapper = styled.div`
   position: absolute;
   top: 53%;
-  left: 8%;
+  left: 3%;
   transform: translateY(-50%);
-`;
-
-const PlayButton = styled.button`
-  background-color: rgba(58, 59, 59, 0.5);
-  color: white;
-  font-size: 1.25rem;
-  font-weight: bold;
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  border: none;
-  cursor: pointer;
+  width: auto;
+  height: auto;
 `;
 
 const ScenarioButtonWrapper = styled.div`
   position: absolute;
-  top: 55%;
+  top: 53%;
   left: 49%;
   transform: translate(-50%, -50%);
+  width: auto;
+  height: auto;
 `;
 
-const ScenarioButton = styled(PlayButton)``;
-
-const CardContainer = styled.div<{ offsetX: number }>`
+const CardContainer = styled.div`
   display: flex;
-  gap: 20px;
-  transform: translateX(calc(${(props) => props.offsetX}% - 50%));
-  transition: transform 0.1s ease-out; /* 부드러운 이동 */
-  position: fixed;
-  bottom: 20%;
-  left: 50%;
-  transform: translateX(calc(-50% + ${(props) => props.offsetX}%));
+  justify-content: center;
+  align-items: center;
+  position: relative;
   width: 80%;
-  background: rgba(255, 255, 255, 0); /* 투명 배경 */
-  border-radius: 15px;
-  padding: 20px;
+  height: 100%;
 `;
 
-const Card = styled.div`
+const Card = styled.div<{ $translateX: number; $scale: number; $zIndex: number; $overlay: number }>`
   flex: 0 0 auto;
-  width: 200px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 20px;
+  width: 36vh;
+  height: 45vh;
+  background-image: url(/images/papyrus.png);
+  background-size: cover;
+  background-position: center;
+  border-radius: 1px;
+  padding: 2.2vw;
   color: white;
-  transition: transform 0.2s ease, background 0.2s ease;
+  position: absolute;
+  transition: transform 0.3s ease;
+  transform: 
+    translateX(${props => props.$translateX}%) 
+    scale(${props => props.$scale});
+  z-index: ${props => props.$zIndex};
+  cursor: pointer;
+`;
 
-  &:hover {
-    transform: scale(1.1); /* Hover 시 확대 */
-    background: rgba(255, 255, 255, 0.2);
-  }
+const CardOverlay = styled.div<{ $opacity: number }>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, ${props => props.$opacity});
+  z-index: 1;
 `;
 
 const CardImage = styled.img`
   width: 100%;
-  height: 100px;
+  height: 16vh;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 5px;
+  position: relative;
+  z-index: 2;
 `;
 
 const CardTitle = styled.h3`
-  font-size: 1.2rem;
-  margin: 10px 0;
+  font-size: calc(1.2vh + 2vw);
+  margin: 0.5vh 0;
   text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold; /* 제목의 굵기를 굵게 설정 */
+  font-family: 'THEFACESHOP_INKLIPQUID';
+  font-weight: bold;
   color: black;
+  position: relative;
+  z-index: 2;
 `;
 
-const CardDetail = styled.p`
-  font-size: 0.9rem;
-  color: #000000;
-  font-size: 1.2rem;
+const CardDetail = styled.div`
   text-align: center;
+  font-family: 'THEFACESHOP_INKLIPQUID';
+  position: relative;
+  z-index: 2;
+  line-height: 1.0; 
+`;
+
+const ScenarioName = styled.p`
+  font-size: calc(1.1vh + 1.6vw); 
+  color: #000000;
+  margin: 0.3vh 0;
+`;
+
+const PlayDate = styled.p`
+  font-size: calc(0.8vh + 1vw); 
+  color: #000000; 
+  margin: 0.2vh 0;
 `;

@@ -14,19 +14,29 @@ const EndingPage: React.FC = () => {
   const {scenarioId} = useParams<{scenarioId: string}>();
   const navigate = useNavigate();
   const { userId } = useUser();
+  const [interrogationsCount, setInterrogationsCount] = useState(0);
+
+  useEffect(() => {
+    const storedCount = parseInt(localStorage.getItem("interrogationsCount") || "0", 10);
+    setInterrogationsCount(storedCount);
+  }, []);
+
   const [historyData, setHistoryData] = useState<{
-    playTime: String;
+    playTime: string;
     suspectsCount: number;
     evidencesCount: number;
     interrogationsCount: number;
   } | null>(null);
-  const [_loading, setLoading] = useState(true);
-  const [_error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [playTime, setPlayTime] = useState<string>("");
 
   useEffect(() => {
     const fetchHistoryData = async () => {
       try {
         setLoading(true);
+        setError(null);
+
         if (!scenarioId) {
           setError("유효하지 않은 시나리오 ID입니다.");
           return;
@@ -36,15 +46,33 @@ const EndingPage: React.FC = () => {
           params: { scenario_id: scenarioId},
         });
 
+        console.log("백엔드 응답 데이터:", response.data);
+
         const {scenarios, suspects, evidences} = response.data;
+
+        if (scenarios?.created_at) {
+          const now = new Date();
+          const startTime = new Date(scenarios.created_at);
+
+          const elapsedMilliseconds = now.getTime() - startTime.getTime();
+
+          const hours = Math.floor(elapsedMilliseconds / (1000 * 60 * 60));
+          const minutes = Math.floor(
+            (elapsedMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((elapsedMilliseconds % (1000 * 60)) / 1000);
+
+          const formattedPlayTime = `${hours}시간 ${minutes}분 ${seconds}초`;
+          setPlayTime(formattedPlayTime);
+        }
 
         setHistoryData({
           playTime: scenarios.play_time || "데이터 없음",
-          suspectsCount: suspects.length,
-          evidencesCount: evidences.length,
-          interrogationsCount: suspects.filter((suspect: any) => suspect.init_chat).length,
+          suspectsCount: Array.isArray(suspects) ? suspects.length : 0,
+          evidencesCount: Array.isArray(evidences) ? evidences.length : 0,
+          interrogationsCount: 0,
         });
-      } catch (error) {
+      } catch {
         setError("데이터를 불러오는 데 실패했습니다.");
       } finally {
         setLoading(false);
@@ -53,7 +81,6 @@ const EndingPage: React.FC = () => {
 
     fetchHistoryData();
   }, [scenarioId]);
-  
 
   useEffect(() => {
       // 페이지 로드 시 오디오 재생
@@ -125,6 +152,9 @@ const EndingPage: React.FC = () => {
     navigate(`/MainPage/${userId}`); // 메인 페이지로 이동
   };
 
+  if (loading) return null;
+  if (error) return <div className="error-message">{error}</div>;
+
   return (
     <div className="ending-page">
       <div className="scroll-container" ref={scrollContainerRef}>
@@ -132,13 +162,13 @@ const EndingPage: React.FC = () => {
           <p className="title">Ending Credits</p>
           <p><br /></p>
           <p className="title2">Play Result</p>
-          <p>플레이 시간: {historyData?.playTime}</p>
+          <p>플레이 시간: {playTime}</p>
           <p>조사한 증거: {historyData?.evidencesCount}개</p>
           <p>조사한 용의자: {historyData?.suspectsCount}명</p>
-          <p>진행한 심문: {historyData?.interrogationsCount}회</p>
+          <p>진행한 심문: {interrogationsCount}회</p>
           <p><br /></p>
           <p className="title2">Techeer-2024-Winter-BootCamp-Team-K</p>
-          <p>박근채 - Team Leader, FullStack, DevOps</p>
+          <p>박근채 - Team Leader, CTO</p>
           <p>여상윤 - Backend, DevOps</p>
           <p>박수용 - Backend, DevOps</p>
           <p>이수연 - Frontend</p>
@@ -148,7 +178,7 @@ const EndingPage: React.FC = () => {
           <p className="title2">Thanks For</p>
           <p>Andrew Park</p>
           <p>Ryan</p>
-          <p>Lena</p>
+          <p>Rena</p>
           <p>Mindy</p>
           <p>Justin</p>
           <p>Sean</p>

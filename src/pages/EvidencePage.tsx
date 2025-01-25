@@ -447,7 +447,7 @@ const EvidencePage: React.FC = () => {
                 }
 
                 .popup-image {
-                    width: 50%;
+                    width: 35%;
                     height: auto;
                     object-fit: contain;
                     margin-bottom: 2vh;
