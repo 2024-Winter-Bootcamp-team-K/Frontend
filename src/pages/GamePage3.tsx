@@ -9,11 +9,18 @@ const GamePage3: React.FC = () => {
     setAnswer(e.target.value);
   };
 
+  const playAudio = (audioFile: string) => {
+    const audio = new Audio(audioFile);
+    audio.play();
+  };
+
   const handleCheckAnswer = () => {
     if (answer === "20") {
       setResultMessage("정답입니다! 🎉");
+      playAudio('/sounds/correct.mp3');
     } else {
       setResultMessage("오답입니다. 다시 시도해보세요.");
+      playAudio('/sounds/poka.mp3');
     }
   };
 

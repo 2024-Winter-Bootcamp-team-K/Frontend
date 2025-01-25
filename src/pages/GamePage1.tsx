@@ -5,11 +5,18 @@ const GamePage1: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [resultMessage, setResultMessage] = useState<string | null>(null);
 
+  const playAudio = (audioFile: string) => {
+    const audio = new Audio(audioFile);
+    audio.play();
+  };
+
   const checkAnswer = () => {
     if (inputValue === '5') {
       setResultMessage('정답입니다! 🎉');
+      playAudio('/sounds/correct.mp3');
     } else {
       setResultMessage('틀렸습니다. 다시 시도해보세요.');
+      playAudio('/sounds/poka.mp3');
     }
   };
 
@@ -68,9 +75,6 @@ const GameImage = styled.img`
   left: -116px;
 `;
 
-
-
-
 const ResultMessage = styled.p`
   font-size: 1.2rem;
   color: ${(props) => (props.children === '정답입니다! 🎉' ? 'green' : 'red')};
@@ -78,14 +82,13 @@ const ResultMessage = styled.p`
   margin-bottom: 10px; /* 입력칸과의 간격 */
 `;
 
-
 const AnswerInput = styled.input`
   padding: 10px;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
   width: 200px;
-  color:black;
+  color: black;
 `;
 
 const InputContainer = styled.div`
@@ -112,5 +115,3 @@ const CheckButton = styled.button`
     background-color: #45a049;
   }
 `;
-
-
