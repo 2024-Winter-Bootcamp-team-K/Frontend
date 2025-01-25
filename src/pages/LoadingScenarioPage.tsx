@@ -331,7 +331,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
             <CardTitle>슈팅 게임</CardTitle>
           </Card>
           <Card onClick={() => openGame("game3")}>
-            <CardImage src="/images/minigame3.jpg" alt="Typing Practice" />
+            <CardImage src="/images/minigame3.png" alt="Typing Practice" />
             <CardTitle>스도쿠 게임</CardTitle>
           </Card>
           </CardContainer>
