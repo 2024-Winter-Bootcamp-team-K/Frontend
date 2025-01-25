@@ -4,7 +4,7 @@ import { useAudio } from "./MainAudioContext"; // AudioContext 사용
 import { createEvidence, createSuspect } from "../services/apiService"; // API 서비스 가져오기
 import styled from "styled-components";
 import GamePage1 from "./GamePage1";
-import GamePage2 from "./GamePage2";
+import SudokuGame from "./SudokuGame";
 
 
 interface ScenarioData {
@@ -346,7 +346,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
           <GamePopup onClick={closeGame}>
             <GamePopupContent onClick={(e) => e.stopPropagation()}>
             {activeGame === "game1" && <GamePage1 />}
-            {activeGame === "game2" && <GamePage2 />}
+            {activeGame === "game2" && <SudokuGame />}
 
             </GamePopupContent>
           </GamePopup>
