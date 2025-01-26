@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import axiosInstance from  "../hooks/axiosInstance.ts";
@@ -48,7 +48,9 @@ const ResultPage: React.FC = () => {
   const [thief, setThief] = useState<Suspect | null>(null);
   const [isLoading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showStamp, setShowStamp] = useState<boolean>(false);
   const { scenarioId } = useParams<{ scenarioId: string }>();
+  const stampAudioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -91,12 +93,22 @@ const ResultPage: React.FC = () => {
   }, [scenarioId]);
 
   useEffect(() => {
-    const stampAudio = new Audio("/sounds/Stamp.mp3");
-    stampAudio.volume = 0.5;
-    stampAudio.play().catch((error) => console.error("오디오 재생 오류:", error));
+    stampAudioRef.current = new Audio("/sounds/Stamp.mp3");
+    stampAudioRef.current.volume = 0.5;
+
+    const stampTimer = setTimeout(() => {
+      setShowStamp(true);
+      if (stampAudioRef.current) {
+        stampAudioRef.current.play().catch((error) => console.error("오디오 재생 오류:", error));
+      }
+    }, 1200);
+
     return () => {
-      stampAudio.pause();
-      stampAudio.currentTime = 0;
+      clearTimeout(stampTimer);
+      if (stampAudioRef.current) {
+        stampAudioRef.current.pause();
+        stampAudioRef.current.currentTime = 0;
+      }
     };
   }, []);
 
@@ -171,16 +183,44 @@ const ResultPage: React.FC = () => {
           <img
             src="/images/WANTED.png"
             alt="WANTED Stamp"
+            className={`absolute top-[33%] left-1/2 transform -translate-x-1/2 w-[17vw] h-auto z-[3] ${
+              showStamp ? "opacity-100" : "opacity-0"
+            }`}
             style={{
-              position: "absolute",
-              top: "0",
-              left: "50%",
-              transform: "translate(-50%, 100%)",
-              width: "17vw",
-              height: "auto",
-              zIndex: 3,
+              animationName: showStamp ? "stamp-scale, stamp-seal-ink" : "none",
+              animationDuration: "0.4s, 0.5s",
+              animationTimingFunction: "ease-out, ease-in-out",
+              animationFillMode: "forwards",
+              animationDelay: "0s, 0.4s", 
+              transition: "opacity 0.5s ease",
             }}
           />
+
+          <style>{`
+           @keyframes stamp-scale {
+              0% {
+                transform: translate(-50%, 0%) scale(1.5);
+                opacity: 0;
+              }
+              50% {
+                transform: translate(-50%, 0%) scale(1.2);
+                opacity: 1;
+              }
+              100% {
+                transform: translate(-50%, 0%) scale(1);
+                opacity: 1;
+              }
+            }
+            @keyframes stamp-seal-ink {
+              0%, 50% {
+                filter: brightness(0.7) contrast(1.2);
+              }
+              100% {
+                filter: brightness(1) contrast(1);
+              }
+            }
+          `}</style>
+
 
           {/* 범인 이름 */}
           <div
