@@ -101,21 +101,22 @@ const InitChatPage: React.FC = () => {
             style={{
               display: "flex",
               justifyContent: "space-around",
+              alignItems: "center",
               width: "100%",
-              maxWidth: "1200px",
-              gap: "4vw",
+              height: "100vh",
             }}
           >
             {suspects.map((suspect, index) => (
               <div
                 key={index}
                 style={{
-                  flex: "0 1 auto",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  width: "26%",
+                  width: "20vw",
+                  height: "50vh",
+                  position: "relative"
                 }}
                 className={`transition-opacity duration-1000 ${
                   visibleSuspect >= index ? "opacity-100" : "opacity-0"
@@ -124,10 +125,9 @@ const InitChatPage: React.FC = () => {
                 {/* 용의자의 초기 대화 */}
                 <div
                   style={{
-                    flex: "1",
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "center",
+                    justifyContent: "space-around",
                     alignItems: "center",
                     minHeight: "15vh",
                   }}
@@ -159,7 +159,7 @@ const InitChatPage: React.FC = () => {
                     style={{
                       width: "10vw",
                       height: "10vw",
-                      marginBottom: "3vh",
+                      marginBottom: "1vh",
                     }}
                   />
                   <p style={{ fontSize: "1.5vw" }} className="text-center font-intelmono">
@@ -194,7 +194,7 @@ const InitChatPage: React.FC = () => {
           display: inline-block;
           text-align: center;
           line-height: 1.3;
-          background-color: white;
+          background: white;
           color: black;
           padding: 1.2vh 1.2vw;
           box-shadow: 
