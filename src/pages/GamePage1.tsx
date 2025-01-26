@@ -179,14 +179,21 @@ const GamePage1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   >
     <Player style={{ left: `${playerPosition.x}%`, top: `${playerPosition.y}%` }} />
     {missiles.map((missile, index) => (
-      <Missile
-        key={index}
-        style={{
-          left: `${(missile.x / gameAreaRef.current!.clientWidth) * 100}%`,
-          top: `${(missile.y / gameAreaRef.current!.clientHeight) * 100}%`,
-        }}
-      />
-    ))}
+  <img
+    key={index}
+    src="/images/flame.png" /* 픽셀아트 미사일 이미지 경로 */
+    alt="Missile"
+    style={{
+      position: 'absolute',
+      width: '2%', /* 미사일의 너비 */
+      height: '6%', /* 미사일의 높이 */
+      left: `${(missile.x / gameAreaRef.current!.clientWidth) * 100}%`,
+      top: `${(missile.y / gameAreaRef.current!.clientHeight) * 100}%`,
+      transform: 'translate(-50%, -50%)',
+    }}
+  />
+))}
+
     {enemies.map((enemy, index) => (
       <Enemy key={index} style={{ left: `${enemy.x}%`, top: `${enemy.y}%` }} />
     ))}
@@ -215,41 +222,47 @@ const PopupContainer = styled.div`
 
 const GameArea = styled.div`
   position: relative;
-  width: 70vw; /* 너비를 화면의 70%로 설정 */
-  height: auto; /* 높이를 자동으로 계산 */
-  aspect-ratio: 14 / 10; /* 가로:세로 비율을 16:9로 고정 */
-  background-color: black;
+  width: 70vw;
+  aspect-ratio: 16 / 9; /* 가로:세로 비율 유지 */
+  background-image: url('/images/space.jpg'); /* 우주 배경 이미지 경로 */
+  background-size: cover; /* 배경 이미지가 영역을 채우도록 설정 */
+  background-repeat: no-repeat; /* 이미지 반복 방지 */
+  background-position: center; /* 배경 이미지 중앙 정렬 */
   border: 2px solid white;
-  cursor: default;
+  cursor: default; /* 내부 클릭 시 이벤트 전파 방지 */
 `;
+
+
 
 
 const Player = styled.div`
   position: absolute;
-  width: 3%;
-  height: 3%;
-  background-color: blue;
-  border-radius: 50%;
+  width: 5%; /* 플레이어의 너비 */
+  height: 5%; /* 플레이어의 높이 */
+  background-image: url('/images/robot.png'); /* 로봇 이미지 경로 */
+  background-size: contain; /* 이미지 크기 조정 */
+  background-repeat: no-repeat; /* 이미지 반복 방지 */
+  background-position: center; /* 이미지 중앙 정렬 */
   transform: translate(-50%, -50%);
 `;
 
-const Missile = styled.div`
-  position: absolute;
-  width: 1%;
-  height: 1%;
-  background-color: red;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-`;
+
+
+
+
+
 
 const Enemy = styled.div`
   position: absolute;
-  width: 3%;
-  height: 3%;
-  background-color: green;
-  border-radius: 50%;
+  width: 5%; /* 이미지의 너비 */
+  height: 5%; /* 이미지의 높이 */
+  background-image: url('/images/enemy.png'); /* 적 이미지 경로 */
+  background-size: contain; /* 이미지 크기 조정 */
+  background-repeat: no-repeat; /* 이미지 반복 방지 */
+  background-position: center; /* 이미지 중앙 정렬 */
   transform: translate(-50%, -50%);
 `;
+
 
 const Score = styled.div`
   position: absolute;
