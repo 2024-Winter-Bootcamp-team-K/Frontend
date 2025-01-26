@@ -44,7 +44,7 @@ const MainPage: React.FC = () => {
   };
 
   const handleExit = () => {
-    navigate('/login'); 
+    navigate('/'); 
   };
 
   const handleNavigation = (path: string) => {
