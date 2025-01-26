@@ -193,6 +193,7 @@ const MakeScenarioPage: React.FC = () => {
                         <InputWrapper>
                           <DateInputContainer>
                             <Input
+                              placeholder="YYYY MM DD"
                               value={selectedDate}
                               onChange={handleDateChange}
                               maxLength={10}
