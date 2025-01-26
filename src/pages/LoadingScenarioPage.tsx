@@ -149,7 +149,22 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
     setIsAPILoading(true);
     try {
       setProgressMessage('시나리오 불러오는 중...');
-      await new Promise<void>((resolve) => setTimeout(resolve, 10000)); // 시나리오 불러오는 중 대기 (예제: 1초)
+        // 초기 로딩 (0~33%)
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+          const interval = setInterval(() => {
+            setProgress((prevProgress) => {
+              if (prevProgress < 50) {
+                return prevProgress + 1;
+              } else {
+                clearInterval(interval);
+                resolve();
+                return prevProgress;
+              }
+            });
+          }, 1000); // 100ms 간격으로 진행률 증가
+        }, 10000); // 10초 대기
+      });
 
       const increaseProgress = (targetProgress: number, callback?: () => void, message?: string) => {
         setProgressMessage(message || ''); // 진행 중 메시지 업데이트
@@ -170,7 +185,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
       const evidenceResponse = await createEvidence(Number(scenario_id));
       if (evidenceResponse) {
         console.log("Evidence 생성 완료, Scenario ID:", scenario_id);
-        await new Promise<void>((resolve) => increaseProgress(50, resolve, '증거 불러오는 중...'));
+        await new Promise<void>((resolve) => increaseProgress(90, resolve, '증거 불러오는 중...'));
       } else {
         console.error("Evidence 생성 실패");
         return;
