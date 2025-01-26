@@ -166,36 +166,35 @@ const GamePage1: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }, []);
 
   return (
-    <PopupContainer
-      onClick={() => {
-        if (!gameOver) {
-          onClose(); // Close the pop-up if not in a game-over state
-        }
-      }}
-    >
-      <GameArea
-        ref={gameAreaRef}
-        onClick={(e) => {
-          e.stopPropagation(); // Prevent the click from closing the pop-up
+<PopupContainer
+  onClick={() => {
+    onClose(); // Always close the pop-up, even if the game is over
+  }}
+>
+  <GameArea
+    ref={gameAreaRef}
+    onClick={(e) => {
+      e.stopPropagation(); // Prevent the click from closing the pop-up
+    }}
+  >
+    <Player style={{ left: `${playerPosition.x}%`, top: `${playerPosition.y}%` }} />
+    {missiles.map((missile, index) => (
+      <Missile
+        key={index}
+        style={{
+          left: `${(missile.x / gameAreaRef.current!.clientWidth) * 100}%`,
+          top: `${(missile.y / gameAreaRef.current!.clientHeight) * 100}%`,
         }}
-      >
-        <Player style={{ left: `${playerPosition.x}%`, top: `${playerPosition.y}%` }} />
-        {missiles.map((missile, index) => (
-          <Missile
-            key={index}
-            style={{
-              left: `${(missile.x / gameAreaRef.current!.clientWidth) * 100}%`,
-              top: `${(missile.y / gameAreaRef.current!.clientHeight) * 100}%`,
-            }}
-          />
-        ))}
-        {enemies.map((enemy, index) => (
-          <Enemy key={index} style={{ left: `${enemy.x}%`, top: `${enemy.y}%` }} />
-        ))}
-        <Score>Score: {score}</Score>
-        {gameOver && <GameOverText>Game Over</GameOverText>}
-      </GameArea>
-    </PopupContainer>
+      />
+    ))}
+    {enemies.map((enemy, index) => (
+      <Enemy key={index} style={{ left: `${enemy.x}%`, top: `${enemy.y}%` }} />
+    ))}
+    <Score>Score: {score}</Score>
+    {gameOver && <GameOverText>Game Over</GameOverText>}
+  </GameArea>
+</PopupContainer>
+
   );
 };
 
@@ -216,12 +215,14 @@ const PopupContainer = styled.div`
 
 const GameArea = styled.div`
   position: relative;
-  width: 70vw;
-  aspect-ratio: 16 / 9;
+  width: 70vw; /* 너비를 화면의 70%로 설정 */
+  height: auto; /* 높이를 자동으로 계산 */
+  aspect-ratio: 14 / 10; /* 가로:세로 비율을 16:9로 고정 */
   background-color: black;
   border: 2px solid white;
-  cursor: default; /* Prevent propagation */
+  cursor: default;
 `;
+
 
 const Player = styled.div`
   position: absolute;
