@@ -95,7 +95,7 @@ const NotePage: React.FC<NoteProps> = ({ onClose }) => {
       onClick={handleClose}
     >
       <div
-        className="relative bg-no-repeat bg-cover"
+        className="relative bg-no-repeat bg-cover "
         style={{
           backgroundImage: "url('/images/note.png')",
           bottom: "5vh",
@@ -113,7 +113,7 @@ const NotePage: React.FC<NoteProps> = ({ onClose }) => {
         </div>
 
         <textarea
-          className="absolute bg-transparent text-black p-4 placeholder-blue-900 resize-none focus:outline-none font-bold font-cursive text-3xl"
+          className="absolute bg-transparent text-black p-4 placeholder-yellow-950 resize-none focus:outline-none font-bold font-cursive text-3xl"
           style={{
             top: "38%",
             left: "15%",
