@@ -178,16 +178,22 @@ const SudokuGame: React.FC = () => {
 
   return (
     <div 
-      className="w-full max-w-md mx-auto p-4 bg-white/80 backdrop-blur-sm shadow-lg rounded-lg"
+      className="w-[33vw] mx-auto px-[2vw] py-[1vw] bg-gray-300 backdrop-blur-sm shadow-lg rounded-lg"
       tabIndex={0}
       onKeyDown={handleKeyPress}
     >
-      <div className="text-center mb-4">
-        <h1 className="text-2xl font-bold text-gray-900">스도쿠</h1>
-        <p className="text-gray-800">잘못된 시도: {mistakes}회</p>
+      <div 
+        className="absolute inset-[0.5vw] border-2 border-dashed border-gray-500 rounded-lg pointer-events-none"
+      ></div>
+      <div className="text-center mb-2">
+        <h1 className="text-[3vw] font-bold text-gray-900 font-Binggrae tracking-[0.2vw]">스도쿠</h1>
+        <p className="text-gray-800 text-[1.1vw]">잘못된 시도: {mistakes}회</p>
       </div>
 
-      <div className="grid grid-cols-9 gap-1">
+      <div className="grid grid-cols-9 gap-[0.2vw] mx-auto" style={{
+        width: 'calc(9 * 3.2vw)', 
+        height: 'calc(9 * 3.3vw)'  
+      }}>
         {boardState.map((row, rowIndex) => 
           row.map((cell, colIndex) => {
             const cellKey = `${rowIndex}-${colIndex}`;
@@ -201,16 +207,25 @@ const SudokuGame: React.FC = () => {
                 key={cellKey}
                 onClick={() => handleCellSelect(rowIndex, colIndex)}
                 className={`
-                  border-2 border-gray-400 flex items-center justify-center text-xl font-bold
-                  h-10 w-10 cursor-pointer transition-all duration-200
-                  ${isSelected ? 'transform -translate-y-2 scale-110 z-10 shadow-lg' : ''}
+                  border-2 border-gray-400 flex items-center justify-center
+                  cursor-pointer transition-all duration-200 relative
+                  ${isSelected ? 'z-10 shadow-lg' : ''}
                   ${isOriginalPuzzleCell ? 'font-bold text-gray-900' : 'text-gray-900'}
                   ${isIncorrect ? 'text-red-700 bg-red-100 font-bold' : ''}
                   ${isHintCell ? 'bg-yellow-200 animate-pulse' : ''}
-                  ${(rowIndex + 1) % 3 === 0 ? 'mb-2 border-b-4 border-black' : ''}
-                  ${(colIndex + 1) % 3 === 0 ? 'mr-2 border-r-4 border-black' : ''}
+                  ${(rowIndex + 1) % 3 === 0 ? 'mb-[0.4vw] border-b-4 border-black' : ''}
+                  ${(colIndex + 1) % 3 === 0 ? 'mr-[0.4vw] border-r-4 border-black' : ''}
                 `}
+                style={{
+                  width: '3vw',
+                  height: '3vw',
+                  fontSize: '1.5vw',
+                  fontWeight: isOriginalPuzzleCell ? 'bold' : 'normal'
+                }}
               >
+                {isSelected && (
+                  <div className="absolute inset-0 bg-white/70 -z-10 rounded"></div>
+                )}
                 {cell !== 0 ? cell : '+'}
               </div>
             );
@@ -218,30 +233,47 @@ const SudokuGame: React.FC = () => {
         )}
       </div>
 
-      <div className="mt-4 flex justify-center space-x-4">
-        <button 
+      <div className="mt-2 mb-1 flex justify-center space-x-4">
+        <button
           onClick={resetGame}
-          className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700"
+          className="bg-gray-800 text-white rounded hover:bg-gray-700 flex items-center justify-center"
+          style={{
+            width: "10vw", 
+            height: "3vw", 
+            fontSize: "1.2vw"
+          }}
         >
           새 게임
         </button>
-        <button 
+
+        <button
           onClick={undoMove}
-          className="bg-blue-800 text-white p-2 rounded hover:bg-blue-700 disabled:opacity-50"
+          className="bg-blue-800 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center"
+          style={{
+            width: "3vw", 
+            height: "3vw",
+            fontSize: "1vw"
+          }}
           disabled={previousMoves.length === 0}
         >
           <FontAwesomeIcon icon={faUndo} size="lg" />
         </button>
-        <button 
+
+        <button
           onClick={giveHint}
-          className="bg-green-800 text-white p-2 rounded hover:bg-green-700"
+          className="bg-green-800 text-white rounded hover:bg-green-700 flex items-center justify-center"
+          style={{
+            width: "3vw", 
+            height: "3vw",
+            fontSize: "1vw"
+          }}
         >
           <FontAwesomeIcon icon={faLightbulb} size="lg" />
         </button>
       </div>
 
       {isGameComplete() && (
-        <div className="text-center text-green-600 mt-4 text-2xl font-bold">
+        <div className="text-center text-gray-900 mt-4 text-[2vw] font-bold font-Binggrae">
           Game Complete!
         </div>
       )}

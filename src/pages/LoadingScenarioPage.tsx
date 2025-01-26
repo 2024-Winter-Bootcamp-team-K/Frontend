@@ -33,13 +33,7 @@ const LoadingScenarioPage: React.FC = () => {
   const [fullText, setFullText] = useState<string>('');
   const [_isAPILoading, setIsAPILoading] = useState(false); // API 로딩 상태
   const [progressMessage, setProgressMessage] = useState<string>(''); // 진행 중 메시지 상태
-  const [isMiniGameOpen, setIsMiniGameOpen] = useState(false);
   const [activeGame, setActiveGame] = useState<string | null>(null); // 활성화된 게임
-
-  // 모달 열기/닫기
-  const toggleMiniGameModal = () => {
-    setIsMiniGameOpen((prev) => !prev);
-  };
 
   // 특정 게임 열기
   const openGame = (game: string) => {
@@ -327,45 +321,49 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
 
       )}
 
-       {/* Game Icon */}
-       <GameIcon onClick={toggleMiniGameModal}>
+      {/* Game Icon */}
+      <GameIcon onClick={() => setActiveGame('selection')}>
         <img 
-        src="/images/gameIcon.png"
-        style={{
-          color: 'white',
-          width: '6vw',
-          height: 'auto'
+          src="/images/gameIcon.png"
+          style={{
+            color: 'white',
+            width: '6vw',
+            height: 'auto'
           }} 
-        alt="Game Icon" />
+          alt="Game Icon" 
+        />
       </GameIcon>
 
-      {/* Mini Game List Modal */}
-      {isMiniGameOpen && (
-        <MiniGameContainer onClick={toggleMiniGameModal}>
-          <CardContainer offsetX={50} onClick={(e) => e.stopPropagation()}>
-          <Card onClick={() => openGame("game1")}>
-            <CardImage src="/images/minigame2.png" alt="Quiz Game" />
-            <CardTitle>슈팅 게임</CardTitle>
-          </Card>
-          <Card onClick={() => openGame("game2")}>
-            <CardImage src="/images/minigame3.png" alt="Typing Practice" />
-            <CardTitle>스도쿠 게임</CardTitle>
-          </Card>
-          </CardContainer>
-
-        </MiniGameContainer>
+      {/* Game Selection Modal */}
+      {activeGame === 'selection' && (
+        <GameSelectionContainer onClick={closeGame}>
+          <GameCard onClick={(e) => { e.stopPropagation(); openGame('game1'); }}>
+            <GameImage src="/images/minigame2.png" alt="Shooting Game" />
+            <GameTitle>슈팅 게임</GameTitle>
+          </GameCard>
+          <GameCard onClick={(e) => { e.stopPropagation(); openGame('game2'); }}>
+            <GameImage src="/images/minigame3.png" alt="Sudoku Game" />
+            <GameTitle>스도쿠 게임</GameTitle>
+          </GameCard>
+        </GameSelectionContainer>
       )}
 
-        {/* MiniGame 팝업 */}
-        {activeGame && (
-          <GamePopup onClick={closeGame}>
-            <GamePopupContent onClick={(e) => e.stopPropagation()}>
-            {activeGame === "game1" && <GamePage1 />}
-            {activeGame === "game2" && <SudokuGame />}
-
-            </GamePopupContent>
-          </GamePopup>
-        )}
+      {/* Game Popups */}
+      {activeGame === 'game1' && (
+        <GamePopup onClick={closeGame}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <GamePage1 />
+          </div>
+        </GamePopup>
+      )}
+      
+      {activeGame === 'game2' && (
+        <GamePopup onClick={closeGame}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <SudokuGame />
+          </div>
+        </GamePopup>
+      )}
 
       {/* 진행 중 메시지 */}
       {isAudioEnabled && progress < 100 && (
@@ -442,63 +440,52 @@ const GameIcon = styled.div`
   }
 `;
 
-const MiniGameContainer = styled.div`
+const GameSelectionContainer = styled.div`
   position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 `;
 
-const CardContainer = styled.div<{ offsetX: number }>`
-  display: flex;
-  gap: 1.5vw; /* 카드 간 간격을 30px로 설정 */
-  transform: translateX(calc(${(props) => props.offsetX}%));
-  transition: transform 0.1s ease-out; /* 부드러운 이동 */
-  position: fixed;
-  bottom: 20%;
-  transform: translateX(calc(-27% + ${(props) => props.offsetX}%));
-  width: 80%;
-  background: rgba(255, 255, 255, 0); /* 투명 배경 */
+const GameCard = styled.div`
+  width: 21vw;
+  height: 50vh;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 15px;
-`;
-
-const Card = styled.div`
-  flex: 0 0 auto;
-  width: 300px; /* 너비를 300px로 설정 */
-  height: 400px; /* 높이를 400px로 설정 */
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 20px;
-  color: white;
-  transition: transform 0.2s ease, background 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 1.5vw;
+  transition: transform 0.3s ease;
+  cursor: pointer;
 
   &:hover {
-    transform: scale(1.1); /* Hover 시 확대 */
-    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
   }
 `;
 
-const CardImage = styled.img`
-  width: 100%; /* 카드의 너비에 맞게 조정 */
-  height: 60%; /* 높이를 60%로 설정 */
+const GameImage = styled.img`
+  width: 80%;
+  height: 60%;
   object-fit: cover;
   border-radius: 10px;
+  margin-bottom: 4vh;
 `;
 
-const CardTitle = styled.h3`
-  font-size: 3rem; /* 제목 크기 증가 */
-  margin: 10px 0;
+const GameTitle = styled.h3`
+  color: white;
+  font-size: calc(2vw + 1vh);
   text-align: center;
-  font-weight: bold; /* 제목의 굵기를 굵게 설정 */
-  color:rgb(187, 187, 186);
-  white-space: nowrap; /* 줄바꿈 방지 */
-  overflow: visible; /* 제목이 카드 밖으로 나가도 표시 */
-  text-overflow: unset; /* 텍스트 생략 없이 전체 표시 */
+  font-family: 'BinggraeII';
+  font-weight: bold;
 `;
-
 
 const GamePopup = styled.div`
   position: fixed;
@@ -506,19 +493,10 @@ const GamePopup = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6); /* 검정 반투명 배경 */
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 1000;
-  border: none; /* 배경 테두리가 있을 경우 제거 */
-`;
-
-const GamePopupContent = styled.div`
-  background-color: transparent;
-  padding: 40px;
-  border-radius: 15px;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  align-items: center;
+  z-index: 1100;
 `;
 
