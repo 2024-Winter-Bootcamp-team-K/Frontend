@@ -153,6 +153,11 @@ const SignupBox: React.FC = () => {
               className="sign-input" 
               value={formData.confirmPassword}
               onChange={handleInputChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    handleSubmit(); // 엔터 키를 누르면 handleSubmit 호출
+                }
+            }}
             />
             <label className="sign-user-label">Password Check</label>
           </div>
