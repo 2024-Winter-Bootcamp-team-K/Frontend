@@ -16,6 +16,7 @@ const MakeScenarioPage: React.FC = () => {
   const navigate = useNavigate();
   const { userId } = useUser();
   const [loading, setLoading] = useState(false);
+  
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -123,7 +124,7 @@ const MakeScenarioPage: React.FC = () => {
     setLoading(true);
 
     const scenarioData = {
-      user_id: 1,
+      user_id: userId,
       year,
       month,
       day,
