@@ -352,7 +352,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
       {activeGame === 'game1' && (
         <GamePopup onClick={closeGame}>
           <div onClick={(e) => e.stopPropagation()}>
-            <GamePage1 />
+            <GamePage1 onClose={closeGame} />
           </div>
         </GamePopup>
       )}
