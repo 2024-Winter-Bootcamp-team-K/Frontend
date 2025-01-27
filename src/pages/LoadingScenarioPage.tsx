@@ -125,7 +125,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
   const handleAudioPermission = async () => {
     if (typingSoundRef.current) {
       try {
-        await typingSoundRef.current.play();
+        typingSoundRef.current.play();
         typingSoundRef.current.pause(); // 재생 후 일시정지
         setIsAudioEnabled(true); // 오디오 활성화
       } catch (error) {
