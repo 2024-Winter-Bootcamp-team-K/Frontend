@@ -193,6 +193,7 @@ const MakeScenarioPage: React.FC = () => {
                         <InputWrapper>
                           <DateInputContainer>
                             <Input
+                              placeholder="YYYY MM DD"
                               value={selectedDate}
                               onChange={handleDateChange}
                               maxLength={10}
@@ -493,7 +494,7 @@ const Dropdown = styled.select<{ isSelected?: boolean }>`
 `;
 
 const DifficultyRow = styled(Row)`
-  margin-top: 2vh;
+  margin-top: 1vh;
 `;
 
 const DifficultyLabel = styled(Label)`
@@ -525,7 +526,7 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: 3vh;
+  margin-top: 1vh;
 `;
 
 const ButtonText = styled.span`
