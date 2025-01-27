@@ -360,7 +360,7 @@ const SuspectPage: React.FC = ()  => {
                     color: white;
                     text-align: center;
                     margin: 0.1vh 0;
-                    font-size: 1.7vw;
+                    font-size: 1.5vw;
                     font-family: 'BinggraeII';
                     width: 100%;
                     word-wrap: break-word;
