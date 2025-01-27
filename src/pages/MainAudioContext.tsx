@@ -11,6 +11,7 @@ const AudioContext = createContext<AudioContextValue | undefined>(undefined);
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const bgmRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [userControlled, setUserControlled] = useState(false); // 사용자가 수동으로 오디오를 제어했는지 여부
   const location = useLocation(); // 현재 URL 경로 확인
 
   useEffect(() => {
@@ -21,21 +22,23 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       bgmRef.current.play();
     }
 
-    // 현재 경로가 "/"일 때만 BGM을 정지
-    if (location.pathname === "/" || location.pathname.startsWith("/loading")) {
-      if (isPlaying && bgmRef.current) {
-        bgmRef.current.pause();
-        setIsPlaying(false);
-      }
-    } else {
-      if (!isPlaying && bgmRef.current) {
-        bgmRef.current.play().catch((error) => {
-          console.error("BGM 재생 오류:", error);
-        });
-        setIsPlaying(true);
+     // 사용자가 수동으로 제어하지 않은 경우에만 자동 제어
+     if (!userControlled) {
+      if (location.pathname === "/" || location.pathname.startsWith("/loading")) {
+        if (isPlaying && bgmRef.current) {
+          bgmRef.current.pause();
+          setIsPlaying(false);
+        }
+      } else {
+        if (!isPlaying && bgmRef.current) {
+          bgmRef.current.play().catch((error) => {
+            console.error("BGM 재생 오류:", error);
+          });
+          setIsPlaying(true);
+        }
       }
     }
-  }, [location.pathname, isPlaying]);
+  }, [location.pathname, isPlaying, userControlled]);
 
   const toggleAudioPlay = () => {
     if (bgmRef.current) {
@@ -45,9 +48,9 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         bgmRef.current.play();
       }
       setIsPlaying(!isPlaying);
+      setUserControlled(true); // 사용자가 수동으로 제어했음을 표시
     }
   };
-
 
   return (
     <AudioContext.Provider value={{ bgmRef, toggleAudioPlay }}>
