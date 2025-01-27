@@ -5,7 +5,7 @@ const fetchTTS = async (sentence: string, taskId: string) => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ sentence, task_id: taskId }),
+            body: JSON.stringify({ sentence, task_id: String(taskId) }),
         });
 
         if (!response.ok) {
@@ -17,6 +17,7 @@ const fetchTTS = async (sentence: string, taskId: string) => {
         return await fetchTTSAudio(task_id);
     } catch (error) {
         console.error("Error in TTS:", error);
+        console.log("TTS 요청 데이터:", { sentence, taskId });
         throw error;
     }
 };

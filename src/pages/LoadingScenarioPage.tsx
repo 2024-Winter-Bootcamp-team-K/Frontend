@@ -94,7 +94,7 @@ const LoadingScenarioPage: React.FC = () => {
     if (scenarioData) {
       console.log("Setting full text with scenarioData:", scenarioData);
       setFullText(`${scenarioData.year}년 ${scenarioData.month}월 ${scenarioData.day}일 ${scenarioData.hour}시 ${scenarioData.minute}분 경,
-${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데,,,
+${scenarioData.location}에서 ${scenarioData.type}이 발생하였는데,,,
 
 사건을 불러오는 중 입니다...
 `);
