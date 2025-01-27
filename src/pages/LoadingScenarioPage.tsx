@@ -48,11 +48,12 @@ const LoadingScenarioPage: React.FC = () => {
         const response = await fetch(`/api/v1/scenarios/${scenario_id}`);
         console.log("scenario_id:", scenario_id);
         if (!response.ok) {
-          throw new Error(`Failed to fetch scenario: ${response.statusText}`);
+          throw new Error(`Failed to fetch scenario: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
   
         console.log("받아온 시나리오 데이터:", data);
+        console.log(`시나리오 상태: ${response.status} ${response.statusText}`);
 
         if (data.scenarios && data.scenarios.length > 0) {
           // `scenarios` 배열에서 첫 번째 항목 가져오기
