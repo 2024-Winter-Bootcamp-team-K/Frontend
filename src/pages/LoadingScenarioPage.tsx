@@ -100,7 +100,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
 
   useEffect(() => {
     if (!typingSoundRef.current) {
-      typingSoundRef.current = new Audio("/sounds/typing.mp3");
+      typingSoundRef.current = new Audio(`/sounds/typing.mp3?cache-bust=${Date.now()}`);
       typingSoundRef.current.volume = 0.5;
   
       typingSoundRef.current.addEventListener("canplaythrough", () => {
