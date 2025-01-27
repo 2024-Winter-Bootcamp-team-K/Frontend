@@ -45,7 +45,7 @@ const LoadingScenarioPage: React.FC = () => {
   useEffect(() => {
     const fetchScenario = async () => {
       try {
-        const response = await fetch(`/api/v1/scenarios/${scenario_id}`);
+        const response = await fetch(`https://ailibi.click/api/v1/scenarios/${scenario_id}`);
         console.log("scenario_id:", scenario_id);
         console.log("Response Status:", response.status);
         console.log("Response Headers:", response.headers);
