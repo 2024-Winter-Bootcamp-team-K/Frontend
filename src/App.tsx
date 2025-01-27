@@ -27,9 +27,9 @@ const App: React.FC = () => {
       <Router>
         <Routes>
           {/* 시작 페이지 */}
-          <Route path="/login" element={<AudioProvider><LogInPage /></AudioProvider>} /> 
+          <Route path="/" element={<AudioProvider><LogInPage /></AudioProvider>} /> 
           <Route path="/register" element={<SignupBox />} />
-          <Route path="/loginbox" element={<LoginBox />} />
+          <Route path="/login" element={<LoginBox />} />
           <Route path="/video" element={<VideoPage />} />
 
           {/* 메인 페이지 */}

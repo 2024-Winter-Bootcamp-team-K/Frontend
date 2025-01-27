@@ -81,7 +81,7 @@ const SignupBox: React.FC = () => {
           
           setError("");
 
-          setTimeout(() => navigate("/loginbox"), 2000);
+          setTimeout(() => navigate("/login"), 2000);
         }
       } catch (error: unknown) {
         if(axios.isAxiosError(error)) {
