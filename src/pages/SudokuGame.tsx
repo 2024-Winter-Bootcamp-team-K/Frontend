@@ -5,23 +5,29 @@ import { faUndo, faLightbulb } from '@fortawesome/free-solid-svg-icons';
 const generateSudokuBoard = (difficulty = 'medium') => {
   const board = Array.from({ length: 9 }, () => Array(9).fill(0));
   
+  // 1-9 사이의 숫자를 랜덤하게 섞는 함수
+  const shuffleNumbers = () => {
+    const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    for (let i = numbers.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+    }
+    return numbers;
+  };
+
   const solve = (board: number[][]): boolean => {
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
         if (board[row][col] === 0) {
-          for (let num = 1; num <= 9; num++) {
+          // 숫자를 랜덤하게 시도
+          const numbers = shuffleNumbers();
+          for (const num of numbers) {
             if (isValid(board, row, col, num)) {
-              const newBoard = board.map(r => [...r]);
-              newBoard[row][col] = num;
-              
-              if (solve(newBoard)) {
-                for (let i = 0; i < 9; i++) {
-                  for (let j = 0; j < 9; j++) {
-                    board[i][j] = newBoard[i][j];
-                  }
-                }
+              board[row][col] = num;
+              if (solve(board)) {
                 return true;
               }
+              board[row][col] = 0;
             }
           }
           return false;
@@ -32,12 +38,19 @@ const generateSudokuBoard = (difficulty = 'medium') => {
   };
 
   const isValid = (board: number[][], row: number, col: number, num: number) => {
+    // 행 검사
     for (let x = 0; x < 9; x++) {
-      if (board[row][x] === num || board[x][col] === num) return false;
+      if (board[row][x] === num) return false;
     }
     
-    const startRow = row - row % 3;
-    const startCol = col - col % 3;
+    // 열 검사
+    for (let x = 0; x < 9; x++) {
+      if (board[x][col] === num) return false;
+    }
+    
+    // 3x3 박스 검사
+    const startRow = Math.floor(row / 3) * 3;
+    const startCol = Math.floor(col / 3) * 3;
     
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
@@ -48,6 +61,15 @@ const generateSudokuBoard = (difficulty = 'medium') => {
     return true;
   };
 
+  // 초기 숫자 몇 개를 랜덤하게 배치하여 다양한 보드 생성
+  const initializeBoard = () => {
+    const numbers = shuffleNumbers();
+    for (let i = 0; i < 3; i++) {
+      board[Math.floor(Math.random() * 9)][Math.floor(Math.random() * 9)] = numbers[i];
+    }
+  };
+
+  initializeBoard();
   solve(board);
 
   const removeNumbers = (board: number[][], difficulty: string) => {
@@ -55,15 +77,22 @@ const generateSudokuBoard = (difficulty = 'medium') => {
     const counts = { 'easy': 30, 'medium': 45, 'hard': 55 };
     const cellsToRemove = counts[difficulty as keyof typeof counts] || 45;
 
-    let removedCount = 0;
-    while (removedCount < cellsToRemove) {
-      const row = Math.floor(Math.random() * 9);
-      const col = Math.floor(Math.random() * 9);
-      
-      if (boardCopy[row][col] !== 0) {
-        boardCopy[row][col] = 0;
-        removedCount++;
-      }
+    // 셀 위치를 랜덤하게 섞기
+    const positions = [];
+    for (let i = 0; i < 81; i++) {
+      positions.push(i);
+    }
+    for (let i = positions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [positions[i], positions[j]] = [positions[j], positions[i]];
+    }
+
+    // 섞인 위치에서 순서대로 숫자 제거
+    for (let i = 0; i < cellsToRemove; i++) {
+      const pos = positions[i];
+      const row = Math.floor(pos / 9);
+      const col = pos % 9;
+      boardCopy[row][col] = 0;
     }
 
     return boardCopy;
