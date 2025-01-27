@@ -479,7 +479,7 @@ const SuspectPage: React.FC = ()  => {
                     border-radius: 10px;
                     cursor: pointer;
                     transition: all 0.3s ease;
-                    font-size: 1.5vw;
+                    font-size: 1.3vw;
                     font-family: 'BinggraeII';
                 }
 
