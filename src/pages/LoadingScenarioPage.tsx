@@ -46,6 +46,7 @@ const LoadingScenarioPage: React.FC = () => {
     const fetchScenario = async () => {
       try {
         const response = await fetch(`/api/v1/scenarios/${scenario_id}`);
+        console.log("scenario_id:", scenario_id);
         if (!response.ok) {
           throw new Error(`Failed to fetch scenario: ${response.statusText}`);
         }
@@ -100,7 +101,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
 
   useEffect(() => {
     if (!typingSoundRef.current) {
-      typingSoundRef.current = new Audio(`/sounds/typing.mp3?cache-bust=${Date.now()}`);
+      typingSoundRef.current = new Audio("/sounds/typing.mp3");
       typingSoundRef.current.volume = 0.5;
   
       typingSoundRef.current.addEventListener("canplaythrough", () => {
@@ -116,36 +117,23 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
   const handleAudioPermission = async () => {
     if (typingSoundRef.current) {
       try {
-        // canplaythrough 이벤트 대기
-        if (typingSoundRef.current.readyState < 4) {
-          await new Promise<void>((resolve, reject) => {
-            const onCanPlayThrough = () => {
-              typingSoundRef.current?.removeEventListener("canplaythrough", onCanPlayThrough);
-              resolve();
-            };
-            typingSoundRef.current?.addEventListener("canplaythrough", onCanPlayThrough);
-            typingSoundRef.current?.addEventListener("error", (e) => reject(e));
-          });
-        }
-  
-        // 오디오 재생
+        // play()가 완료될 때까지 대기
         await typingSoundRef.current.play();
-        console.log("타이핑 사운드 재생 성공");
+        console.log("오디오 재생 성공");
   
-        // 일시정지 호출 딜레이
+        // 재생이 성공한 경우에만 일시 정지
         setTimeout(() => {
           if (typingSoundRef.current && !typingSoundRef.current.paused) {
             typingSoundRef.current.pause();
-            console.log("타이핑 사운드 일시정지");
+            console.log("오디오 일시 정지");
           }
-        }, 100); // 100ms 딜레이
+        }, 1000); // 딜레이 추가
         setIsAudioEnabled(true);
       } catch (error) {
-        console.error("오디오 재생 오류:", error);
+        console.error("오디오 권한 요청 실패:", error);
       }
     }
   };
-  
 
   const handleAPICalls = async () => {
     if (!scenario_id) {
@@ -221,33 +209,31 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
     const typeInterval = setInterval(() => {
       setText((prev) => {
         if (prev.length < fullText.length) {
-          // 오디오 재생 상태 확인 후 실행
           if (
             typingSoundRef.current &&
-            typingSoundRef.current.readyState >= 2 && // 준비된 상태 확인
-            typingSoundRef.current.paused
+            typingSoundRef.current.readyState >= 2 && // 오디오 준비 상태 확인
+            typingSoundRef.current.paused // 오디오가 정지된 경우에만 실행
           ) {
             typingSoundRef.current.currentTime = 0;
-            typingSoundRef.current
-              .play()
-              .then(() => console.log("타이핑 사운드 재생 성공"))
-              .catch((err) => console.error("타이핑 소리 재생 실패:", err));
+            typingSoundRef.current.play().catch((err) => {
+              console.error("타이핑 사운드 재생 오류:", err);
+            });
           }
           return prev + fullText[prev.length];
         } else {
-          clearInterval(typeInterval);
+          clearInterval(typeInterval); // 타이핑 완료 시 interval 정리
           if (typingSoundRef.current && !typingSoundRef.current.paused) {
-            typingSoundRef.current.pause(); // 완료 시 일시정지
+            typingSoundRef.current.pause(); // 타이핑 완료 후 오디오 정지
           }
           setIsTypingComplete(true);
           return prev;
         }
       });
-    }, 8000);
+    }, 100); // 타이핑 간격 조정
   
     return () => clearInterval(typeInterval);
   }, [isAudioEnabled, fullText]);
-  
+
   useEffect(() => {
     if (progress === 100) {
       const timeout = setTimeout(() => {
