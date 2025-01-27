@@ -243,7 +243,7 @@ ${scenarioData.location}에서 ${scenarioData.type} 사건이 발생하였는데
           return prev;
         }
       });
-    }, 100);
+    }, 8000);
   
     return () => clearInterval(typeInterval);
   }, [isAudioEnabled, fullText]);
