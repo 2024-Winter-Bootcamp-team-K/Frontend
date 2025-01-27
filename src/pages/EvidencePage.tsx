@@ -297,19 +297,12 @@ const EvidencePage: React.FC = () => {
                 .evidence-container {
                     display: flex;
                     justify-content: center;
-                    gap: 2vw; 
+                    gap: 8vw; 
                     padding: 0 4vw;
                     flex-wrap: wrap;
                     width: 100%;
                     height: calc(100vh - 20vh);
                     align-items: center;
-                }
-
-                .evidence-paper {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
                 }
 
                 .evidence-name {
@@ -328,10 +321,8 @@ const EvidencePage: React.FC = () => {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    width: 38vw;
-                    min-width: 280px;
+                    width: 27vw;
                     height: 100%;
-                    max-height: 70vh;
                     opacity: 0;
                     transform: translateY(50px);
                     transition: opacity 0.5s ease, transform 0.5s ease;
@@ -507,76 +498,6 @@ const EvidencePage: React.FC = () => {
                     transform: scale(0.9);
                 }
 
-                @media (max-width: 800px) {
-                    .evidence-container {
-                        flex-direction: column;
-                        align-items: center;
-                        gap: 4vh;
-                        padding: 2vh 0;
-                        height: auto;
-                    }
-
-                    .evidence-item {
-                        width: 60vw;
-                        height: 60vh;
-                    }
-
-                    .evidence-paper {
-                        height: 60%;
-                    }
-
-                    .evidence-details {
-                        height: 40%;
-                    }
-                }
-
-                @media (max-width: 480px) {
-                    .back-icon {
-                        width: 8vw;
-                        height: 8vw;
-                    }
-
-                    .evidence-item {
-                        width: 80vw;
-                        height: 50vh;
-                    }
-                }
-
-                @media (max-aspect-ratio: 21/9) {
-                    .popup-content {
-                        width: 60vw;
-                        padding: 2vw;
-                        overflow: hidden;
-                    }
-
-                    .popup-description {
-                        font-size: calc(1.2vw + 1.5vh);
-                        line-height: 1.6;
-                    }
-
-                    .evidence-item {
-                        width: 30vw;
-                        height: 50vh;
-                    }
-
-                    .evidence-paper {
-                        height: 60%;
-                    }
-                }
-
-                @media (min-aspect-ratio: 21/9) {
-                    .popup-content {
-                        max-width: 50vw;
-                        margin: 0 auto;
-                        padding: 2vw;
-                    }
-
-                    .popup-description {
-                        text-align: center:
-                        font-size: calc(1.2vw + 1vh);
-                        white-space: pre-wrap;
-                    }
-                }
             `}</style>
         </div>
     );
