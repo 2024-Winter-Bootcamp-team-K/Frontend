@@ -244,12 +244,14 @@ const ChattingPage: React.FC = () => {
         }
     
         try {
-            const audioBase64 = await fetchTTS(suspectChat, "3"); // task_id는 3 (여성)로 설정
+            const audioBase64 = await fetchTTS(suspectChat, suspectData.task_id);
             const audio = new Audio(`data:audio/wav;base64,${audioBase64}`);
             audio.play(); // 오디오 재생
         } catch (error) {
             console.error("Error playing TTS audio:", error);
         }
+        console.log("TTS task_id:", suspectData.task_id);
+        console.log("TTS sentence:", suspectChat);
     };
 
     return (
