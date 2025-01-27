@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAudio } from "./MainAudioContext"; // AudioContext 사용
 import { createEvidence, createSuspect } from "../services/apiService"; // API 서비스 가져오기
 import styled from "styled-components";
 import GamePage1 from "./GamePage1";
@@ -28,7 +27,6 @@ const LoadingScenarioPage: React.FC = () => {
   const [_isTypingComplete, setIsTypingComplete] = useState(false); // 타이핑 완료 상태
   const navigate = useNavigate();
   const typingSoundRef = useRef<HTMLAudioElement | null>(null);
-  const { bgmRef } = useAudio(); // AudioContext에서 bgmRef 가져오기
   const { scenario_id } = useParams<{ scenario_id: string }>();
   const [fullText, setFullText] = useState<string>('');
   const [_isAPILoading, setIsAPILoading] = useState(false); // API 로딩 상태
