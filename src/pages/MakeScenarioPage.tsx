@@ -306,6 +306,7 @@ const PaperWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 `;
 
 const PaperImage = styled.img`
@@ -314,11 +315,11 @@ const PaperImage = styled.img`
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
-  width: 37vw;
+  height: 90%; 
+  width: min(95vw, 800px);
   highlight: auto;
   min-width: 300px;
-  max-width: 800px;
-  height: auto;
+  object-fit: contain;
   transition: bottom 1.5s ease-out, transform 1s ease-out;
 
   &.animate {
@@ -343,7 +344,7 @@ const ContentWrapper = styled.div`
   max-width: calc(37vw - 5rem); 
   min-width: 260px;
   z-index: 2;
-  padding: clamp(1rem, calc(2rem + 1vw), 12rem);
+  padding: calc(2vh + 2vw) calc(1.2vh + 4vw) calc(1.2vh + 2vw);
   opacity: 0;
   transition: opacity 1s ease-in-out;
   max-height: 80vh;
@@ -396,7 +397,7 @@ const FormContent = styled.div`
 const Row = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 1vw;
+  margin-bottom: 2vh;
   width: 100%;
 `;
 
@@ -472,7 +473,7 @@ const Dropdown = styled.select<{ isSelected?: boolean }>`
   padding: clamp(0.4rem, 0.8vh, 0.8rem);
   border: none;
   background-color: transparent;
-  font-size: clamp(0.8rem, calc(0.6rem + 1vw), 8rem);
+  font-size: calc(0.6rem + 1vw);
   font-family: 'Handlee', cursive;
   cursor: pointer;
   transition: color 0.3s ease;

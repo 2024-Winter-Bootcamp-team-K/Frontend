@@ -167,7 +167,7 @@ const EndingPage: React.FC = () => {
           <p>조사한 용의자: {historyData?.suspectsCount}명</p>
           <p>진행한 심문: {interrogationsCount}회</p>
           <p><br /></p>
-          <p className="title2">Techeer-2024-Winter-BootCamp-Team-K</p>
+          <p className="title2">&nbsp;&nbsp;&nbsp;&nbsp;Techeer-2024-Winter-BootCamp-Team-K</p>
           <p>박근채 - Team Leader, Full Stack, DevOps</p>
           <p>여상윤 - Backend, DevOps</p>
           <p>박수용 - Backend, DevOps</p>

@@ -384,11 +384,11 @@ const ChattingPage: React.FC = () => {
 
                 .paper {
                     position: absolute;
-                    left: 9vw;
-                    top: 43%;
-                    transform: translateY(-50%);
-                    width: 30vw;
-                    height: 70vh;
+                    left: 24%;
+                    top: 45%;
+                    transform: translate(-50%, -50%);
+                    width: min(30vw, 500px);
+                    height: min(70vh, 800px);
                     background-image: url('/images/Paper.png');
                     background-size: 100% 100%;
                     background-repeat: no-repeat;
@@ -398,31 +398,44 @@ const ChattingPage: React.FC = () => {
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    padding: 4% 3% 2% 1%;
+                    padding: calc(1vh + 1vw) calc(1.6vh + 1.6vw);
                 }
 
                 .paper:hover {
-                    transform: translateY(-50%) scale(1.02);
+                    transform: translate(-50%, -50%) scale(1.02);
                 }
 
                 .suspect-profile {
-                    width: 90%;
+                    width: 100%;
                     height: 100%;
                     display: flex;
                     flex-direction: column;
-                    gap: 1.5rem;
-                    padding: 1.5rem;
-                    background: rgba(255, 255, 255, 0);
+                    gap: 1rem;
+                    overflow-y: auto;
+                    padding: 1rem 0.5rem 1rem 2rem;
+                    margin-left: -2rem;
+                }
+
+                .suspect-profile::-webkit-scrollbar {
+                    width: 6px;
+                }
+
+                .suspect-profile::-webkit-scrollbar-thumb {
+                    background-color: rgba(0, 0, 0, 0.2);
+                    border-radius: 3px;
                 }
 
                 .suspect-image-wrapper {
-                    width: 70%;
-                    height: 47%;
+                    width: 50%;
+                    aspect-ratio: 1;
+                    margin: 0 auto;
+                    position: relative;
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    position: relative;
-                    top: -5%;
+                    top: 6%;
+                    position: relative; 
+                    height: auto;
                 }
 
                 .tape-section {
@@ -447,29 +460,20 @@ const ChattingPage: React.FC = () => {
                     transform: rotate(-45deg);
                     left: -4vmin;
                 }
-
-                .suspect-image-wrapper {
-                    position: relative; /* 테이프와 이미지를 하나의 컨테이너로 묶음 */
-                    width: 50%;
-                    height: auto;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin: 0 auto;
-                  }
                 
-                  .suspect-image {
-                    width: 100%; /* 프로필 이미지가 부모 요소에 맞게 반응형으로 조정 */
-                    height: auto; 
-                    object-fit: contain;
-                  }
+                .suspect-image {
+                    width: 95%;
+                    height: 95%;
+                    object-fit: cover;
+                    margin-top: -2vh;
+                }
                 
                 .info-grid {
                     display: grid;
                     grid-template-columns: auto 1fr;
                     gap: 0.2rem 0.5rem;
                     font-size: calc(0.8vw + 1vh);
-                    margin-top: -2vh;
+                    margin-top: 5vh;
                 }
 
                 .info-label {

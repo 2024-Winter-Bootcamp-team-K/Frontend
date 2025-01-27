@@ -541,6 +541,42 @@ const EvidencePage: React.FC = () => {
                         height: 50vh;
                     }
                 }
+
+                @media (max-aspect-ratio: 21/9) {
+                    .popup-content {
+                        width: 60vw;
+                        padding: 2vw;
+                        overflow: hidden;
+                    }
+
+                    .popup-description {
+                        font-size: calc(1.2vw + 1.5vh);
+                        line-height: 1.6;
+                    }
+
+                    .evidence-item {
+                        width: 30vw;
+                        height: 50vh;
+                    }
+
+                    .evidence-paper {
+                        height: 60%;
+                    }
+                }
+
+                @media (min-aspect-ratio: 21/9) {
+                    .popup-content {
+                        max-width: 50vw;
+                        margin: 0 auto;
+                        padding: 2vw;
+                    }
+
+                    .popup-description {
+                        text-align: center:
+                        font-size: calc(1.2vw + 1vh);
+                        white-space: pre-wrap;
+                    }
+                }
             `}</style>
         </div>
     );

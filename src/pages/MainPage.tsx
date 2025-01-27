@@ -207,7 +207,6 @@ const MainPage: React.FC = () => {
                 <CardTitle>{`사건 일지 #${String(scenario.id).padStart(3, "0")}`}</CardTitle>
                 <CardDetail>
                   <ScenarioName>{scenario.name}</ScenarioName>
-                  <br />
                   <PlayDate>
                     {'플레이 날짜 '}
                     {new Date(scenario.created_at).toLocaleString('ko-KR', {
@@ -300,7 +299,7 @@ const Card = styled.div<{ $translateX: number; $scale: number; $zIndex: number; 
   background-size: cover;
   background-position: center;
   border-radius: 1px;
-  padding: 2.2vw;
+  padding: calc(0.8vh + 1.5vw);;
   color: white;
   position: absolute;
   transition: transform 0.3s ease;
@@ -331,7 +330,7 @@ const CardImage = styled.img`
 `;
 
 const CardTitle = styled.h3`
-  font-size: calc(1.2vh + 2vw);
+  font-size: calc(1.2vh + 1.7vw);
   margin: 0.5vh 0;
   text-align: center;
   font-family: 'THEFACESHOP_INKLIPQUID';
@@ -356,7 +355,7 @@ const ScenarioName = styled.p`
 `;
 
 const PlayDate = styled.p`
-  font-size: calc(0.8vh + 1vw); 
+  font-size: calc(0.7vh + 0.9vw); 
   color: #000000; 
-  margin: 0.2vh 0;
+  margin: 2.5vh 0;
 `;
