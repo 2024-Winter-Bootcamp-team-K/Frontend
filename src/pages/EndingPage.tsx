@@ -162,7 +162,7 @@ const EndingPage: React.FC = () => {
           <p className="title">Ending Credits</p>
           <p><br /></p>
           <p className="title2">Play Result</p>
-          <p>플레이 시간: {playTime}</p>
+          <p>플레이 시간: 10분 32초</p>
           <p>조사한 증거: {historyData?.evidencesCount}개</p>
           <p>조사한 용의자: {historyData?.suspectsCount}명</p>
           <p>진행한 심문: {interrogationsCount}회</p>
