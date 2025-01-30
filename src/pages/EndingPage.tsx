@@ -178,7 +178,7 @@ const EndingPage: React.FC = () => {
           <p className="title2">Thanks For</p>
           <p>Andrew Park</p>
           <p>Ryan</p>
-          <p>Rena</p>
+          <p>Lena</p>
           <p>Mindy</p>
           <p>Justin</p>
           <p>Sean</p>
