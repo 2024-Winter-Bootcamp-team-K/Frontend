@@ -16,7 +16,6 @@ const MakeScenarioPage: React.FC = () => {
   const navigate = useNavigate();
   const { userId } = useUser();
   const [loading, setLoading] = useState(false);
-  
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -44,6 +43,10 @@ const MakeScenarioPage: React.FC = () => {
   };
 
   const handleDifficultySelect = (level: string) => {
+    if (level === "상" || level === "하") {
+      alert("구현되지 않은 난이도 입니다.");
+      return;
+    }
     setDifficulty(level);
     const audio = new Audio("/sounds/pencil.mp3");
     audio.play();
@@ -96,6 +99,11 @@ const MakeScenarioPage: React.FC = () => {
   const handleScenarioButtonClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
+    if (difficulty !== "중") {
+      alert("현재 '중' 난이도만 선택 가능합니다.");
+      return;
+    }  
+
     const [yearStr, monthStr, dayStr] = selectedDate.split(' ');
     const year = parseInt(yearStr);
     const month = parseInt(monthStr);
@@ -124,7 +132,7 @@ const MakeScenarioPage: React.FC = () => {
     setLoading(true);
 
     const scenarioData = {
-      user_id: userId,
+      user_id: 1,
       year,
       month,
       day,
@@ -193,7 +201,6 @@ const MakeScenarioPage: React.FC = () => {
                         <InputWrapper>
                           <DateInputContainer>
                             <Input
-                              placeholder="YYYY MM DD"
                               value={selectedDate}
                               onChange={handleDateChange}
                               maxLength={10}
@@ -306,7 +313,6 @@ const PaperWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
 `;
 
 const PaperImage = styled.img`
@@ -315,11 +321,11 @@ const PaperImage = styled.img`
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
-  height: 90%; 
-  width: min(95vw, 800px);
+  width: 37vw;
   highlight: auto;
   min-width: 300px;
-  object-fit: contain;
+  max-width: 800px;
+  height: auto;
   transition: bottom 1.5s ease-out, transform 1s ease-out;
 
   &.animate {
@@ -344,7 +350,7 @@ const ContentWrapper = styled.div`
   max-width: calc(37vw - 5rem); 
   min-width: 260px;
   z-index: 2;
-  padding: calc(2vh + 2vw) calc(1.2vh + 4vw) calc(1.2vh + 2vw);
+  padding: clamp(1rem, calc(2rem + 1vw), 12rem);
   opacity: 0;
   transition: opacity 1s ease-in-out;
   max-height: 80vh;
@@ -397,7 +403,7 @@ const FormContent = styled.div`
 const Row = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 2vh;
+  margin-bottom: 1vw;
   width: 100%;
 `;
 
@@ -473,7 +479,7 @@ const Dropdown = styled.select<{ isSelected?: boolean }>`
   padding: clamp(0.4rem, 0.8vh, 0.8rem);
   border: none;
   background-color: transparent;
-  font-size: calc(0.6rem + 1vw);
+  font-size: clamp(0.8rem, calc(0.6rem + 1vw), 8rem);
   font-family: 'Handlee', cursive;
   cursor: pointer;
   transition: color 0.3s ease;
@@ -495,7 +501,7 @@ const Dropdown = styled.select<{ isSelected?: boolean }>`
 `;
 
 const DifficultyRow = styled(Row)`
-  margin-top: 1vh;
+  margin-top: 2vh;
 `;
 
 const DifficultyLabel = styled(Label)`
@@ -527,7 +533,7 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-top: 1vh;
+  margin-top: 3vh;
 `;
 
 const ButtonText = styled.span`
